@@ -2,5 +2,12 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./apps/guacamolai-e2e"
+    },
+    {
+      "path": "./apps/guacamolai"
+    }
+  ]
 }
