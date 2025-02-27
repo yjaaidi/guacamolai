@@ -1,0 +1,15 @@
+{
+  "name": "Guacamolai",
+  "description": "Smash your advocate activity into delicious guacamole for Advocu",
+  "version": "0.1",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "js": ["./content.js"],
+      "matches": ["https://app.advocu.com/*", "http://localhost:3000/*"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

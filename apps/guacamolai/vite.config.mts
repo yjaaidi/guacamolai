@@ -24,6 +24,19 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    rollupOptions: {
+      input: {
+        content: './src/content.ts',
+        popup: './popup.html',
+      },
+      output: {
+        entryFileNames: ({ facadeModuleId }) => {
+          return facadeModuleId?.endsWith('.ts')
+            ? '[name].js'
+            : 'assets/[name].[hash].js';
+        },
+      },
+    },
   },
   test: {
     watch: false,
