@@ -23,6 +23,7 @@ export default defineConfig({
     command: `bun vite --port ${port} apps/guacamolai-e2e/fake-advocu`,
     url: baseURL,
     cwd: workspaceRoot,
+    reuseExistingServer: true,
   },
   projects: [
     {
