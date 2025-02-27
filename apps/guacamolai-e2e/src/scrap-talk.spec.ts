@@ -5,6 +5,8 @@ test('loads title', async ({ page }) => {
 
   await page.goto('/');
 
+  await page.getByRole('button', { name: 'Add Activity' }).click();
+
   await page
     .getByLabel('URL')
     .fill('https://ng-de.org/speakers/younes-jaaidi/');

@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "out-tsc/guacamolai",
+    "lib": ["dom"],
     "types": ["node"],
     "rootDir": "src",
     "module": "esnext",

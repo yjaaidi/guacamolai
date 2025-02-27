@@ -4,55 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fake Advocu</title>
+    <script type="module" src="/main.js"></script>
   </head>
-  <style>
-    fieldset {
-      display: flex;
-      flex-direction: column;
-      align-items: start;
 
-      label {
-        margin-top: 1rem;
-      }
-    }
-  </style>
   <body>
-    <fieldset>
-      <legend>Activity Form</legend>
-      <label for="#/properties/title">Title</label>
-      <input type="text" id="#/properties/title" />
-
-      <label for="#/properties/description">Description</label>
-      <quill-editor id="#/properties/description">
-        <p></p>
-      </quill-editor>
-
-      <label for="#/properties/metrics/properties/attendees">Attendees</label>
-      <nz-input-number id="#/properties/metrics/properties/attendees">
-        <input type="number" min="1" step="1" inputmode="decimal" />
-      </nz-input-number>
-
-      <label for="#/properties/onlineEvent">Online</label>
-      <nz-radio-group id="#/properties/onlineEvent">
-        <span>Yes</span>
-        <span>No</span>
-      </nz-radio-group>
-
-      <label for="#/properties/country">Country</label>
-      <nz-select id="#/properties/country">
-        <input type="text" />
-      </nz-select>
-
-      <label for="#/properties/city">City</label>
-      <input type="text" id="#/properties/city" />
-
-      <label for="#/properties/activityDate">Date</label>
-      <nz-date-picker id="#/properties/activityDate">
-        <input type="text" size="12" />
-      </nz-date-picker>
-
-      <label for="#/properties/activityUrl">URL</label>
-      <input type="text" id="#/properties/activityUrl" />
-    </fieldset>
+    <button id="add-activity-btn">Add Activity</button>
+    <main></main>
   </body>
 </html>
