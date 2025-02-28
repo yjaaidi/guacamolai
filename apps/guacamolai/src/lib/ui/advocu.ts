@@ -52,7 +52,7 @@ async function setCity(city: string) {
   );
 
   await waitForElementAndTry(
-    () => screen.getAllByText(city, { selector: '.pac-matched' })[0],
+    () => screen.getAllByText(city, { selector: '.pac-item span' })[0],
     (el) => userEvent.click(el)
   );
 }
