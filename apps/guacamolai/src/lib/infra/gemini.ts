@@ -31,7 +31,17 @@ export class Gemini implements Llm {
       switchMap(
         async (response) => (await response.json()) as GenerateContentResponse
       ),
-      map((body) => JSON.parse(body.candidates[0].content.parts[0].text))
+      map((body) => {
+        if ('error' in body) {
+          if (body.error.code === 429) {
+            throw new Error('Too many requests');
+          }
+
+          throw new Error(`Gemini error: ${body.error.message}`);
+        }
+
+        return JSON.parse(body.candidates[0].content.parts[0].text);
+      })
     );
   }
 }
@@ -40,9 +50,11 @@ export interface GenerateContentRequest {
   generationConfig?: GenerationConfig;
   systemInstruction?: Content;
 }
-export interface GenerateContentResponse {
-  candidates: Candidate[];
-}
+export type GenerateContentResponse =
+  | {
+      candidates: Candidate[];
+    }
+  | { error: { code: number; message: string } };
 interface GenerationConfig {
   responseSchema: Schema;
   responseMimeType: string;

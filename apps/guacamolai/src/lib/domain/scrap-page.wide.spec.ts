@@ -10,6 +10,7 @@ describe(scrapHtml.name, () => {
     expect(await firstValueFrom(scrap(ngDeYounesJaaidiHtml))).toEqual({
       title: 'Fake it till you Mock it',
       description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests? Aren’t you tired of maintaining and debugging them, or trying to keep them in sync with the real implementation? Join us to see how Fakes and their fellow companions, Object Mothers, and Gloves might just become the pillars of your testing strategy.`,
+      online: false,
     });
   });
 });
