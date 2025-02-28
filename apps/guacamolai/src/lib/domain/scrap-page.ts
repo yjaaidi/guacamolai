@@ -44,3 +44,4 @@ Trim all the fields.
     },
   });
 }
+export const SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
