@@ -6,11 +6,7 @@ import { watchEl, watchInputValue } from './lib/infra/dom';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
 import { Gemini } from './lib/infra/gemini';
 import { fieldIds, updateForm } from './lib/ui/advocu';
-import {
-  applyScrapButtonStyles,
-  tryInjectScrapButton,
-  updateScrapButton,
-} from './lib/ui/scrap-button';
+import { tryInjectScrapButton, updateScrapButton } from './lib/ui/scrap-button';
 import { isValidUrl } from './lib/utils/is-valid-url';
 
 export async function main() {
@@ -37,8 +33,6 @@ export async function main() {
     share()
   );
   const onClick = () => click$.next();
-
-  applyScrapButtonStyles();
 
   /* Show scrap button when url input is detected. */
   urlInput$.subscribe(() => tryInjectScrapButton({ onClick }));

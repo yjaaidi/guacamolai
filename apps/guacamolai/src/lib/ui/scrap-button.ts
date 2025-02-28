@@ -8,6 +8,8 @@ export function tryInjectScrapButton({ onClick }: { onClick: () => void }) {
     return;
   }
 
+  tryInjectScrapButtonStyles();
+
   const scrapButtonEl = document.createElement('button');
   scrapButtonEl.id = SCRAP_BUTTON_ID;
   scrapButtonEl.textContent = '✨ Scrap';
@@ -17,8 +19,14 @@ export function tryInjectScrapButton({ onClick }: { onClick: () => void }) {
   actionsEl.prepend(scrapButtonEl);
 }
 
-export function applyScrapButtonStyles() {
+function tryInjectScrapButtonStyles() {
+  const attr = 'data-guacamolai-scrap-button-styles';
+  if (document.head.querySelector(`style[${attr}]`)) {
+    return;
+  }
+
   const style = document.createElement('style');
+  style.setAttribute(attr, '');
   style.textContent = `
     button.pending {
       animation: blink 2s alternate infinite;
