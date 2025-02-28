@@ -3,9 +3,9 @@ import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
 import { config as dotEnvConfig } from 'dotenv';
 import { join } from 'path';
-import { authFilePath } from './src/testing/auth-user';
-import { SetupOptions } from './src/testing/setup-fixtures';
-import { Options } from './src/testing/fixtures';
+import { authFilePath } from './e2e/testing/auth-user';
+import { SetupOptions } from './e2e/testing/setup-fixtures';
+import { Options } from './e2e/testing/fixtures';
 
 const baseURL = 'https://gde.advocu.com';
 
@@ -15,7 +15,7 @@ dotEnvConfig({ path: join(workspaceRoot, '.env.local') });
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig<Options & SetupOptions>({
-  ...nxE2EPreset(__filename, { testDir: './src' }),
+  ...nxE2EPreset(__filename, { testDir: './e2e' }),
   timeout: 10_000,
   retries: 2,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
