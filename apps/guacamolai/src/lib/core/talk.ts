@@ -4,4 +4,6 @@ export interface Talk {
   attendees?: number;
   online?: boolean;
   date?: string;
+  country?: string;
+  city?: string;
 }

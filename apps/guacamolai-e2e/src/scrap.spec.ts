@@ -21,6 +21,6 @@ test('loads talk', async ({ page }) => {
     .toContainText(
       'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
     );
-  await expect(page.getByTestId('online-yes')).not.toHaveClass('checked');
-  await expect(page.getByTestId('online-no')).toHaveClass('checked');
+  await expect.soft(page.getByTestId('online-yes')).not.toHaveClass('checked');
+  await expect.soft(page.getByTestId('online-no')).toHaveClass('checked');
 });

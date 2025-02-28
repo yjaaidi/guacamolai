@@ -19,8 +19,10 @@ export function scrapPage({
 Return the result in the following JSON format:
 - title: the title of the talk
 - description: the description of the talk
-- attendees: the number of attendees (if available, otherwise remove field)
 - online: whether the talk is online or not
+- city: the city where the talk is happening
+- country: the country where the talk is happening
+- attendees: the number of attendees (if available, otherwise remove field)
 - date: the event date (if available, otherwise remove field)
 
 Trim all the fields.
@@ -35,6 +37,8 @@ Trim all the fields.
         attendees: { type: 'number' },
         online: { type: 'boolean' },
         date: { type: 'string', format: 'date-time' },
+        city: { type: 'string' },
+        country: { type: 'string' },
       },
       required: ['title', 'description'],
     },
