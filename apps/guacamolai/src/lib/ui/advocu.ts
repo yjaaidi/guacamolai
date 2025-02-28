@@ -24,14 +24,12 @@ export async function updateForm(talk: Talk) {
   );
   trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
 
-  if (!talk.online) {
-    if (talk.country) {
-      await setCountry(talk.country);
-    }
+  if (talk.country) {
+    await setCountry(talk.country);
+  }
 
-    if (talk.city) {
-      trySetInputValue(document.getElementById(fieldIds.city), talk.city);
-    }
+  if (talk.city) {
+    await setCity(talk.city);
   }
 }
 
@@ -43,6 +41,18 @@ async function setCountry(country: string) {
 
   await waitForElementAndTry(
     () => document.querySelector<HTMLElement>(`[title="${country}"]`),
+    (el) => userEvent.click(el)
+  );
+}
+
+async function setCity(city: string) {
+  await waitForElementAndTry<HTMLElement>(
+    () => document.getElementById(fieldIds.city),
+    (el) => fill(el, city)
+  );
+
+  await waitForElementAndTry(
+    () => screen.getAllByText(city, { selector: '.pac-matched' })[0],
     (el) => userEvent.click(el)
   );
 }
@@ -63,4 +73,9 @@ async function waitForElementAndTry<T>(
   } catch {
     return;
   }
+}
+
+async function fill(el: HTMLElement, value: string) {
+  await userEvent.clear(el);
+  await userEvent.type(el, value);
 }
