@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
-import { Talk } from '../../content';
 import { Llm } from '../core/llm';
+import { Talk } from '../core/talk';
 
 export function scrapPage({
   llm,

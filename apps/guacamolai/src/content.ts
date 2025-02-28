@@ -1,18 +1,14 @@
 import { fromEvent, map, Observable, of, switchMap } from 'rxjs';
-import { Gemini } from './lib/infra/gemini';
+import {
+  SCRAP_ACTION,
+  ScrapMessage,
+  ScrapResponse,
+} from './lib/core/extension-messages';
 import { isValidUrl } from './lib/utils/is-valid-url';
-import { scrapPage } from './lib/domain/scrap-page';
-import { fromFetch } from 'rxjs/fetch';
 
 async function main() {
-  const llm = new Gemini('TODO');
-
   watchUrlInputEl()
-    .pipe(
-      switchMap(watchInputValue),
-      switchMap(loadUrl),
-      switchMap((html) => scrapPage({ llm, html }))
-    )
+    .pipe(switchMap(watchInputValue), switchMap(scrap))
     .subscribe(console.log);
 }
 
@@ -47,23 +43,19 @@ function watchInputValue(
   );
 }
 
-function loadUrl(url: string | null): Observable<string | null> {
+async function scrap(url: string | null): Promise<ScrapResponse | null> {
   if (!url) {
-    return of(null);
+    return null;
   }
 
-  return fromFetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`).pipe(
-    switchMap((response) => (response.ok ? response.text() : of(null)))
-  );
+  return await chrome.runtime.sendMessage<ScrapMessage, ScrapResponse>({
+    action: SCRAP_ACTION,
+    data: url,
+  });
 }
 
 const fieldIds = {
   url: '#/properties/activityUrl',
 } as const;
-
-export interface Talk {
-  title: string;
-  description: string;
-}
 
 main();
