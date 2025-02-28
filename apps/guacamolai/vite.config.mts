@@ -1,5 +1,6 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
+import webExtension from 'vite-plugin-web-extension';
 
 export default defineConfig({
   root: __dirname,
@@ -12,32 +13,15 @@ export default defineConfig({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
+  plugins: [
+    webExtension({
+      disableAutoLaunch: true,
+    }),
+  ],
   build: {
     outDir: './dist',
     emptyOutDir: true,
     reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-    rollupOptions: {
-      input: {
-        background: './src/background.ts',
-        content: './src/content.ts',
-        popup: './popup.html',
-      },
-      output: {
-        entryFileNames: ({ facadeModuleId }) => {
-          return facadeModuleId?.endsWith('.ts')
-            ? '[name].js'
-            : 'assets/[name].[hash].js';
-        },
-      },
-    },
   },
   test: {
     watch: false,

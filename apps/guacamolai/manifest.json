@@ -6,15 +6,11 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "js": ["./content.js"],
+      "js": ["src/content.ts"],
       "matches": ["https://app.advocu.com/*", "http://localhost:5173/*"]
     }
   ],
-  "background": {
-    "service_worker": "./background.js",
-    "type": "module"
-  },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "src/popup.html"
   }
 }

@@ -1,14 +1,36 @@
 import { fromEvent, map, Observable, of, switchMap } from 'rxjs';
-import {
-  SCRAP_ACTION,
-  ScrapMessage,
-  ScrapResponse,
-} from './lib/core/extension-messages';
+import { fromFetch } from 'rxjs/fetch';
+import { KeyStorage } from './lib/domain/key-storage';
+import { scrapPage } from './lib/domain/scrap-page';
+import { Gemini } from './lib/infra/gemini';
 import { isValidUrl } from './lib/utils/is-valid-url';
 
-async function main() {
+export async function main() {
+  const keyStorage = new KeyStorage();
+
   watchUrlInputEl()
-    .pipe(switchMap(watchInputValue), switchMap(scrap))
+    .pipe(
+      switchMap(watchInputValue),
+      switchMap(loadUrl),
+      switchMap(async (html) => {
+        const key = await keyStorage.getGeminiApiKey();
+        if (key == null) {
+          return null;
+        }
+
+        return {
+          llm: new Gemini(key),
+          html,
+        };
+      }),
+      switchMap((args) => {
+        if (args == null) {
+          return of(null);
+        }
+
+        return scrapPage(args);
+      })
+    )
     .subscribe(console.log);
 }
 
@@ -43,15 +65,14 @@ function watchInputValue(
   );
 }
 
-async function scrap(url: string | null): Promise<ScrapResponse | null> {
+function loadUrl(url: string | null): Observable<string | null> {
   if (!url) {
-    return null;
+    return of(null);
   }
 
-  return await chrome.runtime.sendMessage<ScrapMessage, ScrapResponse>({
-    action: SCRAP_ACTION,
-    data: url,
-  });
+  return fromFetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`).pipe(
+    switchMap((response) => (response.ok ? response.text() : of(null)))
+  );
 }
 
 const fieldIds = {
