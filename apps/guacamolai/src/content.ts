@@ -1,5 +1,14 @@
 import { suspensify } from '@jscutlery/operators';
-import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
+import {
+  filter,
+  map,
+  of,
+  share,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { KeyStorage } from './lib/domain/key-storage';
 import { scrapPage } from './lib/domain/scrap-page';
 import { watchEl, watchInputValue } from './lib/infra/dom';
@@ -42,31 +51,37 @@ export async function main() {
     updateScrapButton(page != null ? 'enabled' : 'disabled')
   );
 
-  page$
+  const scrap$ = page$.pipe(
+    filter((page) => page != null),
+    switchMap((page) => click$.pipe(map(() => page))),
+    switchMap((page) => scrapPage({ html: page.html, llm }).pipe(suspensify())),
+    share()
+  );
+
+  scrap$
     .pipe(
-      filter((page) => page != null),
-      switchMap((page) => click$.pipe(map(() => page))),
-      switchMap((page) =>
-        scrapPage({ html: page.html, llm }).pipe(suspensify())
-      )
-    )
-    .subscribe((suspense) => {
-      if (suspense.pending) {
-        updateScrapButton('pending');
-      }
-
-      if (suspense.hasValue) {
-        if (suspense.value != null) {
-          updateForm(suspense.value);
+      switchMap(async (suspense) => {
+        if (suspense.finalized && suspense.hasValue && suspense.value != null) {
+          await updateForm(suspense.value);
         }
-        updateScrapButton('enabled');
-      }
+      })
+    )
+    .subscribe();
 
-      if (suspense.hasError) {
-        console.error(suspense.error);
-        updateScrapButton('enabled');
-      }
-    });
+  scrap$.subscribe((suspense) => {
+    if (suspense.pending) {
+      updateScrapButton('pending');
+    }
+
+    if (suspense.hasValue) {
+      updateScrapButton('enabled');
+    }
+
+    if (suspense.hasError) {
+      console.error(suspense.error);
+      updateScrapButton('enabled');
+    }
+  });
 }
 
 main();

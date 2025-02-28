@@ -1,3 +1,5 @@
+import { screen, waitFor } from '@testing-library/dom';
+import { userEvent } from '@testing-library/user-event';
 import { Talk } from '../core/talk';
 import {
   trySetInputValue,
@@ -14,7 +16,7 @@ export const fieldIds = {
   city: '#/properties/city',
 } as const;
 
-export function updateForm(talk: Talk) {
+export async function updateForm(talk: Talk) {
   trySetInputValue(document.getElementById(fieldIds.title), talk.title);
   trySetParagraphContent(
     document.getElementById(fieldIds.description)?.querySelector('p') ?? null,
@@ -22,14 +24,43 @@ export function updateForm(talk: Talk) {
   );
   trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
 
-  if (talk.country) {
-    trySetInputValue(
-      document.getElementById(fieldIds.country)?.querySelector('input') ?? null,
-      talk.country
-    );
-  }
+  if (!talk.online) {
+    if (talk.country) {
+      await setCountry(talk.country);
+    }
 
-  if (talk.city) {
-    trySetInputValue(document.getElementById(fieldIds.city), talk.city);
+    if (talk.city) {
+      trySetInputValue(document.getElementById(fieldIds.city), talk.city);
+    }
+  }
+}
+
+async function setCountry(country: string) {
+  await waitForElementAndTry<HTMLInputElement>(
+    () => document.getElementById(fieldIds.country)?.querySelector('input'),
+    (el) => userEvent.type(el, country)
+  );
+
+  await waitForElementAndTry(
+    () => document.querySelector<HTMLElement>(`[title="${country}"]`),
+    (el) => userEvent.click(el)
+  );
+}
+
+async function waitForElementAndTry<T>(
+  getEl: () => T | null | undefined,
+  act: (el: T) => Promise<void>
+) {
+  try {
+    const el = await waitFor(() => {
+      const el = getEl();
+      if (el == null) {
+        throw new Error('Element not found');
+      }
+      return el;
+    });
+    await act(el);
+  } catch {
+    return;
   }
 }
