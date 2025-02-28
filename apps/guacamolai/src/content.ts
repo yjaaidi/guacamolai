@@ -1,3 +1,4 @@
+import { suspensify } from '@jscutlery/operators';
 import {
   filter,
   map,
@@ -22,21 +23,37 @@ import {
 } from './lib/infra/dom';
 import { Gemini } from './lib/infra/gemini';
 import { isValidUrl } from './lib/utils/is-valid-url';
-import { suspensify } from '@jscutlery/operators';
 
 export async function main() {
   const keyStorage = new KeyStorage();
+  const key = await keyStorage.getGeminiApiKey();
+  if (key == null) {
+    return;
+  }
+
+  const llm = new Gemini(key);
   const click$ = new Subject<void>();
   const url$ = watchEl<HTMLInputElement>(fieldIds.url).pipe(
     switchMap(watchInputValue),
+    share()
+  );
+  const page$ = url$.pipe(
+    filter((url) => url != null),
+    filter(isValidUrl),
+    switchMap((url) => {
+      return loadUrl(url).pipe(
+        map((html) => (html != null ? { url, html } : null))
+      );
+    }),
+    filter((page) => page != null),
     share()
   );
   const onClick = () => click$.next();
 
   applyStyles();
 
-  url$.subscribe((url) => {
-    if (url && isValidUrl(url)) {
+  page$.subscribe((page) => {
+    if (page != null) {
       showScrapButton({ onClick });
     } else {
       disableScrapButton();
@@ -45,16 +62,11 @@ export async function main() {
 
   click$
     .pipe(
-      withLatestFrom(url$),
-      map(([, url]) => url),
+      withLatestFrom(page$),
+      map(([, page]) => page),
       /* Fetch URL and scrap... */
-      switchMap((url) =>
-        loadUrl(url).pipe(
-          switchMap(async (html) => {
-            const key = await keyStorage.getGeminiApiKey();
-            return key != null ? { llm: new Gemini(key), html } : null;
-          }),
-          switchMap((args) => (args != null ? scrapPage(args) : of(null))),
+      switchMap(({ html }) =>
+        scrapPage({ html, llm }).pipe(
           suspensify(),
           /* ... and stop if the URL changes. */
           takeUntil(url$)
@@ -108,6 +120,7 @@ function loadUrl(url: string | null): Observable<string | null> {
 
   return fromFetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`, {
     credentials: 'omit',
+    mode: 'cors',
   }).pipe(switchMap((response) => (response.ok ? response.text() : of(null))));
 }
 
