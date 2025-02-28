@@ -10,6 +10,7 @@ import {
   watchInputValue,
   watchUrlInputEl,
 } from './lib/infra/dom';
+import { Talk } from './lib/core/talk';
 
 export async function main() {
   const keyStorage = new KeyStorage();
@@ -25,24 +26,7 @@ export async function main() {
       switchMap((args) => (args != null ? scrapPage(args) : of(null))),
       filter((talk) => talk != null)
     )
-    .subscribe((talk) => {
-      trySetInputValue(document.getElementById(fieldIds.title), talk.title);
-      trySetParagraphContent(
-        document.getElementById(fieldIds.description),
-        talk.description
-      );
-      trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
-      if (talk.country) {
-        trySetInputValue(
-          document.getElementById(fieldIds.country)?.querySelector('input') ??
-            null,
-          talk.country
-        );
-      }
-      if (talk.city) {
-        trySetInputValue(document.getElementById(fieldIds.city), talk.city);
-      }
-    });
+    .subscribe(updateForm);
 }
 
 export const fieldIds = {
@@ -62,6 +46,24 @@ function loadUrl(url: string | null): Observable<string | null> {
   return fromFetch(`https://corsproxy.io/?url=${encodeURIComponent(url)}`).pipe(
     switchMap((response) => (response.ok ? response.text() : of(null)))
   );
+}
+
+function updateForm(talk: Talk) {
+  trySetInputValue(document.getElementById(fieldIds.title), talk.title);
+  trySetParagraphContent(
+    document.getElementById(fieldIds.description),
+    talk.description
+  );
+  trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
+  if (talk.country) {
+    trySetInputValue(
+      document.getElementById(fieldIds.country)?.querySelector('input') ?? null,
+      talk.country
+    );
+  }
+  if (talk.city) {
+    trySetInputValue(document.getElementById(fieldIds.city), talk.city);
+  }
 }
 
 main();
