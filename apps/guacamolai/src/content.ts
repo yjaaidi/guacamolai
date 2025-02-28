@@ -33,9 +33,11 @@ export async function main() {
   );
   const onClick = () => click$.next();
 
+  applyStyles();
+
   url$.subscribe((url) => {
     if (url && isValidUrl(url)) {
-      enableScrapButton({ onClick });
+      showScrapButton({ onClick });
     } else {
       disableScrapButton();
     }
@@ -57,16 +59,19 @@ export async function main() {
           /* ... and stop if the URL changes. */
           takeUntil(url$)
         )
-      ),
-      filter((talk) => talk != null)
+      )
     )
     .subscribe((suspense) => {
       if (suspense.pending) {
-        disableScrapButton();
+        updateScrapButton('pending');
       }
       if (suspense.hasValue && suspense.value != null) {
-        enableScrapButton({ onClick });
+        updateScrapButton('enabled');
         updateForm(suspense.value);
+      }
+      if (suspense.hasError) {
+        console.error(suspense.error);
+        updateScrapButton('enabled');
       }
     });
 }
@@ -80,6 +85,22 @@ const fieldIds = {
   city: '#/properties/city',
 } as const;
 
+function applyStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    button.pending {
+      animation: blink 2s alternate infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: .2; }
+      100% { opacity: 1; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function loadUrl(url: string | null): Observable<string | null> {
   if (!url) {
     return of(null);
@@ -90,7 +111,7 @@ function loadUrl(url: string | null): Observable<string | null> {
   }).pipe(switchMap((response) => (response.ok ? response.text() : of(null))));
 }
 
-function enableScrapButton({ onClick }: { onClick: () => void }) {
+function showScrapButton({ onClick }: { onClick: () => void }) {
   const actionsEl = document.querySelector('.steps-action');
   if (!actionsEl) {
     return;
@@ -109,6 +130,25 @@ function enableScrapButton({ onClick }: { onClick: () => void }) {
   scrapButtonEl.addEventListener('click', onClick);
 
   actionsEl.prepend(scrapButtonEl);
+}
+
+function updateScrapButton(status: 'disabled' | 'pending' | 'enabled') {
+  const scrapButton = getScrapButton();
+  if (!scrapButton) {
+    return;
+  }
+
+  if (['disabled', 'pending'].includes(status)) {
+    scrapButton.setAttribute('disabled', '');
+  } else {
+    scrapButton.removeAttribute('disabled');
+  }
+
+  if (status === 'pending') {
+    scrapButton.classList.add('pending');
+  } else {
+    scrapButton.classList.remove('pending');
+  }
 }
 
 function disableScrapButton() {
