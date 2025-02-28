@@ -6,8 +6,7 @@ import {
   share,
   startWith,
   Subject,
-  switchMap,
-  tap,
+  switchMap
 } from 'rxjs';
 import { KeyStorage } from './lib/domain/key-storage';
 import { scrapPage } from './lib/domain/scrap-page';
