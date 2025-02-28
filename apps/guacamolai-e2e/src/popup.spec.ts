@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, test } from './testing/fixtures';
 
 test('save gemini api key', async ({ goToExtensionPopup, page }) => {
   await goToExtensionPopup();

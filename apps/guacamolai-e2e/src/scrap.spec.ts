@@ -1,4 +1,4 @@
-import { test, expect } from './fixtures';
+import { test, expect } from './testing/fixtures';
 
 test.beforeEach(async ({ page, setUpApiKey }) => {
   await setUpApiKey();
