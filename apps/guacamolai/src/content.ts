@@ -1,4 +1,13 @@
-import { fromEvent, map, Observable, of, switchMap } from 'rxjs';
+import {
+  debounceTime,
+  filter,
+  fromEvent,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 import { KeyStorage } from './lib/domain/key-storage';
 import { scrapPage } from './lib/domain/scrap-page';
@@ -16,16 +25,27 @@ export async function main() {
         const key = await keyStorage.getGeminiApiKey();
         return key != null ? { llm: new Gemini(key), html } : null;
       }),
-      switchMap((args) => (args != null ? scrapPage(args) : of(null)))
+      switchMap((args) => (args != null ? scrapPage(args) : of(null))),
+      filter((talk) => talk != null)
     )
-    .subscribe(console.log);
+    .subscribe((talk) => {
+      trySetInputValue(fieldIds.title, talk.title);
+      trySetParagraphContent(fieldIds.description, talk.description);
+    });
 }
 
+const fieldIds = {
+  title: '#/properties/title',
+  url: '#/properties/activityUrl',
+  description: '#/properties/description',
+  online: '#/properties/onlineEvent',
+} as const;
+
 function watchUrlInputEl(): Observable<HTMLInputElement | null> {
-  return new Observable((observer) => {
+  return new Observable<HTMLInputElement | null>((observer) => {
     const mutationObserver = new MutationObserver(() => {
       const el = document.getElementById(fieldIds.url);
-      observer.next(el instanceof HTMLInputElement ? el : null);
+      observer.next(el != null ? (el as HTMLInputElement) : null);
     });
 
     mutationObserver.observe(document.body, {
@@ -34,7 +54,7 @@ function watchUrlInputEl(): Observable<HTMLInputElement | null> {
     });
 
     return () => mutationObserver.disconnect();
-  });
+  }).pipe(debounceTime(50));
 }
 
 function watchInputValue(
@@ -45,8 +65,9 @@ function watchInputValue(
   }
 
   return fromEvent(el, 'input').pipe(
+    startWith(getInputValue(el)),
     map(() => {
-      const url = el.value.trim();
+      const url = getInputValue(el);
       return isValidUrl(url) ? url : null;
     })
   );
@@ -62,8 +83,47 @@ function loadUrl(url: string | null): Observable<string | null> {
   );
 }
 
-const fieldIds = {
-  url: '#/properties/activityUrl',
-} as const;
+function trySetInputValue(id: string, value: string) {
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLInputElement)) {
+    return;
+  }
+  el.value = value;
+}
+
+function trySetParagraphContent(id: string, content: string) {
+  const el = document.getElementById(id);
+  if (!el) {
+    return;
+  }
+  el.textContent = content;
+}
+
+function trySetBooleanValue(id: string, value: boolean | undefined) {
+  const el = document.getElementById(id);
+  const spanEls = Array.from(el?.querySelectorAll('span') ?? []);
+  const yesEl = spanEls.find((spanEl) => compareText(spanEl, 'yes'));
+  const noEl = spanEls.find((spanEl) => compareText(spanEl, 'no'));
+  if (!yesEl || !noEl) {
+    return;
+  }
+
+  switch (value) {
+    case true:
+      yesEl.click();
+      break;
+    case false:
+      noEl.click();
+      break;
+  }
+}
+
+function compareText(el: HTMLElement, text: string): boolean {
+  return el.textContent?.trim().toLocaleLowerCase() === text;
+}
+
+function getInputValue(el: HTMLInputElement): string {
+  return el.value.trim();
+}
 
 main();

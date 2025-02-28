@@ -1,13 +1,6 @@
 export class ActivityForm extends HTMLElement {
-  #shadowRoot;
-
-  constructor() {
-    super();
-    this.#shadowRoot = this.attachShadow({ mode: 'open' });
-  }
-
   connectedCallback() {
-    this.#shadowRoot.innerHTML = `
+    this.innerHTML = `
       <style>
         fieldset {
           display: flex;
@@ -18,6 +11,11 @@ export class ActivityForm extends HTMLElement {
             margin-top: 1rem;
           }
         }
+
+        p {
+          min-height: 100px;
+          width: 100%;
+        }
       </style>
       <fieldset>
         <legend>Activity Form</legend>
@@ -25,7 +23,7 @@ export class ActivityForm extends HTMLElement {
         <input type="text" id="#/properties/title" />
 
         <label for="#/properties/description">Description</label>
-        <quill-editor id="#/properties/description">
+        <quill-editor id="#/properties/description" data-testid="description">
           <p></p>
         </quill-editor>
 

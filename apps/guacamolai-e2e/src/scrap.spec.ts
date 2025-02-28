@@ -1,8 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
-test('loads title', async ({ page }) => {
-  test.fixme();
+test.beforeEach(async ({ setUpApiKey }) => {
+  await setUpApiKey();
+});
 
+test('loads talk', async ({ page }) => {
   await page.goto('/');
 
   await page.getByRole('button', { name: 'Add Activity' }).click();
@@ -11,5 +13,12 @@ test('loads title', async ({ page }) => {
     .getByLabel('URL')
     .fill('https://ng-de.org/speakers/younes-jaaidi/');
 
-  await expect(page.getByLabel('Title')).toHaveText('Fake it till you Mock it');
+  await expect
+    .soft(page.getByLabel('Title'))
+    .toHaveValue('Fake it till you Mock it');
+  await expect
+    .soft(page.getByTestId('description'))
+    .toContainText(
+      'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
+    );
 });

@@ -2,11 +2,18 @@ import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
 
-export const test = base.extend<{
+export interface Fixtures {
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
+  setUpApiKey: () => Promise<void>;
   _extensionId: string;
-}>({
+}
+
+export interface Options {
+  geminiApiKey: string | null;
+}
+
+export const test = base.extend<Fixtures & Options>({
   // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
     const pathToExtension = path.join(workspaceRoot, 'apps/guacamolai/dist');
@@ -25,6 +32,17 @@ export const test = base.extend<{
       await page.goto(`chrome-extension://${_extensionId}/popup.html`);
     });
   },
+  setUpApiKey: async ({ goToExtensionPopup, geminiApiKey, page }, use) => {
+    use(async () => {
+      if (!geminiApiKey) {
+        throw new Error('geminiApiKey is required');
+      }
+
+      await goToExtensionPopup();
+      await page.fill('input', geminiApiKey);
+    });
+  },
+  geminiApiKey: [null, { option: true }],
   _extensionId: async ({ context }, use) => {
     let [background] = context.serviceWorkers();
     if (!background) {
