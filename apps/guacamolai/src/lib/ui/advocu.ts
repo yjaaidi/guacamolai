@@ -21,12 +21,14 @@ export function updateForm(talk: Talk) {
     talk.description
   );
   trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
+
   if (talk.country) {
     trySetInputValue(
       document.getElementById(fieldIds.country)?.querySelector('input') ?? null,
       talk.country
     );
   }
+
   if (talk.city) {
     trySetInputValue(document.getElementById(fieldIds.city), talk.city);
   }

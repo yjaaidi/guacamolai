@@ -1,6 +1,5 @@
-import { Observable, of, fromEvent, startWith, map, debounceTime } from 'rxjs';
+import { debounceTime, fromEvent, map, Observable, of, startWith } from 'rxjs';
 import { isValidUrl } from '../utils/is-valid-url';
-import { fieldIds } from '../../content';
 
 export function watchInputValue(
   el: HTMLInputElement | null
