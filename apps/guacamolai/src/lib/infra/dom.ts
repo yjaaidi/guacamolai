@@ -56,11 +56,13 @@ export function trySetBooleanValue(
   }
 }
 
-export function watchUrlInputEl(): Observable<HTMLInputElement | null> {
-  return new Observable<HTMLInputElement | null>((observer) => {
+export function watchEl<T extends HTMLElement>(
+  id: string
+): Observable<T | null> {
+  return new Observable<T | null>((observer) => {
     const mutationObserver = new MutationObserver(() => {
-      const el = document.getElementById(fieldIds.url);
-      observer.next(el != null ? (el as HTMLInputElement) : null);
+      const el = document.getElementById(id);
+      observer.next(el != null ? (el as T) : null);
     });
 
     mutationObserver.observe(document.body, {

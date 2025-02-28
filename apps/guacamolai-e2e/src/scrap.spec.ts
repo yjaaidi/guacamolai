@@ -13,6 +13,8 @@ test('loads talk', async ({ page }) => {
     .getByLabel('URL')
     .fill('https://ng-de.org/speakers/younes-jaaidi/');
 
+  await page.getByRole('button', { name: 'Scrap' }).click();
+
   await expect
     .soft(page.getByLabel('Title'))
     .toHaveValue('Fake it till you Mock it');

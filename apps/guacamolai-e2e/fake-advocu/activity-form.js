@@ -61,6 +61,10 @@ export class ActivityForm extends HTMLElement {
 
         <label for="#/properties/activityUrl">URL</label>
         <input type="text" id="#/properties/activityUrl" />
+    
+        <div class="steps-action">
+          <button>NEXT</button>
+        </div>
       </fieldset>
     `;
 
