@@ -26,7 +26,7 @@ export class PopupElement extends HTMLElement {
       </style>
       <main class="container">
         <h1>GuacamolAI</h1>
-        <input placeholder="Gemini API Key" type="text">
+        <input placeholder="Gemini API Key" type="password">
         <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Gemini API Key</a>
       </main>
     `;
