@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "out-tsc/guacamolai",
     "lib": ["dom"],
-    "types": ["node"],
+    "types": ["chrome", "node"],
     "rootDir": "src",
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -28,5 +28,5 @@
     "eslint.config.cjs",
     "eslint.config.mjs"
   ],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }

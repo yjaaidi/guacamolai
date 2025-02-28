@@ -2,12 +2,10 @@ import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
 
-const EXTENSION_ID = Symbol('extensionId');
-
 export const test = base.extend<{
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
-  [EXTENSION_ID]: string;
+  _extensionId: string;
 }>({
   // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
@@ -22,10 +20,12 @@ export const test = base.extend<{
     await use(context);
     await context.close();
   },
-  goToExtensionPopup: async ({ page, [EXTENSION_ID]: extensionId }) => {
-    await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  goToExtensionPopup: async ({ page, _extensionId }, use) => {
+    use(async () => {
+      await page.goto(`chrome-extension://${_extensionId}/popup.html`);
+    });
   },
-  [EXTENSION_ID]: async ({ context }, use) => {
+  _extensionId: async ({ context }, use) => {
     let [background] = context.serviceWorkers();
     if (!background) {
       background = await context.waitForEvent('serviceworker');
