@@ -13,7 +13,10 @@ test('loads talk', async ({ page }) => {
     .getByLabel('URL')
     .fill('https://ng-de.org/speakers/younes-jaaidi/');
 
-  await page.getByRole('button', { name: 'Scrap' }).click();
+  const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
+  await scrapButtonEl.click();
+
+  await expect.soft(scrapButtonEl).toBeDisabled();
 
   await expect
     .soft(page.getByLabel('Title'))
@@ -25,4 +28,5 @@ test('loads talk', async ({ page }) => {
     );
   await expect.soft(page.getByTestId('online-yes')).not.toHaveClass('checked');
   await expect.soft(page.getByTestId('online-no')).toHaveClass('checked');
+  await expect.soft(scrapButtonEl).toBeEnabled();
 });

@@ -22,6 +22,7 @@ import {
 } from './lib/infra/dom';
 import { Gemini } from './lib/infra/gemini';
 import { isValidUrl } from './lib/utils/is-valid-url';
+import { suspensify } from '@jscutlery/operators';
 
 export async function main() {
   const keyStorage = new KeyStorage();
@@ -30,12 +31,11 @@ export async function main() {
     switchMap(watchInputValue),
     share()
   );
+  const onClick = () => click$.next();
 
   url$.subscribe((url) => {
     if (url && isValidUrl(url)) {
-      tryShowScrapButton({
-        onClick: () => click$.next(),
-      });
+      enableScrapButton({ onClick });
     } else {
       disableScrapButton();
     }
@@ -53,13 +53,22 @@ export async function main() {
             return key != null ? { llm: new Gemini(key), html } : null;
           }),
           switchMap((args) => (args != null ? scrapPage(args) : of(null))),
+          suspensify(),
           /* ... and stop if the URL changes. */
           takeUntil(url$)
         )
       ),
       filter((talk) => talk != null)
     )
-    .subscribe(updateForm);
+    .subscribe((suspense) => {
+      if (suspense.pending) {
+        disableScrapButton();
+      }
+      if (suspense.hasValue && suspense.value != null) {
+        enableScrapButton({ onClick });
+        updateForm(suspense.value);
+      }
+    });
 }
 
 const fieldIds = {
@@ -81,7 +90,7 @@ function loadUrl(url: string | null): Observable<string | null> {
   }).pipe(switchMap((response) => (response.ok ? response.text() : of(null))));
 }
 
-function tryShowScrapButton({ onClick }: { onClick: () => void }) {
+function enableScrapButton({ onClick }: { onClick: () => void }) {
   const actionsEl = document.querySelector('.steps-action');
   if (!actionsEl) {
     return;
