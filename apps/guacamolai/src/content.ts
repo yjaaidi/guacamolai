@@ -1,13 +1,5 @@
 import { suspensify } from '@jscutlery/operators';
-import {
-  filter,
-  map,
-  of,
-  share,
-  startWith,
-  Subject,
-  switchMap
-} from 'rxjs';
+import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
 import { KeyStorage } from './lib/domain/key-storage';
 import { scrapPage } from './lib/domain/scrap-page';
 import { watchEl, watchInputValue } from './lib/infra/dom';
@@ -16,15 +8,14 @@ import { Gemini } from './lib/infra/gemini';
 import { fieldIds, updateForm } from './lib/ui/advocu';
 import { tryInjectScrapButton, updateScrapButton } from './lib/ui/scrap-button';
 import { isValidUrl } from './lib/utils/is-valid-url';
+import { getLlm } from './lib/domain/get-llm';
 
 export async function main() {
-  const keyStorage = new KeyStorage();
-  const key = await keyStorage.getGeminiApiKey();
-  if (key == null) {
+  const llm = await getLlm();
+  if (llm == null) {
     return;
   }
 
-  const llm = new Gemini(key);
   const click$ = new Subject<void>();
 
   const urlInput$ = watchEl<HTMLInputElement>(fieldIds.url).pipe(share());
