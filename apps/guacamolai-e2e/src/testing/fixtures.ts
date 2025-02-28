@@ -1,6 +1,8 @@
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
+import { authFilePath } from './auth-user';
+import { readFile } from 'fs/promises';
 
 export interface Fixtures {
   context: BrowserContext;
@@ -24,6 +26,8 @@ export const test = base.extend<Fixtures & Options>({
         `--load-extension=${pathToExtension}`,
       ],
     });
+    const { cookies } = JSON.parse(await readFile(authFilePath, 'utf-8'));
+    context.addCookies(cookies);
     await use(context);
     await context.close();
   },

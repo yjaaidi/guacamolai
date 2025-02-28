@@ -7,7 +7,7 @@ import { authFilePath } from './src/testing/auth-user';
 import { SetupOptions } from './src/testing/setup-fixtures';
 import { Options } from './src/testing/fixtures';
 
-const baseURL = `http://localhost:5173`;
+const baseURL = 'https://gde.advocu.com';
 
 dotEnvConfig({ path: join(workspaceRoot, '.env.local') });
 
@@ -21,16 +21,9 @@ export default defineConfig<Options & SetupOptions>({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
-    geminiApiKey: process.env.GEMINI_API_KEY,
+    geminiApiKey: getEnv('GEMINI_API_KEY'),
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-  },
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: `bun vite apps/guacamolai-e2e/fake-advocu`,
-    url: baseURL,
-    cwd: workspaceRoot,
-    reuseExistingServer: true,
   },
   projects: [
     {

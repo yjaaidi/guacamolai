@@ -8,7 +8,7 @@ test('authenticate', async ({ page, advocuCredentials }) => {
     (el) => el.click()
   );
 
-  await page.goto('https://gde.advocu.com');
+  await page.goto('/');
 
   await page
     .getByRole('textbox', { name: 'Email' })
