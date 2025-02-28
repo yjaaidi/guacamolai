@@ -5,7 +5,7 @@ export interface Llm {
 }
 
 export interface PromptRequest {
-  prompt: string;
+  prompt: string[];
   schema: Schema;
 }
 

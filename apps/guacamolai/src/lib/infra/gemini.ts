@@ -11,15 +11,7 @@ export class Gemini implements Llm {
 
   prompt<T>(request: PromptRequest): Observable<T> {
     const geminiRequest: GenerateContentRequest = {
-      contents: [
-        {
-          parts: [
-            {
-              text: request.prompt,
-            },
-          ],
-        },
-      ],
+      contents: [{ parts: request.prompt.map((text) => ({ text })) }],
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: request.schema,

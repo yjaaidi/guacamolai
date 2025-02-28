@@ -2,23 +2,26 @@ import { Observable, of } from 'rxjs';
 import { Talk } from '../../content';
 import { Llm } from '../core/llm';
 
-export function scrapUrl({
+export function scrapPage({
   llm,
-  url,
+  html,
 }: {
   llm: Llm;
-  url: string | null;
+  html: string | null;
 }): Observable<Talk | null> {
-  if (url === null) {
+  if (html === null) {
     return of(null);
   }
 
   return llm.prompt<Talk>({
-    prompt: `Scrap the content of this page ${url} and try to extract the presentation of a talk.
+    prompt: [
+      `Scrap the content of the page below and try to extract the presentation of a talk.
             Return the result in the following JSON format:
             - title: the title of the talk
             - description: the description of the talk
             `,
+      html,
+    ],
     schema: {
       type: 'object',
       properties: {
