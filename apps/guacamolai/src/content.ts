@@ -31,6 +31,7 @@ export async function main() {
     .subscribe((talk) => {
       trySetInputValue(fieldIds.title, talk.title);
       trySetParagraphContent(fieldIds.description, talk.description);
+      trySetBooleanValue(fieldIds.online, talk.online);
     });
 }
 

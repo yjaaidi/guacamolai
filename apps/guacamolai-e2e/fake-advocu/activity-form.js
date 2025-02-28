@@ -1,4 +1,8 @@
+import { fromEvent, Subscription } from 'rxjs';
+
 export class ActivityForm extends HTMLElement {
+  #sub = new Subscription();
+
   connectedCallback() {
     this.innerHTML = `
       <style>
@@ -15,6 +19,10 @@ export class ActivityForm extends HTMLElement {
         p {
           min-height: 100px;
           width: 100%;
+        }
+
+        .checked {
+          font-weight: bold;
         }
       </style>
       <fieldset>
@@ -34,8 +42,8 @@ export class ActivityForm extends HTMLElement {
 
         <label for="#/properties/onlineEvent">Online</label>
         <nz-radio-group id="#/properties/onlineEvent">
-          <span>Yes</span>
-          <span>No</span>
+          <span data-testid="online-yes">Yes</span>
+          <span data-testid="online-no">No</span>
         </nz-radio-group>
 
         <label for="#/properties/country">Country</label>
@@ -55,5 +63,25 @@ export class ActivityForm extends HTMLElement {
         <input type="text" id="#/properties/activityUrl" />
       </fieldset>
     `;
+
+    this.#initOnline();
+  }
+
+  disconnectedCallback() {
+    this.#sub.unsubscribe();
+  }
+
+  #initOnline() {
+    const spanEls = Array.from(
+      this.querySelectorAll('#\\#\\/properties\\/onlineEvent span')
+    );
+    const yesEl = spanEls.find((el) => el.textContent === 'Yes');
+    const noEl = spanEls.find((el) => el.textContent === 'No');
+    const setOnline = (online) => {
+      yesEl.classList.toggle('checked', online);
+      noEl.classList.toggle('checked', !online);
+    };
+    this.#sub.add(fromEvent(yesEl, 'click').subscribe(() => setOnline(true)));
+    this.#sub.add(fromEvent(noEl, 'click').subscribe(() => setOnline(false)));
   }
 }
