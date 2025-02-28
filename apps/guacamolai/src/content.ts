@@ -51,7 +51,7 @@ function loadUrl(url: string | null): Observable<string | null> {
 function updateForm(talk: Talk) {
   trySetInputValue(document.getElementById(fieldIds.title), talk.title);
   trySetParagraphContent(
-    document.getElementById(fieldIds.description),
+    document.getElementById(fieldIds.description)?.querySelector('p') ?? null,
     talk.description
   );
   trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
