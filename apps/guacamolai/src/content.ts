@@ -14,22 +14,9 @@ export async function main() {
       switchMap(loadUrl),
       switchMap(async (html) => {
         const key = await keyStorage.getGeminiApiKey();
-        if (key == null) {
-          return null;
-        }
-
-        return {
-          llm: new Gemini(key),
-          html,
-        };
+        return key != null ? { llm: new Gemini(key), html } : null;
       }),
-      switchMap((args) => {
-        if (args == null) {
-          return of(null);
-        }
-
-        return scrapPage(args);
-      })
+      switchMap((args) => (args != null ? scrapPage(args) : of(null)))
     )
     .subscribe(console.log);
 }
