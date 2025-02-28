@@ -1,14 +1,26 @@
 import { test, expect } from './fixtures';
 
-test.beforeEach(async ({ setUpApiKey }) => {
+test.beforeEach(async ({ page, setUpApiKey }) => {
   await setUpApiKey();
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Add Activity' }).click();
 });
 
-test('loads talk', async ({ page }) => {
-  await page.goto('/');
+test('disables scrap button initially as URL is empty', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Scrap' })).toBeDisabled();
+});
 
-  await page.getByRole('button', { name: 'Add Activity' }).click();
+test('disables scrap button if URL becomes invalid', async ({ page }) => {
+  await page
+    .getByLabel('URL')
+    .fill('https://ng-de.org/speakers/younes-jaaidi/');
 
+  await page.getByLabel('URL').fill('INVALID_URL');
+
+  await expect(page.getByRole('button', { name: 'Scrap' })).toBeDisabled();
+});
+
+test('disables scrap button on click', async ({ page }) => {
   await page
     .getByLabel('URL')
     .fill('https://ng-de.org/speakers/younes-jaaidi/');
@@ -16,7 +28,16 @@ test('loads talk', async ({ page }) => {
   const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
   await scrapButtonEl.click();
 
-  await expect.soft(scrapButtonEl).toBeDisabled();
+  await expect(scrapButtonEl).toBeDisabled();
+});
+
+test('loads talk', async ({ page }) => {
+  await page
+    .getByLabel('URL')
+    .fill('https://ng-de.org/speakers/younes-jaaidi/');
+
+  const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
+  await scrapButtonEl.click();
 
   await expect
     .soft(page.getByLabel('Title'))

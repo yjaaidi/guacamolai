@@ -1,26 +1,17 @@
 import { suspensify } from '@jscutlery/operators';
-import {
-  filter,
-  map,
-  share,
-  Subject,
-  switchMap,
-  takeUntil,
-  withLatestFrom,
-} from 'rxjs';
+import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
 import { KeyStorage } from './lib/domain/key-storage';
 import { scrapPage } from './lib/domain/scrap-page';
 import { watchEl, watchInputValue } from './lib/infra/dom';
+import { fetchHtmlPage } from './lib/infra/fetch-html-page';
 import { Gemini } from './lib/infra/gemini';
-import { isValidUrl } from './lib/utils/is-valid-url';
 import { fieldIds, updateForm } from './lib/ui/advocu';
 import {
-  showScrapButton,
-  disableScrapButton,
-  updateScrapButton,
   applyScrapButtonStyles,
+  tryInjectScrapButton,
+  updateScrapButton,
 } from './lib/ui/scrap-button';
-import { fetchHtmlPage } from './lib/infra/fetch-html-page';
+import { isValidUrl } from './lib/utils/is-valid-url';
 
 export async function main() {
   const keyStorage = new KeyStorage();
@@ -31,50 +22,52 @@ export async function main() {
 
   const llm = new Gemini(key);
   const click$ = new Subject<void>();
-  const url$ = watchEl<HTMLInputElement>(fieldIds.url).pipe(
-    switchMap(watchInputValue),
-    share()
-  );
+
+  const urlInput$ = watchEl<HTMLInputElement>(fieldIds.url).pipe(share());
+
+  const url$ = urlInput$.pipe(switchMap(watchInputValue), share());
+
   const page$ = url$.pipe(
-    filter((url) => url != null),
-    filter(isValidUrl),
-    switchMap(fetchHtmlPage),
-    filter((page) => page != null),
+    switchMap((url) => {
+      if (url != null && isValidUrl(url)) {
+        return fetchHtmlPage(url).pipe(startWith(null));
+      }
+      return of(null);
+    }),
     share()
   );
   const onClick = () => click$.next();
 
   applyScrapButtonStyles();
 
-  page$.subscribe((page) => {
-    if (page != null) {
-      showScrapButton({ onClick });
-    } else {
-      disableScrapButton();
-    }
-  });
+  /* Show scrap button when url input is detected. */
+  urlInput$.subscribe(() => tryInjectScrapButton({ onClick }));
 
-  click$
+  /* Enable/disable scrap button depending on whether we have the HTML or not. */
+  page$.subscribe((page) =>
+    updateScrapButton(page != null ? 'enabled' : 'disabled')
+  );
+
+  page$
     .pipe(
-      withLatestFrom(page$),
-      map(([, page]) => page),
-      /* Fetch URL and scrap... */
-      switchMap(({ html }) =>
-        scrapPage({ html, llm }).pipe(
-          suspensify(),
-          /* ... and stop if the URL changes. */
-          takeUntil(url$)
-        )
+      filter((page) => page != null),
+      switchMap((page) => click$.pipe(map(() => page))),
+      switchMap((page) =>
+        scrapPage({ html: page.html, llm }).pipe(suspensify())
       )
     )
     .subscribe((suspense) => {
       if (suspense.pending) {
         updateScrapButton('pending');
       }
-      if (suspense.hasValue && suspense.value != null) {
+
+      if (suspense.hasValue) {
+        if (suspense.value != null) {
+          updateForm(suspense.value);
+        }
         updateScrapButton('enabled');
-        updateForm(suspense.value);
       }
+
       if (suspense.hasError) {
         console.error(suspense.error);
         updateScrapButton('enabled');

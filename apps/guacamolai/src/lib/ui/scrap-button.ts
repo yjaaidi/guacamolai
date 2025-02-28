@@ -1,16 +1,14 @@
-export function showScrapButton({ onClick }: { onClick: () => void }) {
+export function tryInjectScrapButton({ onClick }: { onClick: () => void }) {
   const actionsEl = document.querySelector('.steps-action');
   if (!actionsEl) {
     return;
   }
 
-  let scrapButtonEl = getScrapButton();
-  if (scrapButtonEl) {
-    scrapButtonEl.removeAttribute('disabled');
+  if (getScrapButton()) {
     return;
   }
 
-  scrapButtonEl = document.createElement('button');
+  const scrapButtonEl = document.createElement('button');
   scrapButtonEl.id = SCRAP_BUTTON_ID;
   scrapButtonEl.textContent = '✨ Scrap';
   scrapButtonEl.classList.add('ant-btn', 'ant-btn-default');
@@ -52,10 +50,6 @@ export function updateScrapButton(status: 'disabled' | 'pending' | 'enabled') {
   } else {
     scrapButton.classList.remove('pending');
   }
-}
-
-export function disableScrapButton() {
-  getScrapButton()?.setAttribute('disabled', '');
 }
 
 function getScrapButton() {
