@@ -17,11 +17,17 @@ export const fieldIds = {
 } as const;
 
 export async function updateForm(talk: Talk) {
-  trySetInputValue(document.getElementById(fieldIds.title), talk.title);
-  trySetParagraphContent(
-    document.getElementById(fieldIds.description)?.querySelector('p') ?? null,
-    talk.description
-  );
+  const locators = {
+    title: new Locator(() => document.getElementById(fieldIds.title)),
+    date: new Locator(() => screen.getByPlaceholderText('Select date')),
+    description: new Locator(() =>
+      document.getElementById(fieldIds.description)?.querySelector('p')
+    ),
+  };
+
+  await locators.title.fill(talk.title);
+  await locators.description.setTextContent(talk.description);
+
   trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
 
   if (talk.country) {
@@ -33,9 +39,7 @@ export async function updateForm(talk: Talk) {
   }
 
   if (talk.date) {
-    await new Locator(() => screen.getByPlaceholderText('Select date')).fill(
-      talk.date
-    );
+    await locators.date.fill(talk.date);
   }
 }
 
@@ -70,6 +74,12 @@ class Locator<ELEMENT extends HTMLElement> {
     await waitForElementAndTry(this.#locatorFn, async (el) => {
       await userEvent.clear(el);
       await userEvent.type(el, value);
+    });
+  }
+
+  async setTextContent(description: string) {
+    await waitForElementAndTry(this.#locatorFn, async (el) => {
+      el.textContent = description;
     });
   }
 }
