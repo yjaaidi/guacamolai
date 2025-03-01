@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/guacamolai-e2e"
-    },
-    {
       "path": "./apps/guacamolai"
     }
   ]
