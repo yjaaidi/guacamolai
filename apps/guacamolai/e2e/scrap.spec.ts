@@ -8,6 +8,7 @@ test.beforeEach(async ({ page, setUpLlmFake }) => {
       online: false,
       city: 'Berlin',
       country: 'Germany',
+      date: '2024-10-01T00:00:00Z',
     },
   });
 
@@ -69,5 +70,8 @@ test('loads talk', async ({ page }) => {
     );
   await expect.soft(page.getByLabel('Yes')).not.toBeChecked();
   await expect.soft(page.getByLabel('No')).toBeChecked();
+  await expect
+    .soft(page.getByPlaceholder('Select date'))
+    .toHaveValue('2024-10-01');
   await expect.soft(scrapButtonEl).toBeEnabled();
 });

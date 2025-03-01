@@ -31,6 +31,10 @@ export async function updateForm(talk: Talk) {
   if (talk.city) {
     await setCity(talk.city);
   }
+
+  if (talk.date) {
+    await setDate(talk.date);
+  }
 }
 
 async function setCountry(country: string) {
@@ -54,6 +58,13 @@ async function setCity(city: string) {
   await waitForElementAndTry(
     () => screen.getAllByText(city, { selector: '.pac-item span' })[0],
     (el) => userEvent.click(el)
+  );
+}
+
+async function setDate(date: string) {
+  await waitForElementAndTry<HTMLInputElement>(
+    () => screen.getByPlaceholderText<HTMLInputElement>('Select date'),
+    (el) => fill(el, date)
   );
 }
 
