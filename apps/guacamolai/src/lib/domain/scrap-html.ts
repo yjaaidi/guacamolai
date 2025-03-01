@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Llm } from '../core/llm';
 import { Talk } from '../core/talk';
 
@@ -13,9 +13,10 @@ export function scrapHtml({
     return of(null);
   }
 
-  return llm.prompt<Talk>({
-    prompt: [
-      `Scrap the content of the page below and try to extract the presentation of a talk.
+  return llm
+    .prompt<Talk>({
+      prompt: [
+        `Scrap the content of the page below and try to extract the presentation of a talk.
 Return the result in the following JSON format:
 - title: the title of the talk
 - description: the description of the talk
@@ -27,21 +28,32 @@ Return the result in the following JSON format:
 
 Trim all the fields.
 `,
-      html,
-    ],
-    schema: {
-      type: 'object',
-      properties: {
-        title: { type: 'string' },
-        description: { type: 'string' },
-        attendees: { type: 'number' },
-        online: { type: 'boolean' },
-        date: { type: 'string', format: 'date-time' },
-        city: { type: 'string' },
-        country: { type: 'string' },
+        html,
+      ],
+      schema: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          description: { type: 'string' },
+          attendees: { type: 'number' },
+          online: { type: 'boolean' },
+          date: { type: 'string', format: 'date-time' },
+          city: { type: 'string' },
+          country: { type: 'string' },
+        },
+        required: ['title', 'description'],
       },
-      required: ['title', 'description'],
-    },
-  });
+    })
+    .pipe(
+      map((talk) => {
+        if (talk.date) {
+          talk = {
+            ...talk,
+            date: new Date(talk.date).toISOString().split('T')[0],
+          };
+        }
+        return talk;
+      })
+    );
 }
 export const SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
