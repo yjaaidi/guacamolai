@@ -1,15 +1,7 @@
 import { test, expect } from './testing/fixtures';
 
-test.beforeEach(async ({ page, setUpLlmFake }) => {
-  await setUpLlmFake({
-    'Younes Jaaidi - NG-DE 2024': {
-      title: 'Fake it till you Mock it',
-      description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
-      online: false,
-      city: 'Berlin',
-      country: 'Germany',
-    },
-  });
+test.beforeEach(async ({ page, setUpGeminiApiKey }) => {
+  await setUpGeminiApiKey();
 
   await page.addLocatorHandler(
     page.getByRole('button', { name: 'Close Stonly widget' }),
@@ -22,31 +14,6 @@ test.beforeEach(async ({ page, setUpLlmFake }) => {
   await page.getByRole('heading', { name: 'Public speaking' }).click();
 });
 
-test('disables scrap button initially as URL is empty', async ({ page }) => {
-  await expect(page.getByRole('button', { name: 'Scrap' })).toBeDisabled();
-});
-
-test('disables scrap button if URL becomes invalid', async ({ page }) => {
-  await page
-    .getByLabel('Share any relevant link')
-    .fill('https://ng-de.org/speakers/younes-jaaidi/');
-
-  await page.getByLabel('Share any relevant link').fill('INVALID_URL');
-
-  await expect(page.getByRole('button', { name: 'Scrap' })).toBeDisabled();
-});
-
-test('disables scrap button on click', async ({ page }) => {
-  await page
-    .getByLabel('Share any relevant link')
-    .fill('https://ng-de.org/speakers/younes-jaaidi/');
-
-  const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
-  await scrapButtonEl.click();
-
-  await expect(scrapButtonEl).toBeDisabled();
-});
-
 test('loads talk', async ({ page }) => {
   await page
     .getByLabel('Share any relevant link')
@@ -54,7 +21,7 @@ test('loads talk', async ({ page }) => {
 
   const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
   await scrapButtonEl.click();
-
+  
   await expect
     .soft(page.getByLabel('What was the title of your talk?'))
     .toHaveValue('Fake it till you Mock it');

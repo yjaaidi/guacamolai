@@ -1,6 +1,6 @@
 import { firstValueFrom } from 'rxjs';
 import { Gemini } from '../infra/gemini';
-import { scrapPage as scrapHtml } from './scrap-page';
+import { scrapHtml } from './scrap-html';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 
 describe(scrapHtml.name, () => {

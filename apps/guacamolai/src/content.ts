@@ -1,14 +1,12 @@
 import { suspensify } from '@jscutlery/operators';
 import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
-import { KeyStorage } from './lib/domain/key-storage';
-import { scrapPage } from './lib/domain/scrap-page';
+import { getLlm } from './lib/domain/get-llm';
+import { scrapHtml } from './lib/domain/scrap-html';
 import { watchEl, watchInputValue } from './lib/infra/dom';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
-import { Gemini } from './lib/infra/gemini';
 import { fieldIds, updateForm } from './lib/ui/advocu';
 import { tryInjectScrapButton, updateScrapButton } from './lib/ui/scrap-button';
 import { isValidUrl } from './lib/utils/is-valid-url';
-import { getLlm } from './lib/domain/get-llm';
 
 export async function main() {
   const llm = await getLlm();
@@ -44,7 +42,7 @@ export async function main() {
   const scrap$ = page$.pipe(
     filter((page) => page != null),
     switchMap((page) => click$.pipe(map(() => page))),
-    switchMap((page) => scrapPage({ html: page.html, llm }).pipe(suspensify())),
+    switchMap((page) => scrapHtml({ html: page.html, llm }).pipe(suspensify())),
     share()
   );
 

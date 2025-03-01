@@ -1,13 +1,16 @@
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
-import path from 'path';
-import { authFilePath } from './auth-user';
 import { readFile } from 'fs/promises';
+import path from 'path';
+import { Talk } from '../../src/lib/core/talk';
+import { LLM_FAKE_KEY } from '../../src/lib/domain/get-llm';
+import { authFilePath } from './auth-user';
 
 export interface Fixtures {
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
-  setUpApiKey: () => Promise<void>;
+  setUpGeminiApiKey: () => Promise<void>;
+  setUpLlmFake: (responses: Record<string, Talk>) => Promise<void>;
   _extensionId: string;
 }
 
@@ -32,18 +35,31 @@ export const test = base.extend<Fixtures & Options>({
     await context.close();
   },
   goToExtensionPopup: async ({ page, _extensionId }, use) => {
-    use(async () => {
+    await use(async () => {
       await page.goto(`chrome-extension://${_extensionId}/popup.html`);
     });
   },
-  setUpApiKey: async ({ goToExtensionPopup, geminiApiKey, page }, use) => {
-    use(async () => {
+  setUpGeminiApiKey: async (
+    { goToExtensionPopup, geminiApiKey, page },
+    use
+  ) => {
+    await use(async () => {
       if (!geminiApiKey) {
         throw new Error('geminiApiKey is required');
       }
 
       await goToExtensionPopup();
       await page.fill('input', geminiApiKey);
+    });
+  },
+  setUpLlmFake: async ({ page }, use) => {
+    await use(async (responses) => {
+      await page.goto('/');
+      await page.evaluate(
+        ({ LLM_FAKE_KEY, responses }) =>
+          localStorage.setItem(LLM_FAKE_KEY, JSON.stringify(responses)),
+        { LLM_FAKE_KEY, responses }
+      );
     });
   },
   geminiApiKey: [null, { option: true }],
