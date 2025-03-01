@@ -33,39 +33,49 @@ export async function updateForm(talk: Talk) {
   }
 
   if (talk.date) {
-    await setDate(talk.date);
+    await new Locator(() => screen.getByPlaceholderText('Select date')).fill(
+      talk.date
+    );
   }
 }
 
 async function setCountry(country: string) {
-  await waitForElementAndTry<HTMLInputElement>(
-    () => document.getElementById(fieldIds.country)?.querySelector('input'),
-    (el) => userEvent.type(el, country)
-  );
-
-  await waitForElementAndTry(
-    () => document.querySelector<HTMLElement>(`[title="${country}"]`),
-    (el) => userEvent.click(el)
-  );
+  await new Locator(() =>
+    document.getElementById(fieldIds.country)?.querySelector('input')
+  ).fill(country);
+  await new Locator(() =>
+    document.querySelector<HTMLElement>(`[title="${country}"]`)
+  ).click();
 }
 
 async function setCity(city: string) {
-  await waitForElementAndTry<HTMLElement>(
-    () => document.getElementById(fieldIds.city),
-    (el) => fill(el, city)
-  );
-
-  await waitForElementAndTry(
-    () => screen.getAllByText(city, { selector: '.pac-item span' })[0],
-    (el) => userEvent.click(el)
-  );
+  await new Locator(() => document.getElementById(fieldIds.city)).fill(city);
+  await new Locator(
+    () => screen.getAllByText(city, { selector: '.pac-item span' })[0]
+  ).click();
 }
 
-async function setDate(date: string) {
-  await waitForElementAndTry<HTMLInputElement>(
-    () => screen.getByPlaceholderText<HTMLInputElement>('Select date'),
-    (el) => fill(el, date)
-  );
+class Locator<ELEMENT extends HTMLElement> {
+  #locatorFn: LocatorFn<ELEMENT>;
+
+  constructor(locatorFn: LocatorFn<ELEMENT>) {
+    this.#locatorFn = locatorFn;
+  }
+
+  async click() {
+    await waitForElementAndTry(this.#locatorFn, (el) => userEvent.click(el));
+  }
+
+  async fill(value: string) {
+    await waitForElementAndTry(this.#locatorFn, async (el) => {
+      await userEvent.clear(el);
+      await userEvent.type(el, value);
+    });
+  }
+}
+
+interface LocatorFn<ELEMENT> {
+  (): ELEMENT | null | undefined;
 }
 
 async function waitForElementAndTry<T>(
@@ -84,9 +94,4 @@ async function waitForElementAndTry<T>(
   } catch {
     return;
   }
-}
-
-async function fill(el: HTMLElement, value: string) {
-  await userEvent.clear(el);
-  await userEvent.type(el, value);
 }
