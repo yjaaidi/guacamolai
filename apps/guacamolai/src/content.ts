@@ -2,9 +2,9 @@ import { suspensify } from '@jscutlery/operators';
 import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
 import { getLlm } from './lib/domain/get-llm';
 import { scrapHtml } from './lib/domain/scrap-html';
-import { watchEl, watchInputValue } from './lib/infra/dom';
+import { watchEl, watchInputValue } from './lib/ui/dom';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
-import { fieldIds, updateForm } from './lib/ui/advocu';
+import { fieldIds, updateTalkForm } from './lib/ui/advocu';
 import { tryInjectScrapButton, updateScrapButton } from './lib/ui/scrap-button';
 import { isValidUrl } from './lib/utils/is-valid-url';
 
@@ -50,7 +50,7 @@ export async function main() {
     .pipe(
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
-          await updateForm(suspense.value);
+          await updateTalkForm(suspense.value);
         }
       })
     )

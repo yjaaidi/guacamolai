@@ -1,11 +1,6 @@
-import { screen, waitFor } from '@testing-library/dom';
-import { userEvent } from '@testing-library/user-event';
+import { screen } from '@testing-library/dom';
 import { Talk } from '../core/talk';
-import {
-  trySetInputValue,
-  trySetParagraphContent,
-  trySetBooleanValue,
-} from '../infra/dom';
+import { Locator } from './dom';
 
 export const fieldIds = {
   title: '#/properties/title',
@@ -16,7 +11,7 @@ export const fieldIds = {
   city: '#/properties/city',
 } as const;
 
-export async function updateForm(talk: Talk) {
+export async function updateTalkForm(talk: Talk) {
   const locators = {
     title: new Locator(() => document.getElementById(fieldIds.title)),
     date: new Locator(() => screen.getByPlaceholderText('Select date')),
@@ -28,7 +23,9 @@ export async function updateForm(talk: Talk) {
   await locators.title.fill(talk.title);
   await locators.description.setTextContent(talk.description);
 
-  trySetBooleanValue(document.getElementById(fieldIds.online), talk.online);
+  if (talk.online != null) {
+    await setOnline(talk.online);
+  }
 
   if (talk.country) {
     await setCountry(talk.country);
@@ -41,6 +38,16 @@ export async function updateForm(talk: Talk) {
   if (talk.date) {
     await locators.date.fill(talk.date);
   }
+}
+
+async function setOnline(online: boolean) {
+  const label = online ? 'Yes' : 'No';
+  const locator = new Locator(() =>
+    Array.from(
+      document.querySelectorAll<HTMLElement>('nz-radio-group label')
+    ).find((el) => el.textContent === label)
+  );
+  await locator.click();
 }
 
 async function setCountry(country: string) {
@@ -57,51 +64,4 @@ async function setCity(city: string) {
   await new Locator(
     () => screen.getAllByText(city, { selector: '.pac-item span' })[0]
   ).click();
-}
-
-class Locator<ELEMENT extends HTMLElement> {
-  #locatorFn: LocatorFn<ELEMENT>;
-
-  constructor(locatorFn: LocatorFn<ELEMENT>) {
-    this.#locatorFn = locatorFn;
-  }
-
-  async click() {
-    await waitForElementAndTry(this.#locatorFn, (el) => userEvent.click(el));
-  }
-
-  async fill(value: string) {
-    await waitForElementAndTry(this.#locatorFn, async (el) => {
-      await userEvent.clear(el);
-      await userEvent.type(el, value);
-    });
-  }
-
-  async setTextContent(description: string) {
-    await waitForElementAndTry(this.#locatorFn, async (el) => {
-      el.textContent = description;
-    });
-  }
-}
-
-interface LocatorFn<ELEMENT> {
-  (): ELEMENT | null | undefined;
-}
-
-async function waitForElementAndTry<T>(
-  getEl: () => T | null | undefined,
-  act: (el: T) => Promise<void>
-) {
-  try {
-    const el = await waitFor(() => {
-      const el = getEl();
-      if (el == null) {
-        throw new Error('Element not found');
-      }
-      return el;
-    });
-    await act(el);
-  } catch {
-    return;
-  }
 }
