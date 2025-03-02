@@ -58,6 +58,13 @@ Return the result in the following JSON format:
           };
         }
 
+        if (result.online == null && (result.city || result.country)) {
+          result = {
+            ...result,
+            online: false,
+          };
+        }
+
         result = {
           ...result,
           title: result.title.trim(),
