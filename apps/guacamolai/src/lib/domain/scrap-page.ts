@@ -1,7 +1,7 @@
 import { map, Observable, of } from 'rxjs';
-import { Llm } from '../core/llm';
-import { Article, Talk } from '../core/activity';
+import { Activity, Article, Talk } from '../core/activity';
 import { HtmlPage } from '../core/html-page';
+import { Llm } from '../core/llm';
 
 export function scrapPage({
   llm,
@@ -9,7 +9,7 @@ export function scrapPage({
 }: {
   llm: Llm;
   page: HtmlPage;
-}): Observable<Talk | null> {
+}): Observable<Activity | null> {
   const { html, url } = page;
   if (html === null) {
     return of(null);

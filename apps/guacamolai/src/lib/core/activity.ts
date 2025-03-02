@@ -19,4 +19,6 @@ export interface Talk extends ActivityBase {
   country?: string;
 }
 
+export type ActivityType = Article['type'] | Talk['type'];
+
 export type Activity = Article | Talk;

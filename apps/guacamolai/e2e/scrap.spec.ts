@@ -4,6 +4,8 @@ import { ACTIVITIES_URL } from './testing/urls';
 test.beforeEach(async ({ page, setUpLlmFake }) => {
   await setUpLlmFake({
     'Younes Jaaidi - NG-DE 2024': {
+      activityType: 'talk',
+      url: 'https://ng-de.org/speakers/younes-jaaidi/',
       title: 'Fake it till you Mock it',
       description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
       online: false,

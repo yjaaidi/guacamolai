@@ -2,7 +2,6 @@ import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { Talk } from '../../src/lib/core/activity';
 import { LLM_FAKE_KEY } from '../../src/lib/domain/get-llm';
 import { authFilePath } from './auth-user';
 import { ScrapFormGlove } from './scrap-form.glove';
@@ -13,7 +12,9 @@ export interface Fixtures {
   goToExtensionPopup: () => Promise<void>;
   scrapFormGlove: ScrapFormGlove;
   setUpGeminiApiKey: () => Promise<void>;
-  setUpLlmFake: (responses: Record<string, Talk>) => Promise<void>;
+  setUpLlmFake: (
+    responses: Record<string, Record<string, unknown>>
+  ) => Promise<void>;
   _extensionId: string;
 }
 
