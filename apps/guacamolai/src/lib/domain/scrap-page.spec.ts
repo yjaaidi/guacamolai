@@ -1,9 +1,9 @@
 import { lastValueFrom } from 'rxjs';
 import { describe, it } from 'vitest';
 import { LlmFake } from '../core/llm.fake';
-import { scrapHtml } from './scrap-html';
+import { scrapPage } from './scrap-page';
 
-describe(scrapHtml.name, () => {
+describe(scrapPage.name, () => {
   it('converts date-time to date', async () => {
     const llm = new LlmFake();
     llm.setResponses({
@@ -18,9 +18,12 @@ describe(scrapHtml.name, () => {
     });
 
     const talk = await lastValueFrom(
-      scrapHtml({
+      scrapPage({
         llm,
-        html: 'Something about Younes Jaaidi - NG-DE 2024 ...',
+        page: {
+          url: 'https://ng-de.org/speakers/younes-jaaidi/',
+          html: 'Something about Younes Jaaidi - NG-DE 2024 ...',
+        },
       })
     );
     expect(talk?.date).toBe('2024-10-01');

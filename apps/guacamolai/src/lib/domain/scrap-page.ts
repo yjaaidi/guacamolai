@@ -1,20 +1,22 @@
 import { map, Observable, of } from 'rxjs';
 import { Llm } from '../core/llm';
 import { Talk } from '../core/talk';
+import { HtmlPage } from '../core/html-page';
 
-export function scrapHtml({
+export function scrapPage({
   llm,
-  html,
+  page,
 }: {
   llm: Llm;
-  html: string | null;
+  page: HtmlPage;
 }): Observable<Talk | null> {
+  const { html, url } = page;
   if (html === null) {
     return of(null);
   }
 
   return llm
-    .prompt<Talk>({
+    .prompt<Omit<Talk, 'url'>>({
       prompt: [
         `Scrap the content of the page below and try to extract the presentation of a talk.
 Return the result in the following JSON format:
@@ -52,7 +54,7 @@ Trim all the fields.
             date: new Date(talk.date).toISOString().split('T')[0],
           };
         }
-        return talk;
+        return { ...talk, url };
       })
     );
 }

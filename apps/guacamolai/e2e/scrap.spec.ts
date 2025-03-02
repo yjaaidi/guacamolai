@@ -67,5 +67,9 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
   await expect
     .soft(page.getByPlaceholder('Select date'))
     .toHaveValue('2024-10-01');
+  await expect
+    .soft(page.getByLabel('Share any relevant link'))
+    .toHaveValue('https://ng-de.org/speakers/younes-jaaidi/');
+
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });

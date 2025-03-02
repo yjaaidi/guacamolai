@@ -18,10 +18,12 @@ export async function fillTalkForm(talk: Talk) {
     description: new Locator(() =>
       document.getElementById(fieldIds.description)?.querySelector('p')
     ),
+    url: new Locator(() => document.getElementById(fieldIds.url)),
   };
 
   await locators.title.fill(talk.title);
   await locators.description.setTextContent(talk.description);
+  await locators.url.fill(talk.url);
 
   if (talk.online != null) {
     await setOnline(talk.online);

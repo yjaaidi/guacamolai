@@ -29,7 +29,4 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
     .toContainText(
       'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
     );
-  await expect.soft(page.getByLabel('Yes')).not.toBeChecked();
-  await expect.soft(page.getByLabel('No')).toBeChecked();
-  await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });

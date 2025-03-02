@@ -1,9 +1,9 @@
 import { firstValueFrom } from 'rxjs';
 import { Gemini } from '../infra/gemini';
-import { scrapHtml } from './scrap-html';
+import { scrapPage } from './scrap-page';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 
-describe(scrapHtml.name, () => {
+describe(scrapPage.name, () => {
   it('scraps talk from url', async () => {
     const { scrap } = setUp();
 
@@ -25,7 +25,13 @@ function setUp() {
   const llm = new Gemini(apiKey);
   return {
     scrap(html: string) {
-      return scrapHtml({ llm, html });
+      return scrapPage({
+        llm,
+        page: {
+          url: 'https://ng-de.org/speakers/younes-jaaidi/',
+          html,
+        },
+      });
     },
   };
 }

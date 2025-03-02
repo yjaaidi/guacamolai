@@ -10,7 +10,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { getLlm } from './lib/domain/get-llm';
-import { scrapHtml } from './lib/domain/scrap-html';
+import { scrapPage as scrapPage } from './lib/domain/scrap-page';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
 import { fillTalkForm } from './lib/ui/fill-talk-form';
 import { goToActivityForm } from './lib/ui/go-to-activity-form';
@@ -48,7 +48,7 @@ export async function main() {
   const scrap$ = page$.pipe(
     filter((page) => page != null),
     switchMap((page) => click$.pipe(map(() => page))),
-    switchMap((page) => scrapHtml({ html: page.html, llm }).pipe(suspensify())),
+    switchMap((page) => scrapPage({ page, llm }).pipe(suspensify())),
     share()
   );
 
