@@ -1,29 +1,11 @@
 import { screen } from '@testing-library/dom';
-import { Talk } from '../core/activity';
-import { Locator } from './dom';
-
-export const fieldIds = {
-  title: '#/properties/title',
-  url: '#/properties/activityUrl',
-  description: '#/properties/description',
-  online: '#/properties/onlineEvent',
-  country: '#/properties/country',
-  city: '#/properties/city',
-} as const;
+import { Talk } from '../../core/activity';
+import { Locator } from '../dom';
+import { fieldIds } from './activity-form-locators';
+import { fillActivityFormSharedFields } from './fill-activity-form-shared-fields';
 
 export async function fillTalkForm(talk: Talk) {
-  const locators = {
-    title: new Locator(() => document.getElementById(fieldIds.title)),
-    date: new Locator(() => screen.getByPlaceholderText('Select date')),
-    description: new Locator(() =>
-      document.getElementById(fieldIds.description)?.querySelector('p')
-    ),
-    url: new Locator(() => document.getElementById(fieldIds.url)),
-  };
-
-  await locators.title.fill(talk.title);
-  await locators.description.setTextContent(talk.description);
-  await locators.url.fill(talk.url);
+  await fillActivityFormSharedFields(talk);
 
   if (talk.online != null) {
     await setOnline(talk.online);
@@ -35,10 +17,6 @@ export async function fillTalkForm(talk: Talk) {
 
   if (talk.city) {
     await setCity(talk.city);
-  }
-
-  if (talk.date) {
-    await locators.date.fill(talk.date);
   }
 }
 

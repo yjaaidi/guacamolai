@@ -1,4 +1,4 @@
-import { waitForElement } from './dom';
+import { waitForElement } from '../dom';
 
 export async function tryInjectScrapForm({
   onClick,

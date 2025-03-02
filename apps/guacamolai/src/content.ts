@@ -12,10 +12,14 @@ import {
 import { getLlm } from './lib/domain/get-llm';
 import { scrapPage as scrapPage } from './lib/domain/scrap-page';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
-import { fillTalkForm } from './lib/ui/fill-talk-form';
-import { goToActivityForm } from './lib/ui/go-to-activity-form';
-import { tryInjectScrapForm, updateScrapButton } from './lib/ui/scrap-form';
+import { fillTalkForm } from './lib/ui/advocu/fill-talk-form';
+import { goToActivityForm } from './lib/ui/advocu/go-to-activity-form';
+import {
+  tryInjectScrapForm,
+  updateScrapButton,
+} from './lib/ui/advocu/scrap-form';
 import { isValidUrl } from './lib/utils/is-valid-url';
+import { fillArticleForm } from './lib/ui/advocu/fill-article-form';
 
 export async function main() {
   const llm = await getLlm();
@@ -64,8 +68,12 @@ export async function main() {
           await new Promise((resolve) => setTimeout(resolve, 500));
 
           switch (activity.type) {
+            case 'article':
+              await fillArticleForm(activity);
+              break;
             case 'talk':
               await fillTalkForm(activity);
+              break;
           }
         }
       })
