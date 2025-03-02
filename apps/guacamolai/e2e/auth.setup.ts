@@ -1,8 +1,12 @@
-/* eslint-disable playwright/expect-expect */
+import { stat } from 'node:fs/promises';
 import { authFilePath } from './testing/auth-user';
 import { expect, test } from './testing/setup-fixtures';
+import { existsSync } from 'node:fs';
 
 test('authenticate', async ({ page, advocuCredentials }) => {
+  // eslint-disable-next-line playwright/no-skipped-test
+  test.skip(await skipAuth(), 'Auth storage is still fresh, skip auth.');
+
   await page.addLocatorHandler(
     page.getByRole('button', { name: 'Close Stonly widget' }),
     (el) => el.click()
@@ -24,3 +28,11 @@ test('authenticate', async ({ page, advocuCredentials }) => {
 
   await page.context().storageState({ path: authFilePath });
 });
+
+async function skipAuth() {
+  if (!existsSync(authFilePath)) {
+    return false;
+  }
+  const { mtime } = await stat(authFilePath);
+  return Date.now() - mtime.getTime() > 3600;
+}
