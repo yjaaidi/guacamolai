@@ -7,7 +7,7 @@ import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 import { HtmlPage } from '../core/html-page';
 
 describe(scrapPage.name, () => {
-  it('scraps talk from url', async () => {
+  it('scraps content from url', async () => {
     const { scrap } = setUp();
 
     expect(
@@ -22,10 +22,11 @@ describe(scrapPage.name, () => {
       ),
       description:
         'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
+      date: '2024-11-18',
     });
   });
 
-  it('scraps content from url', async () => {
+  it('scraps talk from url', async () => {
     const { scrap } = setUp();
 
     expect(

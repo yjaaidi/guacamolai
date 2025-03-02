@@ -22,12 +22,12 @@ export function scrapPage({
 Return the result in the following JSON format:
 - activityType: whether this page presents a content creation (e.g. blog post or article) or public speaking (e.g. a talk at a conferences)
 - title: the title of the talk or blog post or article
-- description: the description of the talk or a summary of the article
+- description: the description of the talk or article. If no description can be found for the article, generate a quick summary.
 - online: whether the talk or conference is online or on-site
 - city: the city where the talk is happening
 - country: the country where the talk is happening
 - attendees: the number of attendees (if available, otherwise remove field)
-- date: the event date (if available, otherwise remove field)
+- date: the event date if it's a talk or the publication date if it's an article (if available, otherwise remove field)
 `,
         html,
       ],
