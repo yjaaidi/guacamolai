@@ -57,6 +57,8 @@ export async function main() {
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
           await goToActivityForm();
+          /* HACK: for some reason we have to wait a bit here,
+           * otherwise, Advocu closes the form. */
           await new Promise((resolve) => setTimeout(resolve, 500));
           await fillTalkForm(suspense.value);
         }
