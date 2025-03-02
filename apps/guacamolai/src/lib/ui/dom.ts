@@ -17,7 +17,9 @@ export class Locator<ELEMENT extends HTMLElement> {
   async fill(value: string) {
     await _waitForElementAndTry(this.#locatorFn, async (el) => {
       await userEvent.clear(el);
-      await userEvent.type(el, value);
+      await userEvent.type(el, value, {
+        delay: null,
+      });
     });
   }
 
