@@ -11,7 +11,7 @@ export const fieldIds = {
   city: '#/properties/city',
 } as const;
 
-export async function updateTalkForm(talk: Talk) {
+export async function fillTalkForm(talk: Talk) {
   const locators = {
     title: new Locator(() => document.getElementById(fieldIds.title)),
     date: new Locator(() => screen.getByPlaceholderText('Select date')),

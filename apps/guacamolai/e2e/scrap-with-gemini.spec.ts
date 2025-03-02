@@ -1,4 +1,5 @@
 import { test, expect } from './testing/fixtures';
+import { ACTIVITIES_URL } from './testing/urls';
 
 test.beforeEach(async ({ page, setUpGeminiApiKey }) => {
   await setUpGeminiApiKey();
@@ -8,20 +9,14 @@ test.beforeEach(async ({ page, setUpGeminiApiKey }) => {
     (el) => el.click()
   );
 
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Add new activity' }).click();
-  await page.getByRole('listitem').filter({ hasText: 'New activity' }).click();
-  await page.getByRole('heading', { name: 'Public speaking' }).click();
+  await page.goto(ACTIVITIES_URL);
 });
 
-test('loads talk', async ({ page }) => {
-  await page
-    .getByLabel('Share any relevant link')
-    .fill('https://ng-de.org/speakers/younes-jaaidi/');
+test('loads talk', async ({ page, scrapFormGlove }) => {
+  await scrapFormGlove.fillAndSubmit(
+    'https://ng-de.org/speakers/younes-jaaidi/'
+  );
 
-  const scrapButtonEl = page.getByRole('button', { name: 'Scrap' });
-  await scrapButtonEl.click();
-  
   await expect
     .soft(page.getByLabel('What was the title of your talk?'))
     .toHaveValue('Fake it till you Mock it');
@@ -36,5 +31,5 @@ test('loads talk', async ({ page }) => {
     );
   await expect.soft(page.getByLabel('Yes')).not.toBeChecked();
   await expect.soft(page.getByLabel('No')).toBeChecked();
-  await expect.soft(scrapButtonEl).toBeEnabled();
+  await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });

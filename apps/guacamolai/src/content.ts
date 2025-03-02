@@ -1,11 +1,20 @@
 import { suspensify } from '@jscutlery/operators';
-import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  map,
+  of,
+  share,
+  startWith,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { getLlm } from './lib/domain/get-llm';
 import { scrapHtml } from './lib/domain/scrap-html';
-import { watchEl, watchInputValue } from './lib/ui/dom';
 import { fetchHtmlPage } from './lib/infra/fetch-html-page';
-import { fieldIds, updateTalkForm } from './lib/ui/advocu';
-import { tryInjectScrapButton, updateScrapButton } from './lib/ui/scrap-button';
+import { fillTalkForm } from './lib/ui/fill-talk-form';
+import { goToActivityForm } from './lib/ui/go-to-activity-form';
+import { tryInjectScrapForm, updateScrapButton } from './lib/ui/scrap-form';
 import { isValidUrl } from './lib/utils/is-valid-url';
 
 export async function main() {
@@ -13,12 +22,13 @@ export async function main() {
   if (llm == null) {
     return;
   }
-
   const click$ = new Subject<void>();
+  const url$ = new BehaviorSubject<string | null>(null);
 
-  const urlInput$ = watchEl<HTMLInputElement>(fieldIds.url).pipe(share());
-
-  const url$ = urlInput$.pipe(switchMap(watchInputValue), share());
+  await tryInjectScrapForm({
+    onClick: () => click$.next(),
+    onUrlChange: (url) => url$.next(url),
+  });
 
   const page$ = url$.pipe(
     switchMap((url) => {
@@ -29,10 +39,6 @@ export async function main() {
     }),
     share()
   );
-  const onClick = () => click$.next();
-
-  /* Show scrap button when url input is detected. */
-  urlInput$.subscribe(() => tryInjectScrapButton({ onClick }));
 
   /* Enable/disable scrap button depending on whether we have the HTML or not. */
   page$.subscribe((page) =>
@@ -50,7 +56,9 @@ export async function main() {
     .pipe(
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
-          await updateTalkForm(suspense.value);
+          await goToActivityForm();
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          await fillTalkForm(suspense.value);
         }
       })
     )

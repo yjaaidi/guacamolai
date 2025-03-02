@@ -11,18 +11,18 @@ export class Locator<ELEMENT extends HTMLElement> {
   }
 
   async click() {
-    await waitForElementAndTry(this.#locatorFn, (el) => userEvent.click(el));
+    await _waitForElementAndTry(this.#locatorFn, (el) => userEvent.click(el));
   }
 
   async fill(value: string) {
-    await waitForElementAndTry(this.#locatorFn, async (el) => {
+    await _waitForElementAndTry(this.#locatorFn, async (el) => {
       await userEvent.clear(el);
       await userEvent.type(el, value);
     });
   }
 
   async setTextContent(description: string) {
-    await waitForElementAndTry(this.#locatorFn, async (el) => {
+    await _waitForElementAndTry(this.#locatorFn, async (el) => {
       el.textContent = description;
     });
   }
@@ -31,19 +31,33 @@ interface LocatorFn<ELEMENT> {
   (): ELEMENT | null | undefined;
 }
 
-async function waitForElementAndTry<T>(
-  getEl: () => T | null | undefined,
-  act: (el: T) => Promise<void>
+async function _waitForElementAndTry<ELEMENT extends HTMLElement>(
+  locatorFn: LocatorFn<ELEMENT>,
+  act: (el: ELEMENT) => Promise<void>
+) {
+  const el = await waitForElement(locatorFn);
+  if (!el) {
+    return;
+  }
+
+  try {
+    await act(el);
+  } catch {
+    return;
+  }
+}
+
+export async function waitForElement<ELEMENT extends HTMLElement>(
+  locatorFn: LocatorFn<ELEMENT>
 ) {
   try {
-    const el = await waitFor(() => {
-      const el = getEl();
+    return await waitFor(() => {
+      const el = locatorFn();
       if (el == null) {
         throw new Error('Element not found');
       }
       return el;
     });
-    await act(el);
   } catch {
     return;
   }

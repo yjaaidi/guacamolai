@@ -1,14 +1,17 @@
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
-import { readFile } from 'fs/promises';
-import path from 'path';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { Talk } from '../../src/lib/core/talk';
 import { LLM_FAKE_KEY } from '../../src/lib/domain/get-llm';
 import { authFilePath } from './auth-user';
+import { ScrapFormGlove } from './scrap-form.glove';
+import { ACTIVITIES_URL } from './urls';
 
 export interface Fixtures {
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
+  scrapFormGlove: ScrapFormGlove;
   setUpGeminiApiKey: () => Promise<void>;
   setUpLlmFake: (responses: Record<string, Talk>) => Promise<void>;
   _extensionId: string;
@@ -39,6 +42,9 @@ export const test = base.extend<Fixtures & Options>({
       await page.goto(`chrome-extension://${_extensionId}/popup.html`);
     });
   },
+  scrapFormGlove: async ({ page }, use) => {
+    await use(new ScrapFormGlove(page));
+  },
   setUpGeminiApiKey: async (
     { goToExtensionPopup, geminiApiKey, page },
     use
@@ -54,7 +60,7 @@ export const test = base.extend<Fixtures & Options>({
   },
   setUpLlmFake: async ({ page }, use) => {
     await use(async (responses) => {
-      await page.goto('/');
+      await page.goto(ACTIVITIES_URL);
       await page.evaluate(
         ({ LLM_FAKE_KEY, responses }) =>
           localStorage.setItem(LLM_FAKE_KEY, JSON.stringify(responses)),
