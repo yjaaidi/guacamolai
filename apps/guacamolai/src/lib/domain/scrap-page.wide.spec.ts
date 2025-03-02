@@ -16,7 +16,7 @@ describe(scrapPage.name, () => {
         html: marmicodeBlogPostHtml,
       })
     ).toMatchObject({
-      activityType: 'content-creation',
+      type: 'article',
       title: expect.stringContaining(
         'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
       ),
@@ -34,7 +34,7 @@ describe(scrapPage.name, () => {
         html: ngDeYounesJaaidiHtml,
       })
     ).toMatchObject({
-      activityType: 'public-speaking',
+      type: 'talk',
       title: 'Fake it till you Mock it',
       description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests? Aren’t you tired of maintaining and debugging them, or trying to keep them in sync with the real implementation? Join us to see how Fakes and their fellow companions, Object Mothers, and Gloves might just become the pillars of your testing strategy.`,
       city: 'Berlin',

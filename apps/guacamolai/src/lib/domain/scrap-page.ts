@@ -1,6 +1,6 @@
 import { map, Observable, of } from 'rxjs';
 import { Llm } from '../core/llm';
-import { Talk } from '../core/talk';
+import { Article, Talk } from '../core/activity';
 import { HtmlPage } from '../core/html-page';
 
 export function scrapPage({
@@ -16,7 +16,7 @@ export function scrapPage({
   }
 
   return llm
-    .prompt<Omit<Talk, 'url'>>({
+    .prompt<LlmResult>({
       prompt: [
         `Scrap the content of the page below and try to extract the presentation of a talk.
 Return the result in the following JSON format:
@@ -36,7 +36,7 @@ Return the result in the following JSON format:
         properties: {
           activityType: {
             type: 'string',
-            enum: ['content-creation', 'public-speaking'],
+            enum: ['article', 'talk'],
           },
           title: { type: 'string' },
           description: { type: 'string' },
@@ -50,20 +50,58 @@ Return the result in the following JSON format:
       },
     })
     .pipe(
-      map((talk) => {
-        if (talk.date) {
-          talk = {
-            ...talk,
-            title: talk.title.trim(),
-            description: talk.description.trim(),
-            date: new Date(talk.date).toISOString().split('T')[0],
-            city: talk.city?.trim(),
-            country: talk.country?.trim(),
+      map((result) => {
+        if (result.date) {
+          result = {
+            ...result,
+            date: new Date(result.date).toISOString().split('T')[0],
           };
         }
 
-        return { ...talk, url };
+        result = {
+          ...result,
+          title: result.title.trim(),
+          description: result.description.trim(),
+          city: result.city?.trim(),
+          country: result.country?.trim(),
+        };
+
+        const shared = {
+          url,
+          title: result.title,
+          date: result.date,
+          description: result.description,
+        };
+
+        switch (result.activityType) {
+          case 'article':
+            return {
+              ...shared,
+              type: 'article',
+            } satisfies Article;
+          case 'talk':
+            return {
+              ...shared,
+              type: 'talk',
+              attendees: result.attendees,
+              online: result.online,
+              city: result.city,
+              country: result.country,
+            } satisfies Talk;
+        }
       })
     );
 }
+
 export const SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
+
+interface LlmResult {
+  activityType: 'article' | 'talk';
+  title: string;
+  description: string;
+  attendees?: number;
+  city?: string;
+  country?: string;
+  date?: string;
+  online?: boolean;
+}

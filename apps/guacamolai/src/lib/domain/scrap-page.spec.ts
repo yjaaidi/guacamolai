@@ -8,6 +8,7 @@ describe(scrapPage.name, () => {
     const llm = new LlmFake();
     llm.setResponses({
       'Younes Jaaidi - NG-DE 2024': {
+        activityType: 'talk',
         title: 'Fake it till you Mock it',
         description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
         online: false,

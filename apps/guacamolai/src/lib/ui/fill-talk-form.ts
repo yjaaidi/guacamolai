@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom';
-import { Talk } from '../core/talk';
+import { Talk } from '../core/activity';
 import { Locator } from './dom';
 
 export const fieldIds = {

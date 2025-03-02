@@ -9,7 +9,7 @@
   "include": [
     "e2e/**/*.ts",
     "e2e/**/*.js",
-    "src/lib/core/talk.ts",
+    "src/lib/core/activity.ts",
     "src/lib/domain/get-llm.ts",
     "playwright.config.ts"
   ],
