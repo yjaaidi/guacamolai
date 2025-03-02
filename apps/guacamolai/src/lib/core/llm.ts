@@ -1,3 +1,4 @@
+import { JSONSchema7 } from 'json-schema';
 import { Observable } from 'rxjs';
 
 export interface Llm {
@@ -6,7 +7,7 @@ export interface Llm {
 
 export interface PromptRequest {
   prompt: string[];
-  schema: Schema;
+  schema: JSONSchema7;
 }
 
 export type Schema =

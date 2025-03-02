@@ -1,20 +1,44 @@
 import { lastValueFrom } from 'rxjs';
+import { describe, it } from 'vitest';
 import { Gemini } from '../infra/gemini';
 import { scrapPage } from './scrap-page';
+import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
+import { HtmlPage } from '../core/html-page';
 
 describe(scrapPage.name, () => {
   it('scraps talk from url', async () => {
     const { scrap } = setUp();
 
-    expect(await lastValueFrom(scrap(ngDeYounesJaaidiHtml))).toEqual({
+    expect(
+      await scrap({
+        url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
+        html: marmicodeBlogPostHtml,
+      })
+    ).toMatchObject({
+      activityType: 'content-creation',
+      title: expect.stringContaining(
+        'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
+      ),
+      description:
+        'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
+    });
+  });
+
+  it('scraps content from url', async () => {
+    const { scrap } = setUp();
+
+    expect(
+      await scrap({
+        url: 'https://ng-de.org/speakers/younes-jaaidi/',
+        html: ngDeYounesJaaidiHtml,
+      })
+    ).toMatchObject({
       activityType: 'public-speaking',
       title: 'Fake it till you Mock it',
       description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests? Aren’t you tired of maintaining and debugging them, or trying to keep them in sync with the real implementation? Join us to see how Fakes and their fellow companions, Object Mothers, and Gloves might just become the pillars of your testing strategy.`,
-      online: false,
       city: 'Berlin',
       country: 'Germany',
-      url: 'https://ng-de.org/speakers/younes-jaaidi/',
     });
   });
 });
@@ -26,14 +50,13 @@ function setUp() {
   }
   const llm = new Gemini(apiKey);
   return {
-    scrap(html: string) {
-      return scrapPage({
-        llm,
-        page: {
-          url: 'https://ng-de.org/speakers/younes-jaaidi/',
-          html,
-        },
-      });
+    async scrap(page: HtmlPage) {
+      return lastValueFrom(
+        scrapPage({
+          llm,
+          page,
+        })
+      );
     },
   };
 }
