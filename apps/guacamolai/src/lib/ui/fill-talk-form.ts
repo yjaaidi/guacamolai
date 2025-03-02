@@ -41,13 +41,7 @@ export async function fillTalkForm(talk: Talk) {
 }
 
 async function setOnline(online: boolean) {
-  const label = online ? 'Yes' : 'No';
-  const locator = new Locator(() =>
-    Array.from(
-      document.querySelectorAll<HTMLElement>('nz-radio-group label')
-    ).find((el) => el.textContent === label)
-  );
-  await locator.click();
+  await new Locator(() => screen.getByText(online ? 'Yes' : 'No')).click();
 }
 
 async function setCountry(country: string) {
