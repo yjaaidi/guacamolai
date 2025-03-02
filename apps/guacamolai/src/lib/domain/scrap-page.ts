@@ -20,6 +20,7 @@ export function scrapPage({
       prompt: [
         `Scrap the content of the page below and try to extract the presentation of a talk.
 Return the result in the following JSON format:
+- activityType: whether this page presents a content creation (e.g. blog post) or public speaking (e.g. a talk at a conferences)
 - title: the title of the talk
 - description: the description of the talk
 - online: whether the talk is online or not
@@ -35,6 +36,10 @@ Trim all the fields.
       schema: {
         type: 'object',
         properties: {
+          activityType: {
+            type: 'string',
+            enum: ['content-creation', 'public-speaking'],
+          },
           title: { type: 'string' },
           description: { type: 'string' },
           attendees: { type: 'number' },

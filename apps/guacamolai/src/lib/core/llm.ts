@@ -15,6 +15,7 @@ export type Schema =
     }
   | {
       type: 'string';
+      enum?: string[];
       format?: string;
     }
   | { type: 'object'; properties: Record<string, Schema>; required?: string[] };
