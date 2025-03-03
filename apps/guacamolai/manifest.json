@@ -3,7 +3,8 @@
   "description": "Smash your advocate activity into delicious guacamole for Advocu",
   "version": "0.1",
   "manifest_version": 3,
-  "permissions": ["storage"],
+  "permissions": ["scripting", "storage", "tabs"],
+  "host_permissions": ["https://*/*"],
   "content_scripts": [
     {
       "js": ["src/content.ts"],

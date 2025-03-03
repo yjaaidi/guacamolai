@@ -1,13 +1,17 @@
 import { suspensify } from '@jscutlery/operators';
 import {
   BehaviorSubject,
+  defer,
   filter,
+  from,
   map,
+  Observable,
   of,
   share,
   startWith,
   Subject,
   switchMap,
+  tap,
 } from 'rxjs';
 import { getLlm } from './lib/domain/get-llm';
 import { scrapPage as scrapPage } from './lib/domain/scrap-page';
@@ -34,31 +38,24 @@ export async function main() {
     onUrlChange: (url) => url$.next(url),
   });
 
-  const page$ = url$.pipe(
+  const scrap$ = url$.pipe(
+    switchMap((url) => click$.pipe(map(() => url))),
     switchMap((url) => {
-      if (url != null && isValidUrl(url)) {
-        return fetchHtmlPage(url).pipe(startWith(null));
-      }
-      return of(null);
+      return defer(() => {
+        if (url != null && isValidUrl(url)) {
+          return from(chrome.runtime.sendMessage(url)).pipe(startWith(null));
+        }
+        return of(null);
+      }).pipe(suspensify());
     }),
-    share()
-  );
-
-  /* Enable/disable scrap button depending on whether we have the HTML or not. */
-  page$.subscribe((page) =>
-    updateScrapButton(page != null ? 'enabled' : 'disabled')
-  );
-
-  const scrap$ = page$.pipe(
-    filter((page) => page != null),
-    switchMap((page) => click$.pipe(map(() => page))),
-    switchMap((page) => scrapPage({ page, llm }).pipe(suspensify())),
     share()
   );
 
   scrap$
     .pipe(
       switchMap(async (suspense) => {
+        updateScrapButton(suspense.pending ? 'disabled' : 'enabled');
+
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
           const activity = suspense.value;
           await goToActivityForm(activity.type);
