@@ -16,7 +16,7 @@
     "**/*.ts",
     "index.spec.ts",
     "index.ts",
-    "lib/get-llm.ts",
+    "lib/create-llm.ts",
     "lib/key-storage.ts",
     "lib/scrap-page.spec.ts",
     "lib/scrap-page.ts",
