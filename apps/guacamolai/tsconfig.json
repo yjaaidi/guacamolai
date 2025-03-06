@@ -7,6 +7,9 @@
       "path": "../../packages/core"
     },
     {
+      "path": "../../packages/shared-util"
+    },
+    {
       "path": "../../packages/infra"
     },
     {

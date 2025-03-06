@@ -18,7 +18,7 @@ import {
   tryInjectScrapForm,
   updateScrapButton,
 } from './lib/ui/advocu/scrap-form';
-import { isValidUrl } from './lib/utils/is-valid-url';
+import { isValidUrl } from '@guacamolai/shared-util';
 
 export async function main() {
   const llm = await getLlm();

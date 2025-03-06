@@ -1,7 +1,7 @@
+import { isValidUrl } from '@guacamolai/shared-util';
 import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { debounceTime, fromEvent, map, Observable, of, startWith } from 'rxjs';
-import { isValidUrl } from '../utils/is-valid-url';
 
 export class Locator<ELEMENT extends HTMLElement> {
   #locatorFn: LocatorFn<ELEMENT>;
