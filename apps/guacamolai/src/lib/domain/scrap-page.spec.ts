@@ -1,8 +1,8 @@
+import { Talk } from '@guacamolai/core';
+import { LlmFake } from '@guacamolai/core/testing';
 import { lastValueFrom } from 'rxjs';
 import { describe, it } from 'vitest';
-import { LlmFake } from '../core/llm.fake';
 import { scrapPage } from './scrap-page';
-import { Talk } from '../core/activity';
 
 describe(scrapPage.name, () => {
   it('converts date-time to date', async () => {

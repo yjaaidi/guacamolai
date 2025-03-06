@@ -1,7 +1,6 @@
 import { map, Observable, of } from 'rxjs';
-import { Activity, Article, Talk } from '../core/activity';
-import { HtmlPage } from '../core/html-page';
-import { Llm } from '../core/llm';
+import { Activity, Article, Talk } from '@guacamolai/core';
+import { HtmlPage, Llm } from '@guacamolai/core';
 
 export function scrapPage({
   llm,

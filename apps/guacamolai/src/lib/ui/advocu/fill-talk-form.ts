@@ -1,5 +1,5 @@
+import { Talk } from '@guacamolai/core';
 import { screen } from '@testing-library/dom';
-import { Talk } from '../../core/activity';
 import { Locator } from '../dom';
 import { fieldIds } from './activity-form-locators';
 import { fillActivityFormSharedFields } from './fill-activity-form-shared-fields';

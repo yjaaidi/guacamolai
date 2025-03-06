@@ -1,4 +1,4 @@
-import { Activity } from '../../core/activity';
+import { Activity } from '@guacamolai/core';
 import { activityFormLocators } from './activity-form-locators';
 
 export async function fillActivityFormSharedFields(activity: Activity) {

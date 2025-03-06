@@ -1,10 +1,10 @@
+import { HtmlPage } from '@guacamolai/core';
 import { lastValueFrom } from 'rxjs';
 import { describe, it } from 'vitest';
 import { Gemini } from '../infra/gemini';
 import { scrapPage } from './scrap-page';
 import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
-import { HtmlPage } from '../core/html-page';
 
 describe(scrapPage.name, () => {
   it('scraps content from url', async () => {

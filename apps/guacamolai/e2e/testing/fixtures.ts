@@ -23,7 +23,6 @@ export interface Options {
 }
 
 export const test = base.extend<Fixtures & Options>({
-  // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
     const pathToExtension = path.join(workspaceRoot, 'apps/guacamolai/dist');
     const context = await chromium.launchPersistentContext('', {

@@ -1,6 +1,6 @@
+import { ActivityType } from '@guacamolai/core';
 import { screen } from '@testing-library/dom';
 import { Locator } from '../dom';
-import { ActivityType } from '../../core/activity';
 
 export async function goToActivityForm(activityType: ActivityType) {
   await new Locator(() =>

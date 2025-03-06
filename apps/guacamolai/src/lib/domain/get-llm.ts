@@ -1,4 +1,4 @@
-import { LlmFake } from '../core/llm.fake';
+import { LlmFake } from '@guacamolai/core/testing';
 import { Gemini } from '../infra/gemini';
 import { tryReadLocalStorageJson } from '../infra/local-storage';
 import { KeyStorage } from './key-storage';

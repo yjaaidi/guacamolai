@@ -1,5 +1,5 @@
+import { Llm, PromptRequest, Schema } from '@guacamolai/core';
 import { map, Observable, switchMap } from 'rxjs';
-import { Llm, PromptRequest, Schema } from '../core/llm';
 import { fromFetch } from 'rxjs/fetch';
 
 export class Gemini implements Llm {

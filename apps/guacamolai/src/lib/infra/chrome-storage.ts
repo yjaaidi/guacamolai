@@ -1,4 +1,4 @@
-import { ExtensionStorage } from '../core/extension-storage';
+import { ExtensionStorage } from '@guacamolai/core';
 
 export class ChromeStorage implements ExtensionStorage {
   async get(key: string): Promise<string | null> {

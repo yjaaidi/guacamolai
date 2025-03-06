@@ -1,4 +1,4 @@
-import { Article } from '../../core/activity';
+import { Article } from '@guacamolai/core';
 import { Locator } from '../dom';
 import { fieldIds } from './activity-form-locators';
 import { fillActivityFormSharedFields } from './fill-activity-form-shared-fields';
