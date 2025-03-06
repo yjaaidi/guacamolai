@@ -1,11 +1,17 @@
-import { Activity } from '@guacamolai/core';
-import { goToActivityForm } from './go-to-activity-form';
+import { Activity, ActivityType } from '@guacamolai/core';
+import { Locator } from '@guacamolai/shared-ui/dom';
+import { screen } from '@testing-library/dom';
 import { fillArticleForm } from './fill-article-form';
 import { fillTalkForm } from './fill-talk-form';
 
 export class AdvocuActivityForm {
+  private _activitySectionMap: Record<ActivityType, string> = {
+    article: 'Content creation',
+    talk: 'Public speaking',
+  };
+
   async fillActivityForm(activity: Activity) {
-    await goToActivityForm(activity.type);
+    await this._goToActivityForm(activity.type);
 
     /* HACK: for some reason we have to wait a bit here,
      * otherwise, Advocu closes the form. */
@@ -19,5 +25,19 @@ export class AdvocuActivityForm {
         await fillTalkForm(activity);
         break;
     }
+  }
+
+  private async _goToActivityForm(activityType: ActivityType) {
+    await new Locator(() =>
+      screen.getByRole('button', { name: 'Add new activity' })
+    ).click();
+
+    await new Locator(() => screen.getByText('New activity')).click();
+
+    await new Locator(() =>
+      screen.getByRole('heading', {
+        name: this._activitySectionMap[activityType],
+      })
+    ).click();
   }
 }
