@@ -4,13 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../../packages/core"
-    },
-    {
-      "path": "../../packages/shared-ui"
-    },
-    {
       "path": "../../packages/shared-util"
+    },
+    {
+      "path": "../../packages/advocu-ui"
     },
     {
       "path": "../../packages/infra"

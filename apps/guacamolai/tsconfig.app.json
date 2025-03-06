@@ -35,13 +35,10 @@
   ],
   "references": [
     {
-      "path": "../../packages/core/tsconfig.lib.json"
-    },
-    {
-      "path": "../../packages/shared-ui/tsconfig.lib.json"
-    },
-    {
       "path": "../../packages/shared-util/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/advocu-ui/tsconfig.lib.json"
     },
     {
       "path": "../../packages/infra/tsconfig.lib.json"

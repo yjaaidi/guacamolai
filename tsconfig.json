@@ -20,6 +20,9 @@
     },
     {
       "path": "./packages/shared-ui"
+    },
+    {
+      "path": "./packages/advocu-ui"
     }
   ]
 }

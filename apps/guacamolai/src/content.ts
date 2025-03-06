@@ -1,5 +1,13 @@
+import {
+  fillArticleForm,
+  fillTalkForm,
+  goToActivityForm,
+  tryInjectScrapForm,
+  updateScrapButton,
+} from '@guacamolai/advocu-ui';
 import { getLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
+import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
 import {
   BehaviorSubject,
@@ -11,14 +19,6 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { fillArticleForm } from './lib/ui/advocu/fill-article-form';
-import { fillTalkForm } from './lib/ui/advocu/fill-talk-form';
-import { goToActivityForm } from './lib/ui/advocu/go-to-activity-form';
-import {
-  tryInjectScrapForm,
-  updateScrapButton,
-} from './lib/ui/advocu/scrap-form';
-import { isValidUrl } from '@guacamolai/shared-util';
 
 export async function main() {
   const llm = await getLlm();
