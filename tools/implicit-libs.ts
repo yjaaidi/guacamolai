@@ -16,9 +16,8 @@ export const createNodesV2: CreateNodesV2 = [
             [projectPath]: {
               tags: [`type:${type}`],
               targets: {
-                test: {
-                  command: 'vitest --config=packages/vite.config.mts',
-                },
+                test: { command: `vitest --root ${projectPath}` },
+                'test-wide': { command: `vitest --root ${projectPath} .wide.` },
               },
             },
           },

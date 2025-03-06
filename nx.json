@@ -59,6 +59,13 @@
   "targetDefaults": {
     "test": {
       "options": {
+        "passWithNoTests": true,
+        "exclude": "**/*.wide.spec.ts"
+      },
+      "dependsOn": ["^build"]
+    },
+    "test-wide": {
+      "options": {
         "passWithNoTests": true
       },
       "dependsOn": ["^build"]
