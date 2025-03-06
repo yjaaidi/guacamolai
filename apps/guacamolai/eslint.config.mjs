@@ -11,4 +11,7 @@ export default [
     ...playwright.configs['flat/recommended'],
     files: ['e2e/**/*.ts'],
   },
-];
+].map((config) => ({
+  ...config,
+  ignores: [...(config.ignores || []), 'test-output'],
+}));
