@@ -34,6 +34,5 @@ async function skipAuth() {
     return false;
   }
   const { mtime } = await stat(authFilePath);
-  console.log(Date.now() - mtime.getTime());
-  return Date.now() - mtime.getTime() < 3600;
+  return Date.now() - mtime.getTime() < 3_600_000;
 }
