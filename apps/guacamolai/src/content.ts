@@ -1,5 +1,5 @@
 import { AdvocuActivityForm, AdvocuScrapForm } from '@guacamolai/advocu-ui';
-import { getLlm, scrapPage } from '@guacamolai/domain';
+import { createLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
@@ -13,12 +13,15 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
+import { Llm } from '@guacamolai/core';
 
-export async function main() {
-  const llm = await getLlm();
+export async function main({ llm }: { llm?: Llm } = {}) {
+  llm ??= await createLlm();
+
   if (llm == null) {
     return;
   }
+
   const click$ = new Subject<void>();
   const url$ = new BehaviorSubject<string | null>(null);
   const activityForm = new AdvocuActivityForm();
