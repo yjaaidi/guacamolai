@@ -1,4 +1,8 @@
-import { AdvocuActivityForm, AdvocuScrapForm } from '@guacamolai/advocu-ui';
+import {
+  AdvocuActivityForm,
+  AdvocuScrapFormFactory,
+} from '@guacamolai/advocu-ui';
+import { Llm } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
@@ -13,9 +17,16 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { Llm } from '@guacamolai/core';
 
-export async function main({ llm }: { llm?: Llm } = {}) {
+export async function main({
+  activityForm = new AdvocuActivityForm(),
+  llm,
+  scrapFormFactory = new AdvocuScrapFormFactory(),
+}: {
+  activityForm?: AdvocuActivityForm;
+  llm?: Llm;
+  scrapFormFactory?: AdvocuScrapFormFactory;
+} = {}) {
   llm ??= await createLlm();
 
   if (llm == null) {
@@ -24,12 +35,11 @@ export async function main({ llm }: { llm?: Llm } = {}) {
 
   const click$ = new Subject<void>();
   const url$ = new BehaviorSubject<string | null>(null);
-  const activityForm = new AdvocuActivityForm();
-  const scrapForm = new AdvocuScrapForm({
-    onScrapClick: () => click$.next(),
-    onUrlChange: (url) => url$.next(url),
-  });
-  await scrapForm.inject();
+  const scrapForm = await scrapFormFactory.create();
+
+  if (!scrapForm) {
+    return;
+  }
 
   const page$ = url$.pipe(
     switchMap((url) => {
