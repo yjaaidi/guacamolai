@@ -1,5 +1,5 @@
 {
-  "name": "@guacamolai/infra",
+  "name": "@guacamolai/domain",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -10,6 +10,11 @@
       "types": "./index.ts",
       "import": "./index.ts",
       "default": "./index.ts"
+    },
+    "./testing": {
+      "types": "./testing.ts",
+      "import": "./testing.ts",
+      "default": "./testing.ts"
     },
     "./package.json": "./package.json"
   },

@@ -1,0 +1,46 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "ES2024"],
+    "types": ["chrome", "node"],
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "include": [
+    "**/*.ts",
+    "index.spec.ts",
+    "index.ts",
+    "lib/get-llm.ts",
+    "lib/key-storage.ts",
+    "lib/scrap-page.spec.ts",
+    "lib/scrap-page.ts",
+    "lib/scrap-page.wide.spec.ts"
+  ],
+  "references": [
+    {
+      "path": "../infra/tsconfig.lib.json"
+    },
+    {
+      "path": "../core/tsconfig.lib.json"
+    }
+  ],
+  "exclude": [
+    "vite.config.mts",
+    "vitest.config.ts",
+    "vitest.config.mts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.spec.tsx",
+    "**/*.test.js",
+    "**/*.spec.js",
+    "**/*.test.jsx",
+    "**/*.spec.jsx"
+  ]
+}

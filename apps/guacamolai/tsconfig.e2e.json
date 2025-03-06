@@ -10,7 +10,7 @@
     "e2e/**/*.ts",
     "e2e/**/*.js",
     "src/lib/core/activity.ts",
-    "src/lib/domain/get-llm.ts",
+    "../../packages/domain/lib/get-llm.ts",
     "playwright.config.ts"
   ],
   "exclude": [

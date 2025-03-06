@@ -1,8 +1,8 @@
+import { LLM_FAKE_STORAGE_KEY } from '@guacamolai/domain/testing';
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { LLM_FAKE_KEY } from '../../src/lib/domain/get-llm';
 import { authFilePath } from './auth-user';
 import { ScrapFormGlove } from './scrap-form.glove';
 import { ACTIVITIES_URL } from './urls';
@@ -62,9 +62,9 @@ export const test = base.extend<Fixtures & Options>({
     await use(async (responses) => {
       await page.goto(ACTIVITIES_URL);
       await page.evaluate(
-        ({ LLM_FAKE_KEY, responses }) =>
-          localStorage.setItem(LLM_FAKE_KEY, JSON.stringify(responses)),
-        { LLM_FAKE_KEY, responses }
+        ({ LLM_FAKE_STORAGE_KEY, responses }) =>
+          localStorage.setItem(LLM_FAKE_STORAGE_KEY, JSON.stringify(responses)),
+        { LLM_FAKE_STORAGE_KEY, responses }
       );
     });
   },

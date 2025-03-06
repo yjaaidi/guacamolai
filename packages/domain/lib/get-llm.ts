@@ -4,7 +4,7 @@ import { KeyStorage } from './key-storage';
 
 export async function getLlm() {
   const responses =
-    tryReadLocalStorageJson<Record<string, unknown>>(LLM_FAKE_KEY);
+    tryReadLocalStorageJson<Record<string, unknown>>(LLM_FAKE_STORAGE_KEY);
   if (responses) {
     const llm = new LlmFake();
     llm.setResponses(responses);
@@ -19,4 +19,4 @@ export async function getLlm() {
   }
 }
 
-export const LLM_FAKE_KEY = 'llm-fake';
+export const LLM_FAKE_STORAGE_KEY = 'llm-fake';

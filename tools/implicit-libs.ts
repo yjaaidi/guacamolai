@@ -17,8 +17,7 @@ export const createNodesV2: CreateNodesV2 = [
               tags: [`type:${type}`],
               targets: {
                 test: {
-                  command:
-                    'vitest --config=packages/vite.config.mts --passWithNoTests',
+                  command: 'vitest --config=packages/vite.config.mts',
                 },
               },
             },

@@ -1,3 +1,4 @@
+import { getLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
 import { suspensify } from '@jscutlery/operators';
 import {
@@ -10,8 +11,6 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { getLlm } from './lib/domain/get-llm';
-import { scrapPage } from './lib/domain/scrap-page';
 import { fillArticleForm } from './lib/ui/advocu/fill-article-form';
 import { fillTalkForm } from './lib/ui/advocu/fill-talk-form';
 import { goToActivityForm } from './lib/ui/advocu/go-to-activity-form';

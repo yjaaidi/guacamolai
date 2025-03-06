@@ -39,7 +39,12 @@
     "../../packages/infra/lib/chrome-storage.ts",
     "../../packages/infra/lib/fetch-html-page.ts",
     "../../packages/infra/lib/gemini.ts",
-    "../../packages/infra/lib/local-storage.ts"
+    "../../packages/infra/lib/local-storage.ts",
+    "../../packages/domain/lib/get-llm.ts",
+    "../../packages/domain/lib/key-storage.ts",
+    "../../packages/domain/lib/scrap-page.spec.ts",
+    "../../packages/domain/lib/scrap-page.ts",
+    "../../packages/domain/lib/scrap-page.wide.spec.ts"
   ],
   "references": [
     {
@@ -47,6 +52,9 @@
     },
     {
       "path": "../../packages/infra/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/domain/tsconfig.lib.json"
     }
   ]
 }
