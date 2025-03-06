@@ -1,4 +1,4 @@
-import { AdvocuPage, AdvocuScrapForm } from '@guacamolai/advocu-ui';
+import { AdvocuActivityForm, AdvocuScrapForm } from '@guacamolai/advocu-ui';
 import { getLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
@@ -21,12 +21,12 @@ export async function main() {
   }
   const click$ = new Subject<void>();
   const url$ = new BehaviorSubject<string | null>(null);
-  const advocuPage = new AdvocuPage();
-  const advocuScrapForm = new AdvocuScrapForm({
+  const activityForm = new AdvocuActivityForm();
+  const scrapForm = new AdvocuScrapForm({
     onScrapClick: () => click$.next(),
     onUrlChange: (url) => url$.next(url),
   });
-  await advocuScrapForm.inject();
+  await scrapForm.inject();
 
   const page$ = url$.pipe(
     switchMap((url) => {
@@ -40,7 +40,7 @@ export async function main() {
 
   /* Enable/disable scrap button depending on whether we have the HTML or not. */
   page$.subscribe((page) =>
-    advocuScrapForm.updateScrapButton(page != null ? 'enabled' : 'disabled')
+    scrapForm.updateScrapButton(page != null ? 'enabled' : 'disabled')
   );
 
   const scrap$ = page$.pipe(
@@ -55,7 +55,7 @@ export async function main() {
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
           const activity = suspense.value;
-          advocuPage.fillActivityForm(activity);
+          activityForm.fillActivityForm(activity);
         }
       })
     )
@@ -63,16 +63,16 @@ export async function main() {
 
   scrap$.subscribe((suspense) => {
     if (suspense.pending) {
-      advocuScrapForm.updateScrapButton('pending');
+      scrapForm.updateScrapButton('pending');
     }
 
     if (suspense.hasValue) {
-      advocuScrapForm.updateScrapButton('enabled');
+      scrapForm.updateScrapButton('enabled');
     }
 
     if (suspense.hasError) {
       console.error(suspense.error);
-      advocuScrapForm.updateScrapButton('enabled');
+      scrapForm.updateScrapButton('enabled');
     }
   });
 }

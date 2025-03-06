@@ -3,7 +3,7 @@ import { goToActivityForm } from './go-to-activity-form';
 import { fillArticleForm } from './fill-article-form';
 import { fillTalkForm } from './fill-talk-form';
 
-export class AdvocuPage {
+export class AdvocuActivityForm {
   async fillActivityForm(activity: Activity) {
     await goToActivityForm(activity.type);
 
