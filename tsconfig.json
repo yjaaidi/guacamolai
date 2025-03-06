@@ -17,6 +17,9 @@
     },
     {
       "path": "./packages/shared-util"
+    },
+    {
+      "path": "./packages/shared-ui"
     }
   ]
 }

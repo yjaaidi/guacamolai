@@ -1,5 +1,5 @@
 import { Article } from '@guacamolai/core';
-import { Locator } from '../dom';
+import { Locator } from '@guacamolai/shared-ui/dom';
 import { fieldIds } from './activity-form-locators';
 import { fillActivityFormSharedFields } from './fill-activity-form-shared-fields';
 

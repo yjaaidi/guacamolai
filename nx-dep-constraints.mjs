@@ -54,7 +54,10 @@ export default [
   {
     sourceTag: type.ui,
     onlyDependOnLibsWithTags: [type.core, type.ui, type.util],
-    allowedExternalImports: [...commonAllowedExternalImports],
+    allowedExternalImports: [
+      ...commonAllowedExternalImports,
+      '@testing-library/*',
+    ],
   },
   {
     sourceTag: type.domain,

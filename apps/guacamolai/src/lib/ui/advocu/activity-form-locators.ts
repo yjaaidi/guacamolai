@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom';
-import { Locator } from '../dom';
+import { Locator } from '@guacamolai/shared-ui/dom';
 
 export const activityFormLocators = {
   contentType: new Locator(() => document.getElementById(fieldIds.contentType)),

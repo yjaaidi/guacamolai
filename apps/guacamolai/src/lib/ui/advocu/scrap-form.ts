@@ -1,4 +1,4 @@
-import { waitForElement } from '../dom';
+import { waitForElement } from '@guacamolai/shared-ui/dom';
 
 export async function tryInjectScrapForm({
   onClick,
