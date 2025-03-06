@@ -12,16 +12,7 @@
     "module": "esnext",
     "moduleResolution": "bundler"
   },
-  "include": [
-    "**/*.ts",
-    "index.spec.ts",
-    "index.ts",
-    "lib/create-llm.ts",
-    "lib/key-storage.ts",
-    "lib/scrap-page.spec.ts",
-    "lib/scrap-page.ts",
-    "lib/scrap-page.wide.spec.ts"
-  ],
+  "include": ["**/*.ts"],
   "references": [
     {
       "path": "../infra/tsconfig.lib.json"
