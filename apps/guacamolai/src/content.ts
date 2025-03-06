@@ -1,10 +1,4 @@
-import {
-  fillArticleForm,
-  fillTalkForm,
-  goToActivityForm,
-  tryInjectScrapForm,
-  updateScrapButton,
-} from '@guacamolai/advocu-ui';
+import { AdvocuPage, AdvocuScrapForm } from '@guacamolai/advocu-ui';
 import { getLlm, scrapPage } from '@guacamolai/domain';
 import { fetchHtmlPage } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
@@ -27,11 +21,12 @@ export async function main() {
   }
   const click$ = new Subject<void>();
   const url$ = new BehaviorSubject<string | null>(null);
-
-  await tryInjectScrapForm({
-    onClick: () => click$.next(),
+  const advocuPage = new AdvocuPage();
+  const advocuScrapForm = new AdvocuScrapForm({
+    onScrapClick: () => click$.next(),
     onUrlChange: (url) => url$.next(url),
   });
+  await advocuScrapForm.inject();
 
   const page$ = url$.pipe(
     switchMap((url) => {
@@ -45,7 +40,7 @@ export async function main() {
 
   /* Enable/disable scrap button depending on whether we have the HTML or not. */
   page$.subscribe((page) =>
-    updateScrapButton(page != null ? 'enabled' : 'disabled')
+    advocuScrapForm.updateScrapButton(page != null ? 'enabled' : 'disabled')
   );
 
   const scrap$ = page$.pipe(
@@ -60,20 +55,7 @@ export async function main() {
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
           const activity = suspense.value;
-          await goToActivityForm(activity.type);
-
-          /* HACK: for some reason we have to wait a bit here,
-           * otherwise, Advocu closes the form. */
-          await new Promise((resolve) => setTimeout(resolve, 500));
-
-          switch (activity.type) {
-            case 'article':
-              await fillArticleForm(activity);
-              break;
-            case 'talk':
-              await fillTalkForm(activity);
-              break;
-          }
+          advocuPage.fillActivityForm(activity);
         }
       })
     )
@@ -81,16 +63,16 @@ export async function main() {
 
   scrap$.subscribe((suspense) => {
     if (suspense.pending) {
-      updateScrapButton('pending');
+      advocuScrapForm.updateScrapButton('pending');
     }
 
     if (suspense.hasValue) {
-      updateScrapButton('enabled');
+      advocuScrapForm.updateScrapButton('enabled');
     }
 
     if (suspense.hasError) {
       console.error(suspense.error);
-      updateScrapButton('enabled');
+      advocuScrapForm.updateScrapButton('enabled');
     }
   });
 }
