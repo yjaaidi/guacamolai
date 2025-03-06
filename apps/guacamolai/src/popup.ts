@@ -1,3 +1,3 @@
-import { PopupElement } from './app/popup.element';
+import { PopupElement } from './popup.element';
 
 customElements.define('guacamolai-popup', PopupElement);
