@@ -14,7 +14,7 @@
     "sharedGlobals": []
   },
   "plugins": [
-    "./tools/implicit-vitest.ts",
+    "./tools/implicit-libs.ts",
     {
       "plugin": "@nx/js/typescript",
       "options": {

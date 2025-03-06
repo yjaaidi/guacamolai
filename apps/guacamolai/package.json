@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "nx": {
-    "projectType": "application"
+    "projectType": "application",
+    "tags": [
+      "type:app"
+    ]
   }
 }

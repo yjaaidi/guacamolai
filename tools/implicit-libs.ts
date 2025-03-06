@@ -6,11 +6,15 @@ export const createNodesV2: CreateNodesV2 = [
   (packageFiles) => {
     return packageFiles.map((file) => {
       const projectPath = dirname(file);
+      const [, projectName] = projectPath.split('/');
+      const type = projectName.split('-').at(-1);
+
       return [
         file,
         {
           projects: {
             [projectPath]: {
+              tags: [`type:${type}`],
               targets: {
                 test: {
                   command: 'vitest --config=packages/vite.config.mts',
