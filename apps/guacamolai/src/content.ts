@@ -1,3 +1,4 @@
+import { fetchHtmlPage } from '@guacamolai/infra';
 import { suspensify } from '@jscutlery/operators';
 import {
   BehaviorSubject,
@@ -10,8 +11,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { getLlm } from './lib/domain/get-llm';
-import { scrapPage as scrapPage } from './lib/domain/scrap-page';
-import { fetchHtmlPage } from './lib/infra/fetch-html-page';
+import { scrapPage } from './lib/domain/scrap-page';
+import { fillArticleForm } from './lib/ui/advocu/fill-article-form';
 import { fillTalkForm } from './lib/ui/advocu/fill-talk-form';
 import { goToActivityForm } from './lib/ui/advocu/go-to-activity-form';
 import {
@@ -19,7 +20,6 @@ import {
   updateScrapButton,
 } from './lib/ui/advocu/scrap-form';
 import { isValidUrl } from './lib/utils/is-valid-url';
-import { fillArticleForm } from './lib/ui/advocu/fill-article-form';
 
 export async function main() {
   const llm = await getLlm();

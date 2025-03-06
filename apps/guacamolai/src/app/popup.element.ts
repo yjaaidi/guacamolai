@@ -1,5 +1,5 @@
+import { ChromeStorage } from '@guacamolai/infra';
 import { fromEvent, Subscription, switchMap } from 'rxjs';
-import { ChromeStorage } from '../lib/infra/chrome-storage';
 
 export class PopupElement extends HTMLElement {
   #shadowRoot: ShadowRoot;

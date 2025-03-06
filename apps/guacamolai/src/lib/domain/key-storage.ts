@@ -1,4 +1,4 @@
-import { ChromeStorage } from '../infra/chrome-storage';
+import { ChromeStorage } from '@guacamolai/infra';
 
 export class KeyStorage {
   #storage = new ChromeStorage();

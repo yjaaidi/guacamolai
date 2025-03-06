@@ -7,12 +7,17 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
+    "lib": ["dom", "ES2024"],
+    "types": ["chrome", "node"],
     "module": "esnext",
     "moduleResolution": "bundler"
   },
   "include": ["**/*.ts", "index.spec.ts", "index.ts"],
-  "references": [],
+  "references": [
+    {
+      "path": "../core/tsconfig.lib.json"
+    }
+  ],
   "exclude": [
     "vite.config.mts",
     "vitest.config.ts",

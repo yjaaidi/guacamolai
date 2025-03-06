@@ -35,11 +35,18 @@
     "../../packages/core/lib/extension-storage.ts",
     "../../packages/core/lib/html-page.ts",
     "../../packages/core/lib/llm.fake.ts",
-    "../../packages/core/lib/llm.ts"
+    "../../packages/core/lib/llm.ts",
+    "../../packages/infra/lib/chrome-storage.ts",
+    "../../packages/infra/lib/fetch-html-page.ts",
+    "../../packages/infra/lib/gemini.ts",
+    "../../packages/infra/lib/local-storage.ts"
   ],
   "references": [
     {
       "path": "../../packages/core/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/infra/tsconfig.lib.json"
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { HtmlPage } from '@guacamolai/core';
+import { Gemini } from '@guacamolai/infra';
 import { lastValueFrom } from 'rxjs';
 import { describe, it } from 'vitest';
-import { Gemini } from '../infra/gemini';
 import { scrapPage } from './scrap-page';
 import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';

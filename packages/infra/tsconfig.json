@@ -4,19 +4,13 @@
   "include": [],
   "references": [
     {
-      "path": "../../packages/core"
+      "path": "../core"
     },
     {
-      "path": "../../packages/infra"
-    },
-    {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.lib.json"
     },
     {
       "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.e2e.json"
     }
   ]
 }

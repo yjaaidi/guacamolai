@@ -64,7 +64,7 @@ export default [
   {
     sourceTag: type.infra,
     onlyDependOnLibsWithTags: [type.core, type.infra, type.util],
-    allowedExternalImports: [...commonAllowedExternalImports],
+    allowedExternalImports: [...commonAllowedExternalImports, 'rxjs/fetch'],
   },
   {
     sourceTag: type.core,

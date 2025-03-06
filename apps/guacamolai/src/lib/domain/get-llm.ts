@@ -1,6 +1,5 @@
 import { LlmFake } from '@guacamolai/core/testing';
-import { Gemini } from '../infra/gemini';
-import { tryReadLocalStorageJson } from '../infra/local-storage';
+import { Gemini, tryReadLocalStorageJson } from '@guacamolai/infra';
 import { KeyStorage } from './key-storage';
 
 export async function getLlm() {
