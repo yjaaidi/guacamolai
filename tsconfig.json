@@ -23,6 +23,9 @@
     },
     {
       "path": "./packages/advocu-ui"
+    },
+    {
+      "path": "./packages/advocu-core"
     }
   ]
 }

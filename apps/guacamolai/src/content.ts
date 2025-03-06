@@ -1,6 +1,7 @@
+import { AdvocuScrapFormFactory } from '@guacamolai/advocu-core';
 import {
-  AdvocuActivityForm,
-  AdvocuScrapFormFactory,
+  AdvocuActivityFormImpl,
+  AdvocuScrapFormFactoryImpl,
 } from '@guacamolai/advocu-ui';
 import { Llm } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
@@ -19,11 +20,11 @@ import {
 } from 'rxjs';
 
 export async function main({
-  activityForm = new AdvocuActivityForm(),
+  activityForm = new AdvocuActivityFormImpl(),
   llm,
-  scrapFormFactory = new AdvocuScrapFormFactory(),
+  scrapFormFactory = new AdvocuScrapFormFactoryImpl(),
 }: {
-  activityForm?: AdvocuActivityForm;
+  activityForm?: AdvocuActivityFormImpl;
   llm?: Llm;
   scrapFormFactory?: AdvocuScrapFormFactory;
 } = {}) {

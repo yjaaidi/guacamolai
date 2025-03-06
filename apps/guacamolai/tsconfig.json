@@ -7,10 +7,16 @@
       "path": "../../packages/shared-util"
     },
     {
+      "path": "../../packages/infra"
+    },
+    {
+      "path": "../../packages/core"
+    },
+    {
       "path": "../../packages/advocu-ui"
     },
     {
-      "path": "../../packages/infra"
+      "path": "../../packages/advocu-core"
     },
     {
       "path": "../../packages/domain"

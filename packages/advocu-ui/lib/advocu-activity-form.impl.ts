@@ -1,10 +1,11 @@
 import { Activity, ActivityType } from '@guacamolai/core';
+import { AdvocuActivityForm } from '@guacamolai/advocu-core';
 import { Locator } from '@guacamolai/shared-ui/dom';
 import { screen } from '@testing-library/dom';
 import { fillArticleForm } from './fill-article-form';
 import { fillTalkForm } from './fill-talk-form';
 
-export class AdvocuActivityForm {
+export class AdvocuActivityFormImpl implements AdvocuActivityForm {
   private _activitySectionMap: Record<ActivityType, string> = {
     article: 'Content creation',
     talk: 'Public speaking',

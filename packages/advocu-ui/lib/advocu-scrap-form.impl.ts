@@ -1,6 +1,10 @@
+import type {
+  AdvocuScrapForm,
+  AdvocuScrapFormFactory,
+} from '@guacamolai/advocu-core';
 import { waitForElement } from '@guacamolai/shared-ui/dom';
 
-export class AdvocuScrapFormFactory {
+export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
   private static _SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
 
   async create() {
@@ -9,7 +13,7 @@ export class AdvocuScrapFormFactory {
       return;
     }
 
-    return new AdvocuScrapForm(els);
+    return new AdvocuScrapFormImpl(els);
   }
 
   private async _tryInjectScrapForm() {
@@ -41,7 +45,7 @@ export class AdvocuScrapFormFactory {
   }
 
   private _getScrapButton() {
-    return document.getElementById(AdvocuScrapFormFactory._SCRAP_BUTTON_ID);
+    return document.getElementById(AdvocuScrapFormFactoryImpl._SCRAP_BUTTON_ID);
   }
 
   private _tryInjectScrapButtonStyles() {
@@ -67,7 +71,7 @@ export class AdvocuScrapFormFactory {
   }
 }
 
-export class AdvocuScrapForm {
+export class AdvocuScrapFormImpl implements AdvocuScrapForm {
   private _scrapButtonEl: HTMLElement;
   private _scrapInputEl: HTMLInputElement;
 

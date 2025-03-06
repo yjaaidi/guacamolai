@@ -38,10 +38,16 @@
       "path": "../../packages/shared-util/tsconfig.lib.json"
     },
     {
+      "path": "../../packages/infra/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/core/tsconfig.lib.json"
+    },
+    {
       "path": "../../packages/advocu-ui/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/infra/tsconfig.lib.json"
+      "path": "../../packages/advocu-core/tsconfig.lib.json"
     },
     {
       "path": "../../packages/domain/tsconfig.lib.json"

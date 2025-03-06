@@ -4,13 +4,7 @@
   "include": [],
   "references": [
     {
-      "path": "../advocu-core"
-    },
-    {
       "path": "../core"
-    },
-    {
-      "path": "../shared-ui"
     },
     {
       "path": "./tsconfig.lib.json"
