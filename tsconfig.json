@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./apps/guacamolai"
+    },
+    {
+      "path": "./packages/core"
     }
   ]
 }
