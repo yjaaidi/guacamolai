@@ -6,9 +6,9 @@ import {
   AdvocuActivityFormImpl,
   AdvocuScrapFormFactoryImpl,
 } from '@guacamolai/advocu-ui';
-import { Llm } from '@guacamolai/core';
+import { HtmlLoader, Llm } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
-import { fetchHtmlPage } from '@guacamolai/infra';
+import { HtmlLoaderImpl } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
 import {
@@ -24,10 +24,12 @@ import {
 
 export async function main({
   activityForm = new AdvocuActivityFormImpl(),
+  htmlLoader = new HtmlLoaderImpl(),
   llm,
   scrapFormFactory = new AdvocuScrapFormFactoryImpl(),
 }: {
   activityForm?: AdvocuActivityForm;
+  htmlLoader?: HtmlLoader;
   llm?: Llm;
   scrapFormFactory?: AdvocuScrapFormFactory;
 } = {}) {
@@ -48,7 +50,7 @@ export async function main({
   const page$ = url$.pipe(
     switchMap((url) => {
       if (url != null && isValidUrl(url)) {
-        return fetchHtmlPage(url).pipe(startWith(null));
+        return htmlLoader.loadHtml(url).pipe(startWith(null));
       }
       return of(null);
     }),
