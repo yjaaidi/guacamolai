@@ -1,11 +1,13 @@
+import { Observable } from 'rxjs';
+
 export interface AdvocuScrapFormFactory {
   create(): Promise<AdvocuScrapForm | undefined>;
 }
 
 export interface AdvocuScrapForm {
-  onScrapClick(onClick: () => void): void;
+  scrapClick$: Observable<void>;
 
-  onUrlChange(onUrlChange: (url: string) => void): void;
+  urlChange$: Observable<string>;
 
   updateScrapButton(status: 'disabled' | 'enabled' | 'pending'): void;
 }

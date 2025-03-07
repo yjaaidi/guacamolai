@@ -11,16 +11,7 @@ import { createLlm, scrapPage } from '@guacamolai/domain';
 import { HtmlLoaderImpl } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
-import {
-  BehaviorSubject,
-  filter,
-  map,
-  of,
-  share,
-  startWith,
-  Subject,
-  switchMap,
-} from 'rxjs';
+import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
 
 export async function main({
   activityForm = new AdvocuActivityFormImpl(),
@@ -40,14 +31,14 @@ export async function main({
   }
 
   const click$ = new Subject<void>();
-  const url$ = new BehaviorSubject<string | null>(null);
   const scrapForm = await scrapFormFactory.create();
 
   if (!scrapForm) {
     return;
   }
 
-  const page$ = url$.pipe(
+  const page$ = scrapForm.urlChange$.pipe(
+    startWith(null),
     switchMap((url) => {
       if (url != null && isValidUrl(url)) {
         return htmlLoader.loadHtml(url).pipe(startWith(null));
@@ -64,7 +55,7 @@ export async function main({
 
   const scrap$ = page$.pipe(
     filter((page) => page != null),
-    switchMap((page) => click$.pipe(map(() => page))),
+    switchMap((page) => scrapForm.scrapClick$.pipe(map(() => page))),
     switchMap((page) => scrapPage({ page, llm }).pipe(suspensify())),
     share()
   );

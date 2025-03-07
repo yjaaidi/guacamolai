@@ -3,6 +3,7 @@ import type {
   AdvocuScrapFormFactory,
 } from '@guacamolai/advocu-core';
 import { waitForElement } from '@guacamolai/shared-ui/dom';
+import { fromEvent, map, Observable } from 'rxjs';
 
 export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
   private static _SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
@@ -72,6 +73,9 @@ export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
 }
 
 export class AdvocuScrapFormImpl implements AdvocuScrapForm {
+  urlChange$: Observable<string>;
+  scrapClick$: Observable<void>;
+
   private _scrapButtonEl: HTMLElement;
   private _scrapInputEl: HTMLInputElement;
 
@@ -84,15 +88,11 @@ export class AdvocuScrapFormImpl implements AdvocuScrapForm {
   }) {
     this._scrapButtonEl = scrapButtonEl;
     this._scrapInputEl = scrapInputEl;
-  }
-
-  onScrapClick(onClick: () => void) {
-    this._scrapButtonEl.addEventListener('click', onClick);
-  }
-
-  onUrlChange(onUrlChange: (url: string) => void) {
-    this._scrapInputEl.addEventListener('input', () =>
-      onUrlChange(this._scrapInputEl.value)
+    this.urlChange$ = fromEvent(this._scrapInputEl, 'input').pipe(
+      map(() => this._scrapInputEl.value)
+    );
+    this.scrapClick$ = fromEvent(this._scrapButtonEl, 'click').pipe(
+      map(() => undefined)
     );
   }
 
