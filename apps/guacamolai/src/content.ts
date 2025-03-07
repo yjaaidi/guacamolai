@@ -1,4 +1,7 @@
-import { AdvocuScrapFormFactory } from '@guacamolai/advocu-core';
+import {
+  AdvocuActivityForm,
+  AdvocuScrapFormFactory,
+} from '@guacamolai/advocu-core';
 import {
   AdvocuActivityFormImpl,
   AdvocuScrapFormFactoryImpl,
@@ -24,7 +27,7 @@ export async function main({
   llm,
   scrapFormFactory = new AdvocuScrapFormFactoryImpl(),
 }: {
-  activityForm?: AdvocuActivityFormImpl;
+  activityForm?: AdvocuActivityForm;
   llm?: Llm;
   scrapFormFactory?: AdvocuScrapFormFactory;
 } = {}) {

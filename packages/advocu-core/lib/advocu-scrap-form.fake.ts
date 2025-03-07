@@ -1,6 +1,6 @@
 import { AdvocuScrapForm, AdvocuScrapFormFactory } from './advocu-scrap-form';
 
-export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
+export class AdvocuScrapFormFactoryFake implements AdvocuScrapFormFactory {
   form?: AdvocuScrapFormFake;
 
   async create() {
