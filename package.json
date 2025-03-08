@@ -44,5 +44,9 @@
   "workspaces": [
     "packages/*",
     "apps/*"
+  ],
+  "trustedDependencies": [
+    "@swc/core",
+    "spawn-sync"
   ]
 }

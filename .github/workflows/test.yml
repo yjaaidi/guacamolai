@@ -1,0 +1,75 @@
+name: Test
+on:
+  push:
+
+env:
+  # Using Nx Cloud is safer
+  NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  ADVOCU_EMAIL: ${{ secrets.ADVOCU_EMAIL }}
+  ADVOCU_PASSWORD: ${{ secrets.ADVOCU_PASSWORD }}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  build:
+    name: 📦 Build
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun nx affected -t build
+
+  lint:
+    name: 🧹 Lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun nx affected -t lint
+
+  test-narrow:
+    name: 🐜 Test Narrow
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun nx affected -t test
+
+  test-wide:
+    name: 🐘 Test Wide
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun nx affected -t test-wide
+
+  e2e:
+    name: 🎭 e2e
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun playwright install
+      - run: bun nx affected -t e2e
+      - uses: actions/upload-artifact@v4
+        with:
+          name: e2e
+          path: apps/guacamolai/test-output

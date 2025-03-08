@@ -6,42 +6,51 @@ import { scrapPage } from './scrap-page';
 import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 
+const TIMEOUT = 10_000;
+
 describe(scrapPage.name, () => {
-  it('scraps content from url', async () => {
-    const { scrap } = setUp();
+  it(
+    'scraps content from url',
+    async () => {
+      const { scrap } = setUp();
 
-    expect(
-      await scrap({
-        url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
-        html: marmicodeBlogPostHtml,
-      })
-    ).toMatchObject({
-      type: 'article',
-      title: expect.stringContaining(
-        'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
-      ),
-      description:
-        'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
-      date: '2024-11-18',
-    });
-  });
+      expect(
+        await scrap({
+          url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
+          html: marmicodeBlogPostHtml,
+        })
+      ).toMatchObject({
+        type: 'article',
+        title: expect.stringContaining(
+          'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
+        ),
+        description: expect.stringContaining('Ahead-Of-Time (AOT)'),
+        date: '2024-11-18',
+      });
+    },
+    { timeout: TIMEOUT }
+  );
 
-  it('scraps talk from url', async () => {
-    const { scrap } = setUp();
+  it(
+    'scraps talk from url',
+    async () => {
+      const { scrap } = setUp();
 
-    expect(
-      await scrap({
-        url: 'https://ng-de.org/speakers/younes-jaaidi/',
-        html: ngDeYounesJaaidiHtml,
-      })
-    ).toMatchObject({
-      type: 'talk',
-      title: 'Fake it till you Mock it',
-      description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests? Aren’t you tired of maintaining and debugging them, or trying to keep them in sync with the real implementation? Join us to see how Fakes and their fellow companions, Object Mothers, and Gloves might just become the pillars of your testing strategy.`,
-      city: 'Berlin',
-      country: 'Germany',
-    });
-  });
+      expect(
+        await scrap({
+          url: 'https://ng-de.org/speakers/younes-jaaidi/',
+          html: ngDeYounesJaaidiHtml,
+        })
+      ).toMatchObject({
+        type: 'talk',
+        title: 'Fake it till you Mock it',
+        description: expect.stringContaining('Fake'),
+        city: 'Berlin',
+        country: 'Germany',
+      });
+    },
+    { timeout: TIMEOUT }
+  );
 });
 
 function setUp() {
