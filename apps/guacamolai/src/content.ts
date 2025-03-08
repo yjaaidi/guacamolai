@@ -8,13 +8,14 @@ import {
 } from '@guacamolai/advocu-ui';
 import { BackgroundClient, HtmlLoader, Llm } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
-import { HtmlLoaderImpl } from '@guacamolai/infra';
+import { BackgroundClientImpl, HtmlLoaderImpl } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
 import { filter, map, of, share, startWith, switchMap } from 'rxjs';
 
 export async function main({
   activityForm = new AdvocuActivityFormImpl(),
+  backgroundClient = new BackgroundClientImpl(),
   htmlLoader = new HtmlLoaderImpl(),
   llm,
   scrapFormFactory = new AdvocuScrapFormFactoryImpl(),
