@@ -70,6 +70,7 @@ jobs:
       - run: bun playwright install
       - run: bun nx affected -t e2e
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: e2e
           path: apps/guacamolai/test-output
