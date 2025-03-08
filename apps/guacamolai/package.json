@@ -6,6 +6,13 @@
     "projectType": "application",
     "tags": [
       "type:app"
-    ]
+    ],
+    "targets": {
+      "e2e": {
+        "dependsOn": [
+          "build"
+        ]
+      }
+    }
   }
 }
