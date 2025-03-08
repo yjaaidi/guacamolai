@@ -4,7 +4,11 @@ import {
   AdvocuScrapFormFactoryFake,
 } from '@guacamolai/advocu-core/testing';
 import { main } from './content';
-import { HtmlLoaderFake, LlmFake } from '@guacamolai/core/testing';
+import {
+  BackgroundClientServerFake,
+  HtmlLoaderFake,
+  LlmFake,
+} from '@guacamolai/core/testing';
 import { createHtmlPage } from '@guacamolai/core';
 
 describe('GuacamolAI', () => {
@@ -27,6 +31,7 @@ async function setUpAndRun() {
 
 function setUp() {
   const activityForm = new AdvocuActivityFormFake();
+  const backgroundClientServerFake = new BackgroundClientServerFake();
   const scrapFormFactory = new AdvocuScrapFormFactoryFake();
   const htmlLoader = new HtmlLoaderFake();
   const llm = new LlmFake();
@@ -60,7 +65,13 @@ function setUp() {
       scrapFormFactory.form.fillAndSubmitForm(url);
     },
     async runContent() {
-      await main({ activityForm, scrapFormFactory, htmlLoader, llm });
+      await main({
+        activityForm,
+        backgroundClient: backgroundClientServerFake,
+        scrapFormFactory,
+        htmlLoader,
+        llm,
+      });
     },
   };
 }

@@ -6,12 +6,12 @@ import {
   AdvocuActivityFormImpl,
   AdvocuScrapFormFactoryImpl,
 } from '@guacamolai/advocu-ui';
-import { HtmlLoader, Llm } from '@guacamolai/core';
+import { BackgroundClient, HtmlLoader, Llm } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
 import { HtmlLoaderImpl } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
-import { filter, map, of, share, startWith, Subject, switchMap } from 'rxjs';
+import { filter, map, of, share, startWith, switchMap } from 'rxjs';
 
 export async function main({
   activityForm = new AdvocuActivityFormImpl(),
@@ -20,6 +20,7 @@ export async function main({
   scrapFormFactory = new AdvocuScrapFormFactoryImpl(),
 }: {
   activityForm?: AdvocuActivityForm;
+  backgroundClient?: BackgroundClient;
   htmlLoader?: HtmlLoader;
   llm?: Llm;
   scrapFormFactory?: AdvocuScrapFormFactory;
