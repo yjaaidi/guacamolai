@@ -30,7 +30,6 @@ export async function main({
     return;
   }
 
-  const click$ = new Subject<void>();
   const scrapForm = await scrapFormFactory.create();
 
   if (!scrapForm) {
