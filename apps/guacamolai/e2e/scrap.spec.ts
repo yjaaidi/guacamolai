@@ -71,9 +71,9 @@ test('loads article', async ({ page, scrapFormGlove }) => {
       }
     );
 
-  // await expect
-  //   .soft(page.locator('[id="#/properties/contentType"] input'))
-  //   .toHaveValue('Articles');
+  await expect
+    .soft(page.locator('[id="#/properties/contentType"]'))
+    .toHaveText('Articles');
 
   await expect
     .soft(
