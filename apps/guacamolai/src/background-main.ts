@@ -6,12 +6,12 @@ import {
   ScrapAction,
 } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
-import { BackgroundServerImpl, HtmlLoaderImpl } from '@guacamolai/infra';
+import { BackgroundServerImpl, HtmlLoaderChromeTab } from '@guacamolai/infra';
 import { map, of, Subject, switchMap } from 'rxjs';
 
 export async function main({
   backgroundServer = new BackgroundServerImpl(),
-  htmlLoader = new HtmlLoaderImpl(),
+  htmlLoader = new HtmlLoaderChromeTab(),
   llm,
 }: {
   backgroundServer?: BackgroundServer;

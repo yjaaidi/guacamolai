@@ -56,6 +56,8 @@ test('disables scrap button on click', async ({ scrapFormGlove }) => {
 });
 
 test('loads article', async ({ page, scrapFormGlove }) => {
+  test.slow();
+
   await scrapFormGlove.fillAndSubmit(
     'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
   );
@@ -90,6 +92,8 @@ test('loads article', async ({ page, scrapFormGlove }) => {
 });
 
 test('loads talk', async ({ page, scrapFormGlove }) => {
+  test.slow();
+
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );

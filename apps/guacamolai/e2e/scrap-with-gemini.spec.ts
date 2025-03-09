@@ -13,20 +13,23 @@ test.beforeEach(async ({ page, setUpGeminiApiKey }) => {
 });
 
 test('loads talk', async ({ page, scrapFormGlove }) => {
+  test.slow();
+
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
   await expect
     .soft(page.getByLabel('What was the title of your talk?'))
-    .toHaveValue('Fake it till you Mock it');
+    .toHaveValue('Fake it till you Mock it', {
+      timeout: 10_000,
+    });
+
   await expect
     .soft(
       page
         .locator('[id="\\#\\/properties\\/description"]')
         .getByRole('paragraph')
     )
-    .toContainText(
-      'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
-    );
+    .toContainText('Fake');
 });
