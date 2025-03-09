@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AdvocuScrapForm, AdvocuScrapFormFactory } from './advocu-scrap-form';
 
 export class AdvocuScrapFormFactoryFake implements AdvocuScrapFormFactory {
@@ -12,18 +12,18 @@ export class AdvocuScrapFormFactoryFake implements AdvocuScrapFormFactory {
 export class AdvocuScrapFormFake implements AdvocuScrapForm {
   status?: 'disabled' | 'enabled' | 'pending';
 
-  private _urlChange$ = new Subject<string>();
-  private _scrapClick$ = new Subject<void>();
+  #urlChange$ = new Subject<string>();
+  #scrapClick$ = new Subject<void>();
 
-  urlChange$ = this._urlChange$.asObservable();
-  scrapClick$ = this._scrapClick$.asObservable();
+  urlChange$ = this.#urlChange$.asObservable();
+  scrapClick$ = this.#scrapClick$.asObservable();
 
   updateScrapButton(status: 'disabled' | 'enabled' | 'pending') {
     this.status = status;
   }
 
   fillAndSubmitForm(url: string) {
-    this._urlChange$.next(url);
-    this._scrapClick$.next();
+    this.#urlChange$.next(url);
+    this.#scrapClick$.next();
   }
 }

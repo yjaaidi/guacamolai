@@ -1,3 +1,4 @@
+export * from './lib/activity';
 export * from './lib/background-actions';
 export * from './lib/background-client';
 export * from './lib/background-server';
