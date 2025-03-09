@@ -13,6 +13,9 @@ export class HtmlLoaderChromeTab implements HtmlLoader {
         target: { tabId: tab.id },
         func: _readBody,
       });
+
+      await chrome.tabs.remove(tab.id);
+
       return createHtmlPage({ url, html: html as string });
     });
   }

@@ -130,3 +130,20 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
 
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
+
+test('close scrapping tab', async ({ context, page, scrapFormGlove }) => {
+  await scrapFormGlove.fillAndSubmit(
+    'https://ng-de.org/speakers/younes-jaaidi/'
+  );
+
+  await expect
+    .soft(page.getByLabel('What was the title of your talk?'))
+    .toHaveValue('Fake it till you Mock it');
+
+  /* Make sure `ng-de.org` tab is closed after scraping. */
+  await expect
+    .poll(() => context.pages().map((p) => p.url()))
+    .not.toEqual(
+      expect.arrayContaining([expect.stringContaining('ng-de.org')])
+    );
+});
