@@ -36,7 +36,7 @@ export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
     scrapInputEl.placeholder = 'URL to scrap';
 
     const scrapButtonEl = document.createElement('button');
-    scrapButtonEl.id = AdvocuScrapFormFactory._SCRAP_BUTTON_ID;
+    scrapButtonEl.id = AdvocuScrapFormFactoryImpl._SCRAP_BUTTON_ID;
     scrapButtonEl.textContent = '✨ Scrap activity';
     scrapButtonEl.classList.add('ant-btn', 'ant-btn-default');
 

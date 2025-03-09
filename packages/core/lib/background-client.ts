@@ -1,3 +1,8 @@
+import { BackgroundAction } from './background-actions';
+
 export interface BackgroundClient {
-  sendAction<T, R>(action: string, payload: T): Promise<R>;
+  sendAction<ACTION extends BackgroundAction>(
+    type: ACTION['type'],
+    input: ACTION['payload']
+  ): Promise<ACTION['result']>;
 }

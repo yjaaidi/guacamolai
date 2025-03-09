@@ -1,3 +1,4 @@
+import { BackgroundAction } from './background-actions';
 import { BackgroundClient } from './background-client';
 import { BackgroundServer } from './background-server';
 
@@ -9,8 +10,11 @@ export class BackgroundClientServerFake
     [action: string]: (payload: any) => Promise<any>;
   } = {};
 
-  onAction<T, R>(action: string, handler: (payload: T) => Promise<R>): void {
-    this._handlers[action] = handler;
+  onAction<ACTION extends BackgroundAction>(
+    type: ACTION['type'],
+    handler: (payload: ACTION['payload']) => Promise<ACTION['result']>
+  ): void {
+    this._handlers[type] = handler;
   }
 
   async sendAction<T, R>(action: string, payload: T): Promise<R> {

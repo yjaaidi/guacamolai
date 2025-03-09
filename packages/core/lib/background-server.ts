@@ -1,3 +1,8 @@
+import { BackgroundAction } from './background-actions';
+
 export interface BackgroundServer {
-  onAction<T, R>(action: string, handler: (payload: T) => Promise<R>): void;
+  onAction<ACTION extends BackgroundAction>(
+    action: ACTION['type'],
+    handler: (payload: ACTION['payload']) => Promise<ACTION['result']>
+  ): void;
 }

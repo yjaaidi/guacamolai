@@ -1,7 +1,30 @@
-import { BackgroundServer } from '@guacamolai/core';
+import { BackgroundAction, BackgroundServer } from '@guacamolai/core';
 
 export class BackgroundServerImpl implements BackgroundServer {
-  onAction<T, R>(action: string, handler: (payload: T) => Promise<R>): void {
-    throw new Error('🚧 Work in progress!');
+  onAction<ACTION extends BackgroundAction>(
+    type: ACTION['type'],
+    handler: (payload: ACTION['payload']) => Promise<ACTION['result']>
+  ): void {
+    chrome.runtime.onMessage.addListener(
+      (
+        message: { type: ACTION['type']; payload: ACTION['payload'] },
+        _,
+        sendResponse
+      ) => {
+        innerHandler();
+
+        /* Asynchronous listener. */
+        return true;
+
+        async function innerHandler() {
+          if (message.type === type) {
+            const result = await handler(message.payload);
+            sendResponse(result);
+          } else {
+            console.error(`Unknown action: ${message.type}`);
+          }
+        }
+      }
+    );
   }
 }

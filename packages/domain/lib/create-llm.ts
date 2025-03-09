@@ -1,28 +1,30 @@
-import { LlmFake } from '@guacamolai/core/testing';
-import { Gemini, tryReadLocalStorageJson } from '@guacamolai/infra';
-import { KeyStorage } from './key-storage';
 import { Llm } from '@guacamolai/core';
+import { LlmFake } from '@guacamolai/core/testing';
+import { Gemini } from '@guacamolai/infra';
+import { KeyStorage } from './key-storage';
 
-export async function createLlm() {
-  /* We use the local storage to set up the fake LLM in Playwright. */
-  const llm = _tryCreateLlmFake();
-  if (!llm) {
-    return _tryCreateLlmGemini();
-  }
-
-  return;
+export async function createLlm({
+  fakeLlmResponses,
+}: { fakeLlmResponses?: Record<string, unknown> } = {}): Promise<
+  Llm | undefined
+> {
+  return (
+    (await _tryCreateLlmFake({ fakeLlmResponses })) ??
+    (await _tryCreateLlmGemini())
+  );
 }
 
-async function _tryCreateLlmFake(): Promise<Llm | undefined> {
-  const responses =
-    tryReadLocalStorageJson<Record<string, unknown>>(LLM_FAKE_STORAGE_KEY);
-
-  if (responses == null) {
+async function _tryCreateLlmFake({
+  fakeLlmResponses,
+}: {
+  fakeLlmResponses?: Record<string, unknown>;
+}): Promise<Llm | undefined> {
+  if (fakeLlmResponses == null) {
     return;
   }
 
   const llm = new LlmFake();
-  llm.setResponses(responses);
+  llm.setResponses(fakeLlmResponses);
   return llm;
 }
 

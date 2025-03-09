@@ -3,7 +3,8 @@ import {
   AdvocuActivityFormFake,
   AdvocuScrapFormFactoryFake,
 } from '@guacamolai/advocu-core/testing';
-import { main } from './content';
+import { main as backgroundMain } from './background-main';
+import { main as contentMain } from './content-main';
 import {
   BackgroundClientServerFake,
   HtmlLoaderFake,
@@ -24,7 +25,8 @@ describe('GuacamolAI', () => {
 });
 
 async function setUpAndRun() {
-  const { runContent, ...utils } = setUp();
+  const { runBackground, runContent, ...utils } = setUp();
+  await runBackground();
   await runContent();
   return utils;
 }
@@ -64,13 +66,19 @@ function setUp() {
 
       scrapFormFactory.form.fillAndSubmitForm(url);
     },
+    async runBackground() {
+      await backgroundMain({
+        backgroundServer: backgroundClientServerFake,
+        htmlLoader,
+        llm,
+      });
+    },
     async runContent() {
-      await main({
+      await contentMain({
         activityForm,
         backgroundClient: backgroundClientServerFake,
         scrapFormFactory,
         htmlLoader,
-        llm,
       });
     },
   };

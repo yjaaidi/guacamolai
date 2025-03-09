@@ -1,7 +1,10 @@
-import { BackgroundClient } from '@guacamolai/core';
+import { BackgroundAction, BackgroundClient } from '@guacamolai/core';
 
 export class BackgroundClientImpl implements BackgroundClient {
-  sendAction<T, R>(action: string, payload: T): Promise<R> {
-    throw new Error('🚧 Work in progress!');
+  async sendAction<ACTION extends BackgroundAction>(
+    type: ACTION['type'],
+    payload: ACTION['payload']
+  ): Promise<ACTION['result']> {
+    return await chrome.runtime.sendMessage({ type, payload });
   }
 }
