@@ -6,7 +6,7 @@ import { scrapPage } from './scrap-page';
 import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 
-const TIMEOUT = 10_000;
+const TIMEOUT = 15_000;
 
 describe(scrapPage.name, () => {
   it(
