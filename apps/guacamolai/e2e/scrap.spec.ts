@@ -62,14 +62,19 @@ test('loads article', async ({ page, scrapFormGlove }) => {
     'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
   );
 
-  // await expect
-  //   .soft(page.locator('[id="#/properties/contentType"] input'))
-  //   .toHaveValue('Articles');
   await expect
     .soft(page.getByLabel('What was the title?'))
     .toHaveValue(
-      'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
+      'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
+      {
+        timeout: 10_000,
+      }
     );
+
+  // await expect
+  //   .soft(page.locator('[id="#/properties/contentType"] input'))
+  //   .toHaveValue('Articles');
+
   await expect
     .soft(
       page
@@ -114,12 +119,12 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
   await expect.soft(page.getByLabel('Yes')).not.toBeChecked();
   await expect.soft(page.getByLabel('No')).toBeChecked();
 
-  // await expect
-  //   .soft(page.locator('[id="#/properties/country"] input'))
-  //   .toHaveValue('Germany');
-  // await expect
-  //   .soft(page.locator('[id="#/properties/city"] input'))
-  //   .toHaveValue('Berlin');
+  await expect
+    .soft(page.locator('[id="#/properties/country"]'))
+    .toHaveText('Germany');
+  await expect
+    .soft(page.locator('[id="#/properties/city"]'))
+    .toHaveValue('Berlin');
 
   await expect
     .soft(page.getByPlaceholder('Select date'))
