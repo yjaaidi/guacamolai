@@ -21,9 +21,7 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
 
   await expect
     .soft(page.getByLabel('What was the title of your talk?'))
-    .toHaveValue('Fake it till you Mock it', {
-      timeout: 10_000,
-    });
+    .toHaveValue('Fake it till you Mock it');
 
   await expect
     .soft(

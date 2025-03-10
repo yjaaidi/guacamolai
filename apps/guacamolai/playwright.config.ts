@@ -11,15 +11,33 @@ const baseURL = 'https://gde.advocu.com';
 
 dotEnvConfig({ path: join(workspaceRoot, '.env.local') });
 
+const isCI = !!process.env.CI;
+
+const ciOverrides = defineConfig(
+  isCI
+    ? {
+        timeout: 30_000,
+        expect: {
+          timeout: 10_000,
+        },
+        use: {
+          actionTimeout: 10_000,
+        },
+      }
+    : {}
+);
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig<Options & SetupOptions>({
   ...nxE2EPreset(__filename, { testDir: './e2e' }),
+  ...ciOverrides,
   timeout: 10_000,
   retries: 2,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    ...ciOverrides.use,
     baseURL,
     geminiApiKey: getEnv('GEMINI_API_KEY'),
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

@@ -65,10 +65,7 @@ test('loads article', async ({ page, scrapFormGlove }) => {
   await expect
     .soft(page.getByLabel('What was the title?'))
     .toHaveValue(
-      'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
-      {
-        timeout: 10_000,
-      }
+      'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
     );
 
   await expect
@@ -137,13 +134,15 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
 });
 
 test('close scrapping tab', async ({ context, page, scrapFormGlove }) => {
+  test.slow();
+
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect
-    .soft(page.getByLabel('What was the title of your talk?'))
-    .toHaveValue('Fake it till you Mock it');
+  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+    'Fake it till you Mock it'
+  );
 
   /* Make sure `ng-de.org` tab is closed after scraping. */
   await expect

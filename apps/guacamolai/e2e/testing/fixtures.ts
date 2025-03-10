@@ -1,8 +1,9 @@
 import { LLM_FAKE_STORAGE_KEY } from '@guacamolai/domain/testing';
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { mkdtemp, readFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { authFilePath } from './auth-user';
 import { ScrapFormGlove } from './scrap-form.glove';
 import { ACTIVITIES_URL } from './urls';
@@ -24,8 +25,11 @@ export interface Options {
 
 export const test = base.extend<Fixtures & Options>({
   context: async ({}, use) => {
-    const pathToExtension = path.join(workspaceRoot, 'apps/guacamolai/dist');
-    const context = await chromium.launchPersistentContext('', {
+    const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist');
+    const userDataDir = await mkdtemp(
+      join(tmpdir(), 'guacamolai-chromium-user-data-dir-')
+    );
+    const context = await chromium.launchPersistentContext(userDataDir, {
       channel: 'chromium',
       args: [
         `--disable-extensions-except=${pathToExtension}`,
@@ -61,6 +65,11 @@ export const test = base.extend<Fixtures & Options>({
   setUpLlmFake: async ({ page }, use) => {
     await use(async (responses) => {
       await page.goto(ACTIVITIES_URL);
+
+      await page.getByRole('heading', { name: 'My Activities' }).waitFor({
+        state: 'visible',
+      });
+
       await page.evaluate(
         ({ LLM_FAKE_STORAGE_KEY, responses }) =>
           localStorage.setItem(LLM_FAKE_STORAGE_KEY, JSON.stringify(responses)),
