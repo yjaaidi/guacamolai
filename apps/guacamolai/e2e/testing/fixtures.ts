@@ -27,7 +27,6 @@ export const test = base.extend<Fixtures & Options>({
     const pathToExtension = path.join(workspaceRoot, 'apps/guacamolai/dist');
     const context = await chromium.launchPersistentContext('', {
       channel: 'chromium',
-      headless: false,
       args: [
         `--disable-extensions-except=${pathToExtension}`,
         `--load-extension=${pathToExtension}`,

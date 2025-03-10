@@ -68,9 +68,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
       - run: bun playwright install
-      - uses: coactions/setup-xvfb@v1
-        with:
-          run: bun nx affected -t e2e
+      - run: bun nx affected -t e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
