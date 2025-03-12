@@ -62,11 +62,12 @@ test('loads article', async ({ page, scrapFormGlove }) => {
     'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
   );
 
-  await expect
-    .soft(page.getByLabel('What was the title?'))
-    .toHaveValue(
-      'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
-    );
+  await expect(page.getByLabel('What was the title?')).toHaveValue(
+    'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
+    {
+      timeout: 10_000,
+    }
+  );
 
   await expect
     .soft(page.locator('[id="#/properties/contentType"]'))
@@ -100,9 +101,12 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect
-    .soft(page.getByLabel('What was the title of your talk?'))
-    .toHaveValue('Fake it till you Mock it');
+  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+    'Fake it till you Mock it',
+    {
+      timeout: 10_000,
+    }
+  );
 
   await expect
     .soft(
@@ -141,7 +145,10 @@ test('close scrapping tab', async ({ context, page, scrapFormGlove }) => {
   );
 
   await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
-    'Fake it till you Mock it'
+    'Fake it till you Mock it',
+    {
+      timeout: 10_000,
+    }
   );
 
   /* Make sure `ng-de.org` tab is closed after scraping. */

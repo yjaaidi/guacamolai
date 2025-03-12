@@ -19,9 +19,12 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect
-    .soft(page.getByLabel('What was the title of your talk?'))
-    .toHaveValue('Fake it till you Mock it');
+  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+    'Fake it till you Mock it',
+    {
+      timeout: 10_000,
+    }
+  );
 
   await expect
     .soft(
