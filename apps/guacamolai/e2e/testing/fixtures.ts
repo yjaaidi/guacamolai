@@ -68,6 +68,7 @@ export const test = base.extend<Fixtures & Options>({
 
       await page.getByRole('heading', { name: 'My Activities' }).waitFor({
         state: 'visible',
+        timeout: 10_000,
       });
 
       await page.evaluate(
