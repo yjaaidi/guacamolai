@@ -1,13 +1,12 @@
 import {
-  Activity,
   BackgroundServer,
   HtmlLoader,
   Llm,
-  ScrapAction,
+  ScrapAction
 } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
 import { BackgroundServerImpl, HtmlLoaderChromeTab } from '@guacamolai/infra';
-import { map, of, Subject, switchMap } from 'rxjs';
+import { catchError, map, of, Subject, switchMap } from 'rxjs';
 
 export async function main({
   backgroundServer = new BackgroundServerImpl(),
@@ -18,30 +17,38 @@ export async function main({
   htmlLoader?: HtmlLoader;
   llm?: Llm;
 } = {}) {
-  const work$ = new Subject<Work<string, Activity | null>>();
+  const work$ = new Subject<Work<string, ScrapAction['result']>>();
 
   work$
     .pipe(
-      switchMap(({ payload: url, ...work }) =>
-        htmlLoader.loadHtml(url).pipe(map((page) => ({ page, ...work })))
-      ),
-      switchMap(async ({ fakeLlmResponses, page, sendResult }) => {
-        llm ??= await createLlm({ fakeLlmResponses });
+      switchMap(({ payload: url, fakeLlmResponses, sendResult }) =>
+        htmlLoader.loadHtml(url).pipe(
+          switchMap(async (page) => {
+            if (!page) {
+              throw new Error(`Can't load the page.`);
+            }
 
-        if (!llm) {
-          console.warn(`Can't set up LLM.`);
-        }
+            llm ??= await createLlm({ fakeLlmResponses });
 
-        return { llm, page, sendResult };
-      }),
-      switchMap(({ llm, page, sendResult }) => {
-        return (page && llm ? scrapPage({ page, llm }) : of(null)).pipe(
-          map((activity) => ({ activity, sendResult }))
-        );
-      })
+            if (!llm) {
+              throw new Error(`Can't set up LLM.`);
+            }
+
+            return { llm, page };
+          }),
+          switchMap(scrapPage),
+          map((activity) => {
+            if (!activity) {
+              throw new Error(`Can't scrap the page.`);
+            }
+            return { activity, sendResult };
+          }),
+          catchError((error) => of({ error, sendResult }))
+        )
+      )
     )
-    .subscribe(({ activity, sendResult }) => {
-      sendResult(activity);
+    .subscribe(({ sendResult, ...result }) => {
+      sendResult(result);
     });
 
   backgroundServer.onAction<ScrapAction>(

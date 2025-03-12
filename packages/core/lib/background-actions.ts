@@ -13,5 +13,5 @@ export interface BackgroundAction<
 export type ScrapAction = BackgroundAction<
   'scrap',
   { url: string; fakeLlmResponses?: Record<string, unknown> },
-  Activity | null
+  { activity: Activity } | { error: unknown }
 >;

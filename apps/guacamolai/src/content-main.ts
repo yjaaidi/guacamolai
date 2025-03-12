@@ -65,8 +65,12 @@ export async function main({
     .pipe(
       switchMap(async (suspense) => {
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
-          const activity = suspense.value;
-          activityForm.fillActivityForm(activity);
+          const result = suspense.value;
+          if ('error' in result) {
+            console.error(result.error);
+          } else {
+            activityForm.fillActivityForm(result.activity);
+          }
         }
       })
     )
