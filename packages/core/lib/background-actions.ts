@@ -1,4 +1,4 @@
-import { HtmlPage } from './html-page';
+import { Activity } from './activity';
 
 export interface BackgroundAction<
   TYPE extends string = string,
@@ -13,5 +13,5 @@ export interface BackgroundAction<
 export type ScrapAction = BackgroundAction<
   'scrap',
   { url: string; fakeLlmResponses?: Record<string, unknown> },
-  HtmlPage
+  Activity | null
 >;

@@ -1,7 +1,7 @@
 import {
+  Activity,
   BackgroundServer,
   HtmlLoader,
-  HtmlPage,
   Llm,
   ScrapAction,
 } from '@guacamolai/core';
@@ -18,7 +18,7 @@ export async function main({
   htmlLoader?: HtmlLoader;
   llm?: Llm;
 } = {}) {
-  const work$ = new Subject<Work<string, HtmlPage>>();
+  const work$ = new Subject<Work<string, Activity | null>>();
 
   work$
     .pipe(
