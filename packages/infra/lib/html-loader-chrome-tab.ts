@@ -2,11 +2,11 @@ import { createHtmlPage, HtmlLoader, HtmlPage } from '@guacamolai/core';
 import { defer, Observable } from 'rxjs';
 
 export class HtmlLoaderChromeTab implements HtmlLoader {
-  loadHtml(url: string): Observable<HtmlPage | null> {
+  loadHtml(url: string): Observable<HtmlPage> {
     return defer(async () => {
       const tab = await chrome.tabs.create({ url });
       if (tab.id == null) {
-        return null;
+        throw new Error(`Can't create tab for URL: ${url}`);
       }
 
       const [{ result: html }] = await chrome.scripting.executeScript({
@@ -14,9 +14,13 @@ export class HtmlLoaderChromeTab implements HtmlLoader {
         func: _readBody,
       });
 
+      if (typeof html !== 'string' || html == null) {
+        throw new Error(`Can't extract HTML from URL: ${url}`);
+      }
+
       await chrome.tabs.remove(tab.id);
 
-      return createHtmlPage({ url, html: html as string });
+      return createHtmlPage({ url, html });
     });
   }
 }

@@ -7,11 +7,8 @@ export function scrapPage({
 }: {
   llm: Llm;
   page: HtmlPage;
-}): Observable<Activity | null> {
+}): Observable<Activity> {
   const { html, url } = page;
-  if (html === null) {
-    return of(null);
-  }
 
   return llm
     .prompt<LlmResult>({

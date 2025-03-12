@@ -5,12 +5,10 @@ import { KeyStorage } from './key-storage';
 
 export async function createLlm({
   fakeLlmResponses,
-}: { fakeLlmResponses?: Record<string, unknown> } = {}): Promise<
-  Llm | undefined
-> {
+}: { fakeLlmResponses?: Record<string, unknown> } = {}): Promise<Llm> {
   return (
     (await _tryCreateLlmFake({ fakeLlmResponses })) ??
-    (await _tryCreateLlmGemini())
+    (await _createLlmGemini())
   );
 }
 
@@ -28,12 +26,14 @@ async function _tryCreateLlmFake({
   return llm;
 }
 
-async function _tryCreateLlmGemini(): Promise<Llm | undefined> {
+async function _createLlmGemini(): Promise<Llm> {
   const keyStorage = new KeyStorage();
   const key = await keyStorage.getGeminiApiKey();
+
   if (key == null) {
-    return;
+    throw new Error(`Can't get Gemini API key.`);
   }
+
   return new Gemini(key);
 }
 

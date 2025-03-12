@@ -2,7 +2,7 @@ import {
   BackgroundServer,
   HtmlLoader,
   Llm,
-  ScrapAction
+  ScrapAction,
 } from '@guacamolai/core';
 import { createLlm, scrapPage } from '@guacamolai/domain';
 import { BackgroundServerImpl, HtmlLoaderChromeTab } from '@guacamolai/infra';
@@ -24,25 +24,12 @@ export async function main({
       switchMap(({ payload: url, fakeLlmResponses, sendResult }) =>
         htmlLoader.loadHtml(url).pipe(
           switchMap(async (page) => {
-            if (!page) {
-              throw new Error(`Can't load the page.`);
-            }
-
             llm ??= await createLlm({ fakeLlmResponses });
-
-            if (!llm) {
-              throw new Error(`Can't set up LLM.`);
-            }
 
             return { llm, page };
           }),
           switchMap(scrapPage),
-          map((activity) => {
-            if (!activity) {
-              throw new Error(`Can't scrap the page.`);
-            }
-            return { activity, sendResult };
-          }),
+          map((activity) => ({ activity, sendResult })),
           catchError((error) => of({ error, sendResult }))
         )
       )
