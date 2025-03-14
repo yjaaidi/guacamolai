@@ -1,19 +1,18 @@
 import { Activity, Article, HtmlPage, Llm, Talk } from '@guacamolai/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export function scrapPage({
   llm,
   page,
+  speakerName,
 }: {
   llm: Llm;
   page: HtmlPage;
+  speakerName?: string;
 }): Observable<Activity> {
   const { html, url } = page;
 
-  return llm
-    .prompt<LlmResult>({
-      prompt: [
-        `Scrap the content of the page below and try to extract the presentation of a talk.
+  let prompt = `Scrap the content of the page below and try to extract the presentation of a talk.
 Return the result in the following JSON format:
 - activityType: whether this page presents a content creation (e.g. blog post or article) or public speaking (e.g. a talk at a conferences)
 - title: the title of the talk or blog post or article
@@ -23,9 +22,18 @@ Return the result in the following JSON format:
 - country: the country where the talk is happening
 - attendees: the number of attendees (if available, otherwise remove field)
 - date: the event date if it's a talk or the publication date if it's an article (if available, otherwise remove field)
-`,
-        html,
-      ],
+`;
+
+  if (speakerName) {
+    prompt += `If there are multiple speakers, focus on "${speakerName.replace(
+      /[^(\w|\s)]/g,
+      ''
+    )}" and ignore the others.`;
+  }
+
+  return llm
+    .prompt<LlmResult>({
+      prompt: [prompt, html],
       schema: {
         type: 'object',
         properties: {

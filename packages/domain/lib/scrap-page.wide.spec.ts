@@ -1,12 +1,13 @@
-import { HtmlPage } from '@guacamolai/core';
+import { createHtmlPage } from '@guacamolai/core';
 import { Gemini } from '@guacamolai/infra';
 import { lastValueFrom } from 'rxjs';
 import { describe, it } from 'vitest';
 import { scrapPage } from './scrap-page';
+import angularGrazMeetupHtml from './test-fixtures/angular-graz-meetup.html?raw';
 import marmicodeBlogPostHtml from './test-fixtures/marmicode-blog-post.html?raw';
 import ngDeYounesJaaidiHtml from './test-fixtures/ng-de-younes-jaaidi.html?raw';
 
-const TIMEOUT = 30_000;
+const TIMEOUT = 60_000;
 
 describe(scrapPage.name, () => {
   it('scraps content from url', { timeout: TIMEOUT }, async () => {
@@ -14,8 +15,10 @@ describe(scrapPage.name, () => {
 
     expect(
       await scrap({
-        url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
-        html: marmicodeBlogPostHtml,
+        page: createHtmlPage({
+          url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
+          html: marmicodeBlogPostHtml,
+        }),
       })
     ).toMatchObject({
       type: 'article',
@@ -32,8 +35,10 @@ describe(scrapPage.name, () => {
 
     expect(
       await scrap({
-        url: 'https://ng-de.org/speakers/younes-jaaidi/',
-        html: ngDeYounesJaaidiHtml,
+        page: createHtmlPage({
+          url: 'https://ng-de.org/speakers/younes-jaaidi/',
+          html: ngDeYounesJaaidiHtml,
+        }),
       })
     ).toMatchObject({
       type: 'talk',
@@ -42,6 +47,21 @@ describe(scrapPage.name, () => {
       city: 'Berlin',
       country: 'Germany',
     });
+  });
+
+  it('scraps talk among other talks', { timeout: TIMEOUT }, async () => {
+    const { scrap } = setUp();
+
+    const { description } = await scrap({
+      page: createHtmlPage({
+        url: 'https://www.meetup.com/angular-meetup-graz/events/304485230/',
+        html: angularGrazMeetupHtml,
+      }),
+      speakerName: 'Younes Jaaidi',
+    });
+
+    expect.soft(description).toContain('Nx Implicit');
+    expect.soft(description).not.toContain('Alex Rickabaugh');
   });
 });
 
@@ -52,11 +72,11 @@ function setUp() {
   }
   const llm = new Gemini(apiKey);
   return {
-    async scrap(page: HtmlPage) {
+    async scrap(args: Omit<Parameters<typeof scrapPage>[0], 'llm'>) {
       return lastValueFrom(
         scrapPage({
           llm,
-          page,
+          ...args,
         })
       );
     },
