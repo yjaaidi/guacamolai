@@ -69,6 +69,7 @@ export const test = base.extend<Fixtures & Options>({
   },
   setUpLlmFake: async ({ advocuActivitiesPage, page }, use) => {
     await use(async (responses) => {
+      // TODO: Store the responses in the extension's storage through popup.
       await advocuActivitiesPage.goto();
 
       await advocuActivitiesPage.waitForMyActivities();
