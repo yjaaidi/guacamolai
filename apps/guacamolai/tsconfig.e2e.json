@@ -9,12 +9,7 @@
     "outDir": "out-tsc/playwright",
     "sourceMap": false
   },
-  "include": [
-    "e2e/**/*.ts",
-    "e2e/**/*.js",
-    "src/lib/core/activity.ts",
-    "playwright.config.ts"
-  ],
+  "include": ["e2e/**/*.ts", "e2e/**/*.js", "playwright.config.ts"],
   "exclude": [
     "out-tsc",
     "test-output",
