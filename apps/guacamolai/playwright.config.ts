@@ -1,11 +1,10 @@
-import { defineConfig, devices } from '@playwright/test';
-import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
+import { nxE2EPreset } from '@nx/playwright/preset';
+import { defineConfig, devices } from '@playwright/test';
 import { config as dotEnvConfig } from 'dotenv';
 import { join } from 'path';
-import { authFilePath } from './e2e/testing/auth-user';
-import { SetupOptions } from './e2e/testing/setup-fixtures';
 import { Options } from './e2e/testing/fixtures';
+import { SetupOptions } from './e2e/testing/setup-fixtures';
 
 const baseURL = 'https://gde.advocu.com';
 
@@ -26,6 +25,8 @@ const ciOverrides = defineConfig(
       }
     : {}
 );
+
+const __filename = new URL(import.meta.url).pathname;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -56,7 +57,10 @@ export default defineConfig<Options & SetupOptions>({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], storageState: authFilePath },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: join(workspaceRoot, 'apps/guacamolai/.auth/user.json'),
+      },
       dependencies: ['setup'],
     },
   ],
