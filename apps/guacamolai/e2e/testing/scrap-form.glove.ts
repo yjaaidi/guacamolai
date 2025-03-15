@@ -12,7 +12,7 @@ export class ScrapFormGlove {
   }
 
   async fillAndSubmit(url: string) {
-    await this.#waitForUrlInput();
+    await this.waitForUrlInput();
     await this.fill(url);
     await this.scrapButton.click();
   }
@@ -28,14 +28,14 @@ export class ScrapFormGlove {
    * This seems to only happen on the CI.
    * Maybe the page is loaded before the extension is fully loaded or something like that.
    */
-  async #waitForUrlInput() {
+  async waitForUrlInput() {
     await expect
       .poll(
         async () => {
           try {
             await this.#urlInputLocator.waitFor({
               state: 'visible',
-              timeout: 10_000,
+              timeout: 5_000,
             });
             return true;
           } catch {

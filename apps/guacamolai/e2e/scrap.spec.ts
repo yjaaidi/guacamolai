@@ -1,47 +1,53 @@
 import { expect, test } from './testing/fixtures';
 
-test.beforeEach(async ({ advocuActivitiesPage, setUpLlmFake }) => {
-  await setUpLlmFake([
-    {
-      pattern: 'Younes Jaaidi - NG-DE 2024',
-      value: {
-        activityType: 'talk',
-        url: 'https://ng-de.org/speakers/younes-jaaidi/',
-        title: 'Fake it till you Mock it',
-        description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
-        date: '2024-10-01T00:00:00Z',
-        online: false,
-        city: 'Berlin',
-        country: 'Germany',
-      },
-    },
-    {
-      pattern: 'Marmicode',
-      value: {
-        activityType: 'article',
-        title:
-          'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
-        description:
-          'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
-        date: '2024-11-18',
-      },
-    },
-    {
-      /* This response only matches if the user provides a speaker name. */
-      pattern: 'focus only on the content related to "Younes Jaaidi"',
-      value: {
-        activityType: 'talk',
-        title: 'Nx Implicit Libraries',
-        description: `How to create and share implicit libraries in Nx`,
-        date: '2024-12-12',
-        city: 'Graz',
-        country: 'Austria',
-      },
-    },
-  ]);
+test.beforeEach(
+  async ({ advocuActivitiesPage, scrapFormGlove, setUpLlmFake }) => {
+    test.setTimeout(30_000);
 
-  await advocuActivitiesPage.goto();
-});
+    await setUpLlmFake([
+      {
+        pattern: 'Younes Jaaidi - NG-DE 2024',
+        value: {
+          activityType: 'talk',
+          url: 'https://ng-de.org/speakers/younes-jaaidi/',
+          title: 'Fake it till you Mock it',
+          description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
+          date: '2024-10-01T00:00:00Z',
+          online: false,
+          city: 'Berlin',
+          country: 'Germany',
+        },
+      },
+      {
+        pattern: 'Marmicode',
+        value: {
+          activityType: 'article',
+          title:
+            'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
+          description:
+            'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
+          date: '2024-11-18',
+        },
+      },
+      {
+        /* This response only matches if the user provides a speaker name. */
+        pattern: 'focus only on the content related to "Younes Jaaidi"',
+        value: {
+          activityType: 'talk',
+          title: 'Nx Implicit Libraries',
+          description: `How to create and share implicit libraries in Nx`,
+          date: '2024-12-12',
+          city: 'Graz',
+          country: 'Austria',
+        },
+      },
+    ]);
+
+    await advocuActivitiesPage.goto();
+
+    await scrapFormGlove.waitForUrlInput();
+  }
+);
 
 test('disables scrap button initially as URL is empty', async ({
   scrapFormGlove,
