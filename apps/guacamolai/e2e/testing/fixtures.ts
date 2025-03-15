@@ -4,13 +4,12 @@ import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { AdvocuActivitiesPage } from './advocu-activity.page';
 import { authFilePath } from './auth-user';
 import { ScrapFormGlove } from './scrap-form.glove';
-import { ACTIVITIES_URL } from './urls';
-import { AdvocuActivityFormGlove } from './advocu-activity-form.glove';
 
 export interface Fixtures {
-  advocuActivityFormGlove: AdvocuActivityFormGlove;
+  advocuActivitiesPage: AdvocuActivitiesPage;
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
   scrapFormGlove: ScrapFormGlove;
@@ -26,8 +25,8 @@ export interface Options {
 }
 
 export const test = base.extend<Fixtures & Options>({
-  advocuActivityFormGlove: async ({ page }, use) => {
-    await use(new AdvocuActivityFormGlove(page));
+  advocuActivitiesPage: async ({ page }, use) => {
+    await use(new AdvocuActivitiesPage(page));
   },
   context: async ({}, use) => {
     const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist');
@@ -68,14 +67,11 @@ export const test = base.extend<Fixtures & Options>({
       await page.getByPlaceholder('Gemini API key').fill(geminiApiKey);
     });
   },
-  setUpLlmFake: async ({ page }, use) => {
+  setUpLlmFake: async ({ advocuActivitiesPage, page }, use) => {
     await use(async (responses) => {
-      await page.goto(ACTIVITIES_URL);
+      await advocuActivitiesPage.goto();
 
-      await page.getByRole('heading', { name: 'My Activities' }).waitFor({
-        state: 'visible',
-        timeout: 10_000,
-      });
+      await advocuActivitiesPage.waitForMyActivities();
 
       await page.evaluate(
         ({ LLM_FAKE_STORAGE_KEY, responses }) =>

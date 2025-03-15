@@ -1,7 +1,6 @@
 import { expect, test } from './testing/fixtures';
-import { ACTIVITIES_URL } from './testing/urls';
 
-test.beforeEach(async ({ page, setUpLlmFake }) => {
+test.beforeEach(async ({ advocuActivitiesPage, setUpLlmFake }) => {
   await setUpLlmFake({
     'Younes Jaaidi - NG-DE 2024': {
       activityType: 'talk',
@@ -31,12 +30,7 @@ test.beforeEach(async ({ page, setUpLlmFake }) => {
     },
   });
 
-  await page.addLocatorHandler(
-    page.getByRole('button', { name: 'Close Stonly widget' }),
-    (el) => el.click()
-  );
-
-  await page.goto(ACTIVITIES_URL);
+  await advocuActivitiesPage.goto();
 });
 
 test('disables scrap button initially as URL is empty', async ({
@@ -63,28 +57,31 @@ test('disables scrap button on click', async ({ scrapFormGlove }) => {
   await expect(scrapFormGlove.scrapButton).toBeDisabled();
 });
 
-test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
+test('loads article', async ({
+  advocuActivitiesPage: { activityForm },
+  scrapFormGlove,
+}) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
   );
 
-  await expect(advocuActivityFormGlove.title).toHaveValue(
+  await expect(activityForm.title).toHaveValue(
     'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
     { timeout: 10_000 }
   );
 
-  await expect.soft(advocuActivityFormGlove.contentType).toHaveText('Articles');
+  await expect.soft(activityForm.contentType).toHaveText('Articles');
 
   await expect
-    .soft(advocuActivityFormGlove.description)
+    .soft(activityForm.description)
     .toContainText(
       'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.'
     );
-  await expect.soft(advocuActivityFormGlove.date).toHaveValue('2024-11-18');
+  await expect.soft(activityForm.date).toHaveValue('2024-11-18');
   await expect
-    .soft(advocuActivityFormGlove.link)
+    .soft(activityForm.link)
     .toHaveValue(
       'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
     );
@@ -92,39 +89,41 @@ test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
 
-test('loads talk', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
+test('loads talk', async ({
+  advocuActivitiesPage: { activityForm },
+  scrapFormGlove,
+}) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect(advocuActivityFormGlove.title).toHaveValue(
-    'Fake it till you Mock it',
-    { timeout: 10_000 }
-  );
+  await expect(activityForm.title).toHaveValue('Fake it till you Mock it', {
+    timeout: 10_000,
+  });
 
   await expect
-    .soft(advocuActivityFormGlove.description)
+    .soft(activityForm.description)
     .toContainText(
       'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
     );
-  await expect.soft(advocuActivityFormGlove.isOnlineCheckbox).not.toBeChecked();
-  await expect.soft(advocuActivityFormGlove.isOfflineCheckbox).toBeChecked();
+  await expect.soft(activityForm.isOnlineCheckbox).not.toBeChecked();
+  await expect.soft(activityForm.isOfflineCheckbox).toBeChecked();
 
-  await expect.soft(advocuActivityFormGlove.country).toHaveText('Germany');
-  await expect.soft(advocuActivityFormGlove.city).toHaveValue('Berlin');
+  await expect.soft(activityForm.country).toHaveText('Germany');
+  await expect.soft(activityForm.city).toHaveValue('Berlin');
 
-  await expect.soft(advocuActivityFormGlove.date).toHaveValue('2024-10-01');
+  await expect.soft(activityForm.date).toHaveValue('2024-10-01');
   await expect
-    .soft(advocuActivityFormGlove.link)
+    .soft(activityForm.link)
     .toHaveValue('https://ng-de.org/speakers/younes-jaaidi/');
 
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
 
 test('loads talk with speaker', async ({
-  advocuActivityFormGlove,
+  advocuActivitiesPage,
   page,
   goToExtensionPopup,
   scrapFormGlove,
@@ -135,13 +134,13 @@ test('loads talk with speaker', async ({
 
   await page.getByPlaceholder('Speaker Name').fill('Younes Jaaidi');
 
-  await page.goto(ACTIVITIES_URL);
+  await advocuActivitiesPage.goto();
 
   await scrapFormGlove.fillAndSubmit(
     'https://www.meetup.com/angular-meetup-graz/events/304485230/'
   );
 
-  await expect(advocuActivityFormGlove.title).toHaveValue(
+  await expect(advocuActivitiesPage.activityForm.title).toHaveValue(
     'Nx Implicit Libraries',
     { timeout: 20_000 }
   );
@@ -149,7 +148,7 @@ test('loads talk with speaker', async ({
 
 test('close scrapping tab', async ({
   context,
-  advocuActivityFormGlove,
+  advocuActivitiesPage: { activityForm },
   scrapFormGlove,
 }) => {
   test.slow();
@@ -158,10 +157,9 @@ test('close scrapping tab', async ({
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect(advocuActivityFormGlove.title).toHaveValue(
-    'Fake it till you Mock it',
-    { timeout: 10_000 }
-  );
+  await expect(activityForm.title).toHaveValue('Fake it till you Mock it', {
+    timeout: 10_000,
+  });
 
   /* Make sure `ng-de.org` tab is closed after scraping. */
   await expect

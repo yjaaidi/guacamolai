@@ -1,25 +1,19 @@
 import { test, expect } from './testing/fixtures';
-import { ACTIVITIES_URL } from './testing/urls';
 
-test.beforeEach(async ({ page, setUpGeminiApiKey }) => {
+test.beforeEach(async ({ advocuActivitiesPage, setUpGeminiApiKey }) => {
   await setUpGeminiApiKey();
 
-  await page.addLocatorHandler(
-    page.getByRole('button', { name: 'Close Stonly widget' }),
-    (el) => el.click()
-  );
-
-  await page.goto(ACTIVITIES_URL);
+  await advocuActivitiesPage.goto();
 });
 
-test('loads talk', async ({ page, scrapFormGlove }) => {
+test('loads talk', async ({ advocuActivitiesPage, scrapFormGlove }) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+  await expect(advocuActivitiesPage.activityForm.title).toHaveValue(
     'Fake it till you Mock it',
     {
       timeout: 10_000,
@@ -27,10 +21,6 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
   );
 
   await expect
-    .soft(
-      page
-        .locator('[id="\\#\\/properties\\/description"]')
-        .getByRole('paragraph')
-    )
+    .soft(advocuActivitiesPage.activityForm.description)
     .toContainText('Fake');
 });
