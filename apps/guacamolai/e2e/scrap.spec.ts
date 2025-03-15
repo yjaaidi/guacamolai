@@ -86,7 +86,7 @@ test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
     );
   await expect.soft(advocuActivityFormGlove.date).toHaveValue('2024-11-18');
   await expect
-    .soft(advocuActivityFormGlove.linkToContent)
+    .soft(advocuActivityFormGlove.link)
     .toHaveValue(
       'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
     );
@@ -94,14 +94,17 @@ test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
 
-test('loads talk', async ({ page, scrapFormGlove }) => {
+test('loads talk', async ({
+  advocuActivityFormGlove,
+  scrapFormGlove,
+}) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+  await expect(advocuActivityFormGlove.title).toHaveValue(
     'Fake it till you Mock it',
     {
       timeout: 10_000,
@@ -109,29 +112,19 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
   );
 
   await expect
-    .soft(
-      page
-        .locator('[id="\\#\\/properties\\/description"]')
-        .getByRole('paragraph')
-    )
+    .soft(advocuActivityFormGlove.description)
     .toContainText(
       'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
     );
-  await expect.soft(page.getByLabel('Yes')).not.toBeChecked();
-  await expect.soft(page.getByLabel('No')).toBeChecked();
+  await expect.soft(advocuActivityFormGlove.isOnlineCheckbox).not.toBeChecked();
+  await expect.soft(advocuActivityFormGlove.isOfflineCheckbox).toBeChecked();
 
-  await expect
-    .soft(page.locator('[id="#/properties/country"]'))
-    .toHaveText('Germany');
-  await expect
-    .soft(page.locator('[id="#/properties/city"]'))
-    .toHaveValue('Berlin');
+  await expect.soft(advocuActivityFormGlove.country).toHaveText('Germany');
+  await expect.soft(advocuActivityFormGlove.city).toHaveValue('Berlin');
 
+  await expect.soft(advocuActivityFormGlove.date).toHaveValue('2024-10-01');
   await expect
-    .soft(page.getByPlaceholder('Select date'))
-    .toHaveValue('2024-10-01');
-  await expect
-    .soft(page.getByLabel('Share any relevant link'))
+    .soft(advocuActivityFormGlove.link)
     .toHaveValue('https://ng-de.org/speakers/younes-jaaidi/');
 
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
