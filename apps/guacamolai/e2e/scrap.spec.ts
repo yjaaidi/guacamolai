@@ -20,7 +20,7 @@ test.beforeEach(async ({ advocuActivitiesPage, setUpLlmFake }) => {
         'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
       date: '2024-11-18',
     },
-    'focus on "Younes Jaaidi"': {
+    'focus only on the content related to "Younes Jaaidi"': {
       activityType: 'talk',
       title: 'Nx Implicit Libraries',
       description: `How to create and share implicit libraries in Nx`,
