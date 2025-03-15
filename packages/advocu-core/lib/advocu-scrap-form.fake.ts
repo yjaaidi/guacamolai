@@ -13,10 +13,10 @@ export class AdvocuScrapFormFake implements AdvocuScrapForm {
   status?: 'disabled' | 'enabled' | 'pending';
 
   #urlChange$ = new Subject<string>();
-  #scrapClick$ = new Subject<void>();
+  #scrapSubmit$ = new Subject<void>();
 
   urlChange$ = this.#urlChange$.asObservable();
-  scrapClick$ = this.#scrapClick$.asObservable();
+  scrapSubmit$ = this.#scrapSubmit$.asObservable();
 
   updateScrapButton(status: 'disabled' | 'enabled' | 'pending') {
     this.status = status;
@@ -24,6 +24,6 @@ export class AdvocuScrapFormFake implements AdvocuScrapForm {
 
   fillAndSubmitForm(url: string) {
     this.#urlChange$.next(url);
-    this.#scrapClick$.next();
+    this.#scrapSubmit$.next();
   }
 }

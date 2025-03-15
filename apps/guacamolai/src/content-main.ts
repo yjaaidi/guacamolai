@@ -49,7 +49,7 @@ export async function main({
 
   const scrap$ = url$.pipe(
     filter((url) => url != null),
-    switchMap((url) => scrapForm.scrapClick$.pipe(map(() => url))),
+    switchMap((url) => scrapForm.scrapSubmit$.pipe(map(() => url))),
     switchMap((url) =>
       from(
         backgroundClient.sendAction<ScrapAction>('scrap', {

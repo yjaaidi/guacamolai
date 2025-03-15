@@ -3,7 +3,7 @@ import type {
   AdvocuScrapFormFactory,
 } from '@guacamolai/advocu-core';
 import { waitForElement } from '@guacamolai/shared-ui/dom';
-import { fromEvent, map, Observable } from 'rxjs';
+import { fromEvent, map, Observable, tap } from 'rxjs';
 
 export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
   static #SCRAP_BUTTON_ID = 'guacamolai-scrap-btn';
@@ -37,12 +37,17 @@ export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
 
     const scrapButtonEl = document.createElement('button');
     scrapButtonEl.id = AdvocuScrapFormFactoryImpl.#SCRAP_BUTTON_ID;
+    scrapButtonEl.type = 'submit';
     scrapButtonEl.textContent = '✨ Scrap activity';
     scrapButtonEl.classList.add('ant-btn', 'ant-btn-default');
 
-    activityButtonsEl.append(scrapInputEl, scrapButtonEl);
+    const scrapFormEl = document.createElement('form');
+    scrapFormEl.append(scrapInputEl, scrapButtonEl);
+    scrapFormEl.classList.add('horizontal');
 
-    return { scrapButtonEl, scrapInputEl };
+    activityButtonsEl.appendChild(scrapFormEl);
+
+    return { scrapButtonEl, scrapFormEl, scrapInputEl };
   }
 
   #getScrapButton() {
@@ -58,6 +63,10 @@ export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
     const style = document.createElement('style');
     style.setAttribute(attr, '');
     style.textContent = `
+    form.horizontal {
+      display: flex;
+    }
+
     button.pending {
       animation: blink 2s alternate infinite;
     }
@@ -74,24 +83,29 @@ export class AdvocuScrapFormFactoryImpl implements AdvocuScrapFormFactory {
 
 export class AdvocuScrapFormImpl implements AdvocuScrapForm {
   urlChange$: Observable<string>;
-  scrapClick$: Observable<void>;
+  scrapSubmit$: Observable<void>;
 
+  #scrapFormEl: HTMLFormElement;
   #scrapButtonEl: HTMLElement;
   #scrapInputEl: HTMLInputElement;
 
   constructor({
+    scrapFormEl,
     scrapButtonEl,
     scrapInputEl,
   }: {
+    scrapFormEl: HTMLFormElement;
     scrapButtonEl: HTMLElement;
     scrapInputEl: HTMLInputElement;
   }) {
+    this.#scrapFormEl = scrapFormEl;
     this.#scrapButtonEl = scrapButtonEl;
     this.#scrapInputEl = scrapInputEl;
     this.urlChange$ = fromEvent(this.#scrapInputEl, 'input').pipe(
       map(() => this.#scrapInputEl.value)
     );
-    this.scrapClick$ = fromEvent(this.#scrapButtonEl, 'click').pipe(
+    this.scrapSubmit$ = fromEvent(this.#scrapFormEl, 'submit').pipe(
+      tap((e) => e.preventDefault()),
       map(() => undefined)
     );
   }

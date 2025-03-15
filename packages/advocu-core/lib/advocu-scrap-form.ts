@@ -5,7 +5,7 @@ export interface AdvocuScrapFormFactory {
 }
 
 export interface AdvocuScrapForm {
-  scrapClick$: Observable<void>;
+  scrapSubmit$: Observable<void>;
 
   urlChange$: Observable<string>;
 
