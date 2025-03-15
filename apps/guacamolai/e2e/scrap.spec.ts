@@ -72,9 +72,7 @@ test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
 
   await expect(advocuActivityFormGlove.title).toHaveValue(
     'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
-    {
-      timeout: 10_000,
-    }
+    { timeout: 10_000 }
   );
 
   await expect.soft(advocuActivityFormGlove.contentType).toHaveText('Articles');
@@ -94,10 +92,7 @@ test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
 
-test('loads talk', async ({
-  advocuActivityFormGlove,
-  scrapFormGlove,
-}) => {
+test('loads talk', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
@@ -106,9 +101,7 @@ test('loads talk', async ({
 
   await expect(advocuActivityFormGlove.title).toHaveValue(
     'Fake it till you Mock it',
-    {
-      timeout: 10_000,
-    }
+    { timeout: 10_000 }
   );
 
   await expect
@@ -131,6 +124,7 @@ test('loads talk', async ({
 });
 
 test('loads talk with speaker', async ({
+  advocuActivityFormGlove,
   page,
   goToExtensionPopup,
   scrapFormGlove,
@@ -147,26 +141,26 @@ test('loads talk with speaker', async ({
     'https://www.meetup.com/angular-meetup-graz/events/304485230/'
   );
 
-  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+  await expect(advocuActivityFormGlove.title).toHaveValue(
     'Nx Implicit Libraries',
-    {
-      timeout: 20_000,
-    }
+    { timeout: 20_000 }
   );
 });
 
-test('close scrapping tab', async ({ context, page, scrapFormGlove }) => {
+test('close scrapping tab', async ({
+  context,
+  advocuActivityFormGlove,
+  scrapFormGlove,
+}) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://ng-de.org/speakers/younes-jaaidi/'
   );
 
-  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+  await expect(advocuActivityFormGlove.title).toHaveValue(
     'Fake it till you Mock it',
-    {
-      timeout: 10_000,
-    }
+    { timeout: 10_000 }
   );
 
   /* Make sure `ng-de.org` tab is closed after scraping. */
