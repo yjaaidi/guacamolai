@@ -7,11 +7,7 @@ import {
   AdvocuScrapFormFactoryImpl,
 } from '@guacamolai/advocu-ui';
 import { BackgroundClient, HtmlLoader, ScrapAction } from '@guacamolai/core';
-import { LLM_FAKE_STORAGE_KEY } from '@guacamolai/domain';
-import {
-  BackgroundClientImpl,
-  tryReadLocalStorageJson,
-} from '@guacamolai/infra';
+import { BackgroundClientImpl } from '@guacamolai/infra';
 import { isValidUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
 import { filter, from, map, share, startWith, switchMap } from 'rxjs';
@@ -26,10 +22,6 @@ export async function main({
   htmlLoader?: HtmlLoader;
   scrapFormFactory?: AdvocuScrapFormFactory;
 } = {}) {
-  /* We use the local storage to set up the fake LLM in Playwright. */
-  const fakeLlmResponses =
-    tryReadLocalStorageJson<Record<string, unknown>>(LLM_FAKE_STORAGE_KEY);
-
   const scrapForm = await scrapFormFactory.create();
 
   if (!scrapForm) {
@@ -51,12 +43,9 @@ export async function main({
     filter((url) => url != null),
     switchMap((url) => scrapForm.scrapSubmit$.pipe(map(() => url))),
     switchMap((url) =>
-      from(
-        backgroundClient.sendAction<ScrapAction>('scrap', {
-          url,
-          fakeLlmResponses: fakeLlmResponses ?? undefined,
-        })
-      ).pipe(suspensify())
+      from(backgroundClient.sendAction<ScrapAction>('scrap', { url })).pipe(
+        suspensify()
+      )
     ),
     share()
   );

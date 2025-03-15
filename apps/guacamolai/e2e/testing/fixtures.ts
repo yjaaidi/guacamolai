@@ -1,4 +1,4 @@
-import { LLM_FAKE_STORAGE_KEY } from '@guacamolai/domain/testing';
+import { LLM_FAKE_RESPONSES_KEY } from '@guacamolai/domain';
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import { mkdtemp, readFile } from 'node:fs/promises';
@@ -67,17 +67,16 @@ export const test = base.extend<Fixtures & Options>({
       await page.getByPlaceholder('Gemini API key').fill(geminiApiKey);
     });
   },
-  setUpLlmFake: async ({ advocuActivitiesPage, page }, use) => {
+  setUpLlmFake: async ({ goToExtensionPopup, page }, use) => {
     await use(async (responses) => {
-      // TODO: Store the responses in the extension's storage through popup.
-      await advocuActivitiesPage.goto();
-
-      await advocuActivitiesPage.waitForMyActivities();
+      await goToExtensionPopup();
 
       await page.evaluate(
-        ({ LLM_FAKE_STORAGE_KEY, responses }) =>
-          localStorage.setItem(LLM_FAKE_STORAGE_KEY, JSON.stringify(responses)),
-        { LLM_FAKE_STORAGE_KEY, responses }
+        ({ LLM_FAKE_RESPONSES_KEY, responses }) =>
+          chrome.storage.local.set({
+            [LLM_FAKE_RESPONSES_KEY]: JSON.stringify(responses),
+          }),
+        { LLM_FAKE_RESPONSES_KEY, responses }
       );
     });
   },

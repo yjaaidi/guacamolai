@@ -29,10 +29,10 @@ export async function main({
 
   work$
     .pipe(
-      switchMap(({ payload: url, fakeLlmResponses, sendResult }) =>
+      switchMap(({ payload: url, sendResult }) =>
         htmlLoader.loadHtml(url).pipe(
           switchMap(async (page) => {
-            llm ??= await createLlm({ configStorage, fakeLlmResponses });
+            llm ??= await createLlm({ configStorage });
 
             const speakerName =
               (await configStorage.getSpeakerName()) ?? undefined;
@@ -52,22 +52,17 @@ export async function main({
       sendResult(result);
     });
 
-  backgroundServer.onAction<ScrapAction>(
-    'scrap',
-    async ({ url, fakeLlmResponses }) => {
-      return new Promise((resolve) => {
-        work$.next({
-          fakeLlmResponses,
-          payload: url,
-          sendResult: resolve,
-        });
+  backgroundServer.onAction<ScrapAction>('scrap', async ({ url }) => {
+    return new Promise((resolve) => {
+      work$.next({
+        payload: url,
+        sendResult: resolve,
       });
-    }
-  );
+    });
+  });
 }
 
 interface Work<PAYLOAD, RESULT> {
-  fakeLlmResponses?: Record<string, unknown>;
   payload: PAYLOAD;
   sendResult(result: RESULT): void;
 }

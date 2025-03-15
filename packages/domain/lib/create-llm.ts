@@ -5,22 +5,22 @@ import { ConfigStorage } from './config-storage';
 
 export async function createLlm({
   configStorage,
-  fakeLlmResponses,
 }: {
   configStorage: ConfigStorage;
-  fakeLlmResponses?: Record<string, unknown>;
 }): Promise<Llm> {
   return (
-    (await _tryCreateLlmFake({ fakeLlmResponses })) ??
+    (await _tryCreateLlmFake({ configStorage })) ??
     (await _createLlmGemini({ configStorage }))
   );
 }
 
 async function _tryCreateLlmFake({
-  fakeLlmResponses,
+  configStorage,
 }: {
-  fakeLlmResponses?: Record<string, unknown>;
+  configStorage: ConfigStorage;
 }): Promise<Llm | undefined> {
+  const fakeLlmResponses = await configStorage.getLlmFakeResponses();
+
   if (fakeLlmResponses == null) {
     return;
   }
@@ -43,5 +43,3 @@ async function _createLlmGemini({
 
   return new Gemini(key);
 }
-
-export const LLM_FAKE_STORAGE_KEY = 'llm-fake';
