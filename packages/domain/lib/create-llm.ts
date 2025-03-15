@@ -4,11 +4,15 @@ import { Gemini } from '@guacamolai/infra';
 import { ConfigStorage } from './config-storage';
 
 export async function createLlm({
+  configStorage,
   fakeLlmResponses,
-}: { fakeLlmResponses?: Record<string, unknown> } = {}): Promise<Llm> {
+}: {
+  configStorage: ConfigStorage;
+  fakeLlmResponses?: Record<string, unknown>;
+}): Promise<Llm> {
   return (
     (await _tryCreateLlmFake({ fakeLlmResponses })) ??
-    (await _createLlmGemini())
+    (await _createLlmGemini({ configStorage }))
   );
 }
 
@@ -26,8 +30,11 @@ async function _tryCreateLlmFake({
   return llm;
 }
 
-async function _createLlmGemini(): Promise<Llm> {
-  const configStorage = new ConfigStorage();
+async function _createLlmGemini({
+  configStorage,
+}: {
+  configStorage: ConfigStorage;
+}): Promise<Llm> {
   const key = await configStorage.getGeminiApiKey();
 
   if (key == null) {

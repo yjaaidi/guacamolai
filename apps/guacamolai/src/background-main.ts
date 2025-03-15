@@ -1,11 +1,16 @@
 import {
   BackgroundServer,
+  ExtensionStorage,
   HtmlLoader,
   Llm,
   ScrapAction,
 } from '@guacamolai/core';
 import { ConfigStorage, createLlm, scrapPage } from '@guacamolai/domain';
-import { BackgroundServerImpl, HtmlLoaderAggregate } from '@guacamolai/infra';
+import {
+  BackgroundServerImpl,
+  ChromeStorage,
+  HtmlLoaderAggregate,
+} from '@guacamolai/infra';
 import { catchError, map, of, Subject, switchMap } from 'rxjs';
 
 export async function main({
@@ -27,7 +32,7 @@ export async function main({
       switchMap(({ payload: url, fakeLlmResponses, sendResult }) =>
         htmlLoader.loadHtml(url).pipe(
           switchMap(async (page) => {
-            llm ??= await createLlm({ fakeLlmResponses });
+            llm ??= await createLlm({ configStorage, fakeLlmResponses });
 
             const speakerName =
               (await configStorage.getSpeakerName()) ?? undefined;

@@ -1,9 +1,10 @@
 import { ConfigStorage } from '@guacamolai/domain';
+import { ChromeStorage } from '@guacamolai/infra';
 import { fromEvent, Subscription, switchMap } from 'rxjs';
 
 export class PopupElement extends HTMLElement {
   #shadowRoot: ShadowRoot;
-  #configStorage = new ConfigStorage();
+  #configStorage = new ConfigStorage(new ChromeStorage());
   #sub = new Subscription();
 
   constructor() {

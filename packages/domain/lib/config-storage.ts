@@ -1,4 +1,4 @@
-import { ChromeStorage } from '@guacamolai/infra';
+import { ExtensionStorage } from '@guacamolai/core';
 
 export class ConfigStorage {
   #storage: ExtensionStorage;

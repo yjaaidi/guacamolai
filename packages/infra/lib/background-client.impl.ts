@@ -1,3 +1,5 @@
+/// <reference types="chrome" />
+
 import { BackgroundAction, BackgroundClient } from '@guacamolai/core';
 
 export class BackgroundClientImpl implements BackgroundClient {
