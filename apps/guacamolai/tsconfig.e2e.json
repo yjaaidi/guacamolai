@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowJs": true,
-    "lib": ["DOM"],
+    "lib": ["dom", "ES2024"],
+    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "outDir": "out-tsc/playwright",
     "sourceMap": false
   },
@@ -10,7 +13,6 @@
     "e2e/**/*.ts",
     "e2e/**/*.js",
     "src/lib/core/activity.ts",
-    "../../packages/domain/lib/create-llm.ts",
     "playwright.config.ts"
   ],
   "exclude": [

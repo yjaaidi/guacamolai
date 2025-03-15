@@ -7,8 +7,8 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["dom"],
-    "types": ["node"],
+    "lib": ["dom", "ES2024"],
+    "types": [],
     "module": "esnext",
     "moduleResolution": "bundler"
   },

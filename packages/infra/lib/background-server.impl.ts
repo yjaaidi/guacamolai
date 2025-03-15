@@ -8,7 +8,7 @@ export class BackgroundServerImpl implements BackgroundServer {
     chrome.runtime.onMessage.addListener(
       (
         message: { type: ACTION['type']; payload: ACTION['payload'] },
-        _,
+        _: unknown,
         sendResponse
       ) => {
         innerHandler();

@@ -8,7 +8,7 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "ES2024"],
-    "types": ["node"],
+    "types": [],
     "module": "esnext",
     "moduleResolution": "bundler"
   },

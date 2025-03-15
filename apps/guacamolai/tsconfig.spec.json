@@ -2,13 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/vitest",
-    "types": [
-      "vitest/globals",
-      "vitest/importMeta",
-      "vite/client",
-      "node",
-      "vitest"
-    ],
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "vitest"],
     "module": "esnext",
     "moduleResolution": "bundler"
   },
@@ -25,9 +19,7 @@
     "src/**/*.spec.js",
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
-    "src/**/*.d.ts",
-    "../../packages/domain/lib/scrap-page.spec.ts",
-    "../../packages/domain/lib/scrap-page.wide.spec.ts"
+    "src/**/*.d.ts"
   ],
   "references": [
     {

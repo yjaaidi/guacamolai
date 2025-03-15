@@ -8,11 +8,11 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "ES2024"],
-    "types": ["chrome", "node"],
+    "types": ["chrome"],
     "module": "esnext",
     "moduleResolution": "bundler"
   },
-  "include": ["**/*.ts", "index.spec.ts", "index.ts"],
+  "include": ["**/*.ts", "index.ts"],
   "references": [
     {
       "path": "../core/tsconfig.lib.json"
