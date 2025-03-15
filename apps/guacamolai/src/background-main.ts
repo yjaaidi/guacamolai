@@ -5,12 +5,12 @@ import {
   ScrapAction,
 } from '@guacamolai/core';
 import { ConfigStorage, createLlm, scrapPage } from '@guacamolai/domain';
-import { BackgroundServerImpl, HtmlLoaderChromeTab } from '@guacamolai/infra';
+import { BackgroundServerImpl, HtmlLoaderAggregate } from '@guacamolai/infra';
 import { catchError, map, of, Subject, switchMap } from 'rxjs';
 
 export async function main({
   backgroundServer = new BackgroundServerImpl(),
-  htmlLoader = new HtmlLoaderChromeTab(),
+  htmlLoader = new HtmlLoaderAggregate(),
   llm,
 }: {
   backgroundServer?: BackgroundServer;
@@ -39,6 +39,9 @@ export async function main({
       )
     )
     .subscribe(({ sendResult, ...result }) => {
+      if ('error' in result) {
+        console.error('Error:', result.error);
+      }
       sendResult(result);
     });
 

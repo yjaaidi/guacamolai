@@ -4,6 +4,8 @@ import { fromFetch } from 'rxjs/fetch';
 
 export class HtmlLoaderFetch implements HtmlLoader {
   loadHtml(url: string): Observable<HtmlPage> {
+    console.debug(`Trying HTML loading with fetch: ${url}`);
+
     return fromFetch(url, {
       credentials: 'omit',
       mode: 'cors',

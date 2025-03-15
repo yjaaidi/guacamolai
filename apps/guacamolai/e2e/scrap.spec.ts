@@ -150,7 +150,6 @@ test('loads talk with speaker', async ({
   goToExtensionPopup,
   scrapFormGlove,
 }) => {
-  test.skip(() => true, 'Broken due to a bug with meetup.com');
   test.slow();
 
   await goToExtensionPopup();
