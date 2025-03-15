@@ -58,6 +58,17 @@ jobs:
         uses: ./.github/actions/setup
       - run: bun nx affected -t test-wide
 
+  typecheck:
+    name: 💪 Typecheck
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - run: bun nx affected -t typecheck
+
   e2e:
     name: 🎭 e2e
     runs-on: ubuntu-22.04
