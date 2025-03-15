@@ -47,17 +47,20 @@ function setUp() {
     }),
   ]);
 
-  llm.setResponses({
-    'Younes Jaaidi - NG-DE 2024': {
-      activityType: 'talk',
-      title: 'Fake it till you Mock it',
-      description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
-      online: false,
-      city: 'Berlin',
-      country: 'Germany',
-      date: '2024-10-01T00:00:00Z',
+  llm.setResponses([
+    {
+      pattern: 'Younes Jaaidi - NG-DE 2024',
+      value: {
+        activityType: 'talk',
+        title: 'Fake it till you Mock it',
+        description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
+        online: false,
+        city: 'Berlin',
+        country: 'Germany',
+        date: '2024-10-01T00:00:00Z',
+      },
     },
-  });
+  ]);
 
   return {
     activityForm,

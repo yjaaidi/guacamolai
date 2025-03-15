@@ -44,17 +44,20 @@ describe(scrapPage.name, () => {
 
   it('converts date-time to date', async () => {
     const llm = new LlmFake();
-    llm.setResponses({
-      'Younes Jaaidi - NG-DE 2024': {
-        activityType: 'talk',
-        title: 'Fake it till you Mock it',
-        description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
-        online: false,
-        city: 'Berlin',
-        country: 'Germany',
-        date: '2024-10-01T00:00:00Z',
+    llm.setResponses([
+      {
+        pattern: 'Younes Jaaidi - NG-DE 2024',
+        value: {
+          activityType: 'talk',
+          title: 'Fake it till you Mock it',
+          description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
+          online: false,
+          city: 'Berlin',
+          country: 'Germany',
+          date: '2024-10-01T00:00:00Z',
+        },
       },
-    });
+    ]);
 
     const talk = await lastValueFrom(
       scrapPage({
@@ -70,14 +73,17 @@ describe(scrapPage.name, () => {
 
   it('sets online to false if undefined and country present', async () => {
     const llm = new LlmFake();
-    llm.setResponses({
-      'Younes Jaaidi - NG-DE 2024': {
-        activityType: 'talk',
-        title: 'Fake it till you Mock it',
-        description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
-        country: 'Germany',
+    llm.setResponses([
+      {
+        pattern: 'Younes Jaaidi - NG-DE 2024',
+        value: {
+          activityType: 'talk',
+          title: 'Fake it till you Mock it',
+          description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
+          country: 'Germany',
+        },
       },
-    });
+    ]);
 
     const talk = await lastValueFrom(
       scrapPage({

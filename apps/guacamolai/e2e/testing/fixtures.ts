@@ -1,3 +1,4 @@
+import { LlmFakeResponse } from '@guacamolai/core/testing';
 import { LLM_FAKE_RESPONSES_KEY } from '@guacamolai/domain';
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
@@ -15,7 +16,7 @@ export interface Fixtures {
   scrapFormGlove: ScrapFormGlove;
   setUpGeminiApiKey: () => Promise<void>;
   setUpLlmFake: (
-    responses: Record<string, Record<string, unknown>>
+    responses: LlmFakeResponse<Record<string, unknown>>[]
   ) => Promise<void>;
   _extensionId: string;
 }

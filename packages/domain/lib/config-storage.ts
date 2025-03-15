@@ -23,7 +23,7 @@ export class ConfigStorage {
     return this.#storage.set(SPEAKER_NAME_KEY, value);
   }
 
-  async getLlmFakeResponses(): Promise<Record<string, string> | null> {
+  async getLlmFakeResponses(): Promise<Record<string, unknown>[] | null> {
     const data = await this.#storage.get(LLM_FAKE_RESPONSES_KEY);
 
     if (data == null) {

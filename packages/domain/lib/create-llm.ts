@@ -1,5 +1,5 @@
 import { Llm } from '@guacamolai/core';
-import { LlmFake } from '@guacamolai/core/testing';
+import { LlmFake, LlmFakeResponse } from '@guacamolai/core/testing';
 import { Gemini } from '@guacamolai/infra';
 import { ConfigStorage } from './config-storage';
 
@@ -26,7 +26,7 @@ async function _tryCreateLlmFake({
   }
 
   const llm = new LlmFake();
-  llm.setResponses(fakeLlmResponses);
+  llm.setResponses(fakeLlmResponses as unknown as LlmFakeResponse<unknown>[]);
   return llm;
 }
 
