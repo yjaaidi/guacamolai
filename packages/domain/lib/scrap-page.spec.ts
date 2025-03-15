@@ -38,7 +38,7 @@ describe(scrapPage.name, () => {
     });
 
     expect(spy.mock.calls[0][0].prompt[0]).toContain(
-      'If there are multiple speakers, focus on "Younes Jaaidi" and ignore the others.'
+      'focus only on the content related to "Younes Jaaidi"'
     );
   });
 
