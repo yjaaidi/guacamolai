@@ -59,7 +59,8 @@ export const test = base.extend<Fixtures & Options>({
       }
 
       await goToExtensionPopup();
-      await page.fill('input', geminiApiKey);
+
+      await page.getByPlaceholder('Gemini API key').fill(geminiApiKey);
     });
   },
   setUpLlmFake: async ({ page }, use) => {
