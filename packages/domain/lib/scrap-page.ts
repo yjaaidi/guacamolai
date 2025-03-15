@@ -25,10 +25,10 @@ Return the result in the following JSON format:
 `;
 
   if (speakerName) {
-    prompt += `If there are multiple speakers, focus on "${speakerName.replace(
+    prompt += `If there are multiple speakers, focus only on the content related to "${speakerName.replace(
       /[^(\w|\s)]/g,
       ''
-    )}" and ignore the others.`;
+    )}" and ignore others.`;
   }
 
   return llm
