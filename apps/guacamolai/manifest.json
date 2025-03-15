@@ -3,6 +3,10 @@
   "description": "Smash your advocate activity into delicious guacamole for Advocu",
   "version": "0.1",
   "manifest_version": 3,
+  "icons": {
+    "48": "guacamolai-48.png",
+    "128": "guacamolai-128.png"
+  },
   "permissions": ["scripting", "storage", "tabs"],
   "host_permissions": ["https://*/*"],
   "content_scripts": [
