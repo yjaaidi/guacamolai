@@ -7,8 +7,10 @@ import { join } from 'node:path';
 import { authFilePath } from './auth-user';
 import { ScrapFormGlove } from './scrap-form.glove';
 import { ACTIVITIES_URL } from './urls';
+import { AdvocuActivityFormGlove } from './advocu-activity-form.glove';
 
 export interface Fixtures {
+  advocuActivityFormGlove: AdvocuActivityFormGlove;
   context: BrowserContext;
   goToExtensionPopup: () => Promise<void>;
   scrapFormGlove: ScrapFormGlove;
@@ -24,6 +26,9 @@ export interface Options {
 }
 
 export const test = base.extend<Fixtures & Options>({
+  advocuActivityFormGlove: async ({ page }, use) => {
+    await use(new AdvocuActivityFormGlove(page));
+  },
   context: async ({}, use) => {
     const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist');
     const userDataDir = await mkdtemp(

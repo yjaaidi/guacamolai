@@ -63,38 +63,30 @@ test('disables scrap button on click', async ({ scrapFormGlove }) => {
   await expect(scrapFormGlove.scrapButton).toBeDisabled();
 });
 
-test('loads article', async ({ page, scrapFormGlove }) => {
+test('loads article', async ({ advocuActivityFormGlove, scrapFormGlove }) => {
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
     'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
   );
 
-  await expect(page.getByLabel('What was the title?')).toHaveValue(
+  await expect(advocuActivityFormGlove.title).toHaveValue(
     'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing',
     {
       timeout: 10_000,
     }
   );
 
-  await expect
-    .soft(page.locator('[id="#/properties/contentType"]'))
-    .toHaveText('Articles');
+  await expect.soft(advocuActivityFormGlove.contentType).toHaveText('Articles');
 
   await expect
-    .soft(
-      page
-        .locator('[id="\\#\\/properties\\/description"]')
-        .getByRole('paragraph')
-    )
+    .soft(advocuActivityFormGlove.description)
     .toContainText(
       'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.'
     );
+  await expect.soft(advocuActivityFormGlove.date).toHaveValue('2024-11-18');
   await expect
-    .soft(page.getByPlaceholder('Select date'))
-    .toHaveValue('2024-11-18');
-  await expect
-    .soft(page.getByLabel('Link to Content'))
+    .soft(advocuActivityFormGlove.linkToContent)
     .toHaveValue(
       'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing'
     );
