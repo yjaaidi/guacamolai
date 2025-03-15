@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "out-tsc/guacamolai",
     "lib": ["dom", "ES2024"],
-    "types": ["chrome", "node"],
+    "types": ["chrome"],
     "rootDir": "src",
     "module": "esnext",
     "moduleResolution": "bundler",

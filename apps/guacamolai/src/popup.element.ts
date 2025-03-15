@@ -1,9 +1,9 @@
-import { ChromeStorage } from '@guacamolai/infra';
+import { ConfigStorage } from '@guacamolai/domain';
 import { fromEvent, Subscription, switchMap } from 'rxjs';
 
 export class PopupElement extends HTMLElement {
   #shadowRoot: ShadowRoot;
-  #storage = new ChromeStorage();
+  #configStorage = new ConfigStorage();
   #sub = new Subscription();
 
   constructor() {
@@ -23,32 +23,51 @@ export class PopupElement extends HTMLElement {
         a {
           font-style: italic;
         }
+
+        form {
+          display: flex;
+          flex-direction: column;
+        }
       </style>
       <main class="container">
         <h1>GuacamolAI</h1>
-        <input placeholder="Gemini API Key" type="password">
-        <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Gemini API Key</a>
+        <form>
+          <input id="speaker-name" placeholder="Speaker Name" type="text">
+          <input id="gemini-api-key" placeholder="Gemini API Key" type="password">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Gemini API Key</a>
+        </form>
       </main>
     `;
-    const inputEl = this.#shadowRoot.querySelector('input');
-    if (!inputEl) {
-      throw new Error('Input element not found');
-    }
+
+    const formEl = this.#queryElement('form');
+    const geminiApiKeyEl =
+      this.#queryElement<HTMLInputElement>('#gemini-api-key');
+    const speakerNameEl = this.#queryElement<HTMLInputElement>('#speaker-name');
 
     this.#sub.add(
-      fromEvent(inputEl, 'input')
+      fromEvent(formEl, 'input')
         .pipe(
           switchMap(async () => {
-            const value = inputEl.value;
-            await this.#storage.set(GEMINI_API_KEY_NAME, value);
+            const geminiApiKey = geminiApiKeyEl.value;
+            const speakerName = speakerNameEl.value;
+            await Promise.all([
+              this.#configStorage.setGeminiApiKey(geminiApiKey),
+              this.#configStorage.setSpeakerName(speakerName),
+            ]);
           })
         )
         .subscribe()
     );
 
-    this.#storage.get(GEMINI_API_KEY_NAME).then((key) => {
-      if (key) {
-        inputEl.value = key;
+    Promise.all([
+      this.#configStorage.getGeminiApiKey(),
+      this.#configStorage.getSpeakerName(),
+    ]).then(([geminiApiKey, speakerName]) => {
+      if (geminiApiKey) {
+        geminiApiKeyEl.value = geminiApiKey;
+      }
+      if (speakerName) {
+        speakerNameEl.value = speakerName;
       }
     });
   }
@@ -56,6 +75,12 @@ export class PopupElement extends HTMLElement {
   disconnectedCallback() {
     this.#sub.unsubscribe();
   }
-}
 
-const GEMINI_API_KEY_NAME = 'geminiApiKey';
+  #queryElement<ELEMENT extends HTMLElement>(selector: string): ELEMENT {
+    const el = this.#shadowRoot.querySelector<ELEMENT>(selector);
+    if (el == null) {
+      throw new Error(`Element with selector "${selector}" not found`);
+    }
+    return el;
+  }
+}

@@ -1,7 +1,7 @@
 import { Llm } from '@guacamolai/core';
 import { LlmFake } from '@guacamolai/core/testing';
 import { Gemini } from '@guacamolai/infra';
-import { KeyStorage } from './key-storage';
+import { ConfigStorage } from './config-storage';
 
 export async function createLlm({
   fakeLlmResponses,
@@ -27,8 +27,8 @@ async function _tryCreateLlmFake({
 }
 
 async function _createLlmGemini(): Promise<Llm> {
-  const keyStorage = new KeyStorage();
-  const key = await keyStorage.getGeminiApiKey();
+  const configStorage = new ConfigStorage();
+  const key = await configStorage.getGeminiApiKey();
 
   if (key == null) {
     throw new Error(`Can't get Gemini API key.`);

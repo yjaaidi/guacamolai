@@ -4,7 +4,7 @@ import {
   Llm,
   ScrapAction,
 } from '@guacamolai/core';
-import { createLlm, scrapPage } from '@guacamolai/domain';
+import { ConfigStorage, createLlm, scrapPage } from '@guacamolai/domain';
 import { BackgroundServerImpl, HtmlLoaderChromeTab } from '@guacamolai/infra';
 import { catchError, map, of, Subject, switchMap } from 'rxjs';
 
@@ -17,6 +17,7 @@ export async function main({
   htmlLoader?: HtmlLoader;
   llm?: Llm;
 } = {}) {
+  const configStorage = new ConfigStorage();
   const work$ = new Subject<Work<string, ScrapAction['result']>>();
 
   work$
@@ -26,7 +27,10 @@ export async function main({
           switchMap(async (page) => {
             llm ??= await createLlm({ fakeLlmResponses });
 
-            return { llm, page };
+            const speakerName =
+              (await configStorage.getSpeakerName()) ?? undefined;
+
+            return { llm, page, speakerName };
           }),
           switchMap(scrapPage),
           map((activity) => ({ activity, sendResult })),

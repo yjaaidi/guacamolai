@@ -21,6 +21,14 @@ test.beforeEach(async ({ page, setUpLlmFake }) => {
         'This article presents how turning on Ahead-Of-Time (AOT) compilation for your Angular tests enables accurate template code coverage, faster test execution, production-symmetry, and future-proof tests.',
       date: '2024-11-18',
     },
+    'focus on "Younes Jaaidi"': {
+      activityType: 'talk',
+      title: 'Nx Implicit Libraries',
+      description: `How to create and share implicit libraries in Nx`,
+      date: '2024-12-12',
+      city: 'Graz',
+      country: 'Austria',
+    },
   });
 
   await page.addLocatorHandler(
@@ -135,6 +143,32 @@ test('loads talk', async ({ page, scrapFormGlove }) => {
     .toHaveValue('https://ng-de.org/speakers/younes-jaaidi/');
 
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
+});
+
+test('loads talk with speaker', async ({
+  page,
+  goToExtensionPopup,
+  scrapFormGlove,
+}) => {
+  test.skip(() => true, 'Broken due to a bug with meetup.com');
+  test.slow();
+
+  await goToExtensionPopup();
+
+  await page.getByPlaceholder('Speaker Name').fill('Younes Jaaidi');
+
+  await page.goto(ACTIVITIES_URL);
+
+  await scrapFormGlove.fillAndSubmit(
+    'https://www.meetup.com/angular-meetup-graz/events/304485230/'
+  );
+
+  await expect(page.getByLabel('What was the title of your talk?')).toHaveValue(
+    'Nx Implicit Libraries',
+    {
+      timeout: 20_000,
+    }
+  );
 });
 
 test('close scrapping tab', async ({ context, page, scrapFormGlove }) => {

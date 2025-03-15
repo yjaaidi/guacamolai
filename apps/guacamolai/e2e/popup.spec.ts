@@ -9,3 +9,15 @@ test('save gemini api key', async ({ goToExtensionPopup, page }) => {
 
   await expect(page.getByPlaceholder('Gemini API Key')).toHaveValue('FAKE_KEY');
 });
+
+test('save speaker name', async ({ goToExtensionPopup, page }) => {
+  await goToExtensionPopup();
+
+  await page.getByPlaceholder('Speaker Name').fill('Younes Jaaidi');
+
+  await page.reload();
+
+  await expect(page.getByPlaceholder('Speaker Name')).toHaveValue(
+    'Younes Jaaidi'
+  );
+});
