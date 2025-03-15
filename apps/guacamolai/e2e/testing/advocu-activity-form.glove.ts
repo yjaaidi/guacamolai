@@ -5,7 +5,7 @@ export class AdvocuActivityFormGlove {
   contentType: Locator;
   description: Locator;
   date: Locator;
-  linkToContent: Locator;
+  link: Locator;
   isOnlineCheckbox: Locator;
   isOfflineCheckbox: Locator;
   country: Locator;
