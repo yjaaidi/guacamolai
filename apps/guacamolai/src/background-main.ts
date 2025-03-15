@@ -10,14 +10,16 @@ import { catchError, map, of, Subject, switchMap } from 'rxjs';
 
 export async function main({
   backgroundServer = new BackgroundServerImpl(),
+  extensionStorage = new ChromeStorage(),
   htmlLoader = new HtmlLoaderAggregate(),
   llm,
 }: {
   backgroundServer?: BackgroundServer;
+  extensionStorage?: ExtensionStorage;
   htmlLoader?: HtmlLoader;
   llm?: Llm;
 } = {}) {
-  const configStorage = new ConfigStorage();
+  const configStorage = new ConfigStorage(extensionStorage);
   const work$ = new Subject<Work<string, ScrapAction['result']>>();
 
   work$

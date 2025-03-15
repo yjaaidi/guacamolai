@@ -1,7 +1,11 @@
 import { ChromeStorage } from '@guacamolai/infra';
 
 export class ConfigStorage {
-  #storage = new ChromeStorage();
+  #storage: ExtensionStorage;
+
+  constructor(storage: ExtensionStorage) {
+    this.#storage = storage;
+  }
 
   getGeminiApiKey(): Promise<string | null> {
     return this.#storage.get(GEMINI_API_KEY_NAME);

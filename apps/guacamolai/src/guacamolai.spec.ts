@@ -11,6 +11,7 @@ import {
   LlmFake,
 } from '@guacamolai/core/testing';
 import { createHtmlPage } from '@guacamolai/core';
+import { ExtensionStorageFake } from '@guacamolai/core/testing';
 
 describe('GuacamolAI', () => {
   it('updates the form with scrapped URL', async () => {
@@ -34,6 +35,7 @@ async function setUpAndRun() {
 function setUp() {
   const activityForm = new AdvocuActivityFormFake();
   const backgroundClientServerFake = new BackgroundClientServerFake();
+  const extensionStorage = new ExtensionStorageFake();
   const scrapFormFactory = new AdvocuScrapFormFactoryFake();
   const htmlLoader = new HtmlLoaderFake();
   const llm = new LlmFake();
@@ -69,6 +71,7 @@ function setUp() {
     async runBackground() {
       await backgroundMain({
         backgroundServer: backgroundClientServerFake,
+        extensionStorage,
         htmlLoader,
         llm,
       });
