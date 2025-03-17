@@ -81,5 +81,19 @@
       "unitTestRunner": "vitest",
       "e2eTestRunner": "playwright"
     }
+  },
+  "release": {
+    "projects": ["@guacamolai/guacamolai"],
+    "version": {
+      "conventionalCommits": true,
+      "preVersionCommand": "bun nx run-many -t prepare-release"
+    },
+    "changelog": {
+      "automaticFromRef": true,
+      "workspaceChangelog": {
+        "file": "CHANGELOG.md",
+        "createRelease": "github"
+      }
+    }
   }
 }

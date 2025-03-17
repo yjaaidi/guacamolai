@@ -1,6 +1,6 @@
 {
   "name": "@guacamolai/guacamolai",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "nx": {
@@ -13,6 +13,12 @@
         "dependsOn": [
           "build"
         ]
+      },
+      "prepare-release": {
+        "command": "zip -r guacamolai.zip guacamolai",
+        "options": {
+          "cwd": "{projectRoot}/dist"
+        }
       }
     }
   }

@@ -47,3 +47,5 @@ test-output
 
 .env.local
 apps/*/.auth/user.json
+
+apps/guacamolai/guacamolai.zip

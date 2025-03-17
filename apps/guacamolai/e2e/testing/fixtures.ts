@@ -30,7 +30,7 @@ export const test = base.extend<Fixtures & Options>({
     await use(new AdvocuActivitiesPage(page));
   },
   context: async ({}, use) => {
-    const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist');
+    const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist/guacamolai');
     const userDataDir = await mkdtemp(
       join(tmpdir(), 'guacamolai-chromium-user-data-dir-')
     );
