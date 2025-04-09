@@ -56,7 +56,7 @@ export async function main({
         if (suspense.finalized && suspense.hasValue && suspense.value != null) {
           const result = suspense.value;
           if ('error' in result) {
-            console.error(result.error);
+            console.error('🤷 Something went wrong with the scraping:', result.error);
           } else {
             activityForm.fillActivityForm(result.activity);
           }
@@ -80,3 +80,4 @@ export async function main({
     }
   });
 }
+

@@ -41,14 +41,11 @@ export async function main({
           }),
           switchMap(scrapPage),
           map((activity) => ({ activity, sendResult })),
-          catchError((error) => of({ error, sendResult }))
+          catchError((error) => of({ error: error.message, sendResult }))
         )
       )
     )
     .subscribe(({ sendResult, ...result }) => {
-      if ('error' in result) {
-        console.error('Error:', result.error);
-      }
       sendResult(result);
     });
 
