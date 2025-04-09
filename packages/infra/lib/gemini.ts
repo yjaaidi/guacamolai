@@ -19,7 +19,7 @@ export class Gemini implements Llm {
     };
 
     return fromFetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key=${
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-03-25:generateContent?key=${
         this.#geminiApiKey
       }`,
       {
@@ -40,7 +40,9 @@ export class Gemini implements Llm {
           throw new Error(`Gemini error: ${body.error.message}`);
         }
 
-        return JSON.parse(body.candidates[0].content.parts[0].text);
+        const text = _sanitizeGeminiResponse(body.candidates[0].content.parts[0].text);
+
+        return JSON.parse(text);
       })
     );
   }
@@ -68,4 +70,14 @@ interface Content {
 }
 interface Part {
   text: string;
+}
+
+/**
+ * Fixes weird issue with Gemini.
+ * CF. https://discuss.ai.google.dev/t/gemini-2-5-pro-inserting-random-text-and-format-tokens-around-json-responses/76977
+ */
+function _sanitizeGeminiResponse(text: string): string {
+  const startIndex = text.indexOf('{') ?? 0;
+  const endIndex = text.lastIndexOf('}') ?? (text.length - 1);
+  return text.slice(startIndex, endIndex + 1);
 }

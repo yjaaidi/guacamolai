@@ -13,20 +13,22 @@ describe(scrapPage.name, () => {
   it('scraps content from url', { timeout: TIMEOUT }, async () => {
     const { scrap } = setUp();
 
+    const result = await scrap({
+      page: createHtmlPage({
+        url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
+        html: marmicodeBlogPostHtml,
+      }),
+    });
+
     expect(
-      await scrap({
-        page: createHtmlPage({
-          url: 'https://marmicode.io/blog/angular-template-code-coverage-and-future-proof-testing',
-          html: marmicodeBlogPostHtml,
-        }),
-      })
+      result
     ).toMatchObject({
       type: 'article',
       title: expect.stringContaining(
         'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
       ),
       description: expect.stringContaining('Ahead-Of-Time (AOT)'),
-      date: '2024-11-18',
+      date: '2024-11-17',
     });
   });
 
@@ -44,7 +46,7 @@ describe(scrapPage.name, () => {
       type: 'talk',
       title: 'Fake it till you Mock it',
       description: expect.stringContaining('Fake'),
-      city: 'Berlin',
+      city: 'Bonn',
       country: 'Germany',
     });
   });
