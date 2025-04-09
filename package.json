@@ -2,7 +2,9 @@
   "name": "@guacamolai/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "playwright install"
+  },
   "private": true,
   "dependencies": {
     "@jscutlery/operators": "^3.1.21",
