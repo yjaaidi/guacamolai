@@ -44,7 +44,7 @@ export class AdvocuActivityFormGlove {
     this.title = this.#page.getByLabel('What was the title', { exact: false });
     this.contentType = this.#page.locator('[id="#/properties/contentType"]');
     this.description = this.#page
-      .locator('[id="\\#\\/properties\\/description"]')
+      .locator('[id="#/properties/description"]')
       .getByRole('paragraph');
     this.date = this.#page.getByPlaceholder('Select date');
     this.link = this.#page.getByRole('textbox', { exact: false, name: 'Link' });
