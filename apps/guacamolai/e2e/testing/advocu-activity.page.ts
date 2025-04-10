@@ -34,8 +34,7 @@ export class AdvocuActivityFormGlove {
   description: Locator;
   date: Locator;
   link: Locator;
-  isOnlineCheckbox: Locator;
-  isOfflineCheckbox: Locator;
+  eventFormat: Locator;
   country: Locator;
   city: Locator;
   #page: Page;
@@ -49,8 +48,7 @@ export class AdvocuActivityFormGlove {
       .getByRole('paragraph');
     this.date = this.#page.getByPlaceholder('Select date');
     this.link = this.#page.getByRole('textbox', { exact: false, name: 'Link' });
-    this.isOnlineCheckbox = this.#page.getByLabel('Yes');
-    this.isOfflineCheckbox = this.#page.getByLabel('No');
+    this.eventFormat = this.#page.locator('[id="#/properties/eventFormat"]');
     this.country = this.#page.locator('[id="#/properties/country"]');
     this.city = this.#page.locator('[id="#/properties/city"]');
   }

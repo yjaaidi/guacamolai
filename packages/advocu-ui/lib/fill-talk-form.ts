@@ -5,8 +5,6 @@ import { fieldIds } from './activity-form-locators';
 import { fillActivityFormSharedFields } from './fill-activity-form-shared-fields';
 
 export async function fillTalkForm(talk: Talk) {
-  await fillActivityFormSharedFields(talk);
-
   if (talk.online != null) {
     await setOnline(talk.online);
   }
@@ -18,10 +16,13 @@ export async function fillTalkForm(talk: Talk) {
   if (talk.city) {
     await setCity(talk.city);
   }
+
+  await fillActivityFormSharedFields(talk);
 }
 
 async function setOnline(online: boolean) {
-  await new Locator(() => screen.getByText(online ? 'Yes' : 'No')).click();
+  await new Locator(() => document.getElementById(fieldIds.eventFormat)).click();
+  await new Locator(() => document.querySelector<HTMLElement>(`[title="${online ? 'Virtual' : 'In-Person'}"]`)).click();
 }
 
 async function setCountry(country: string) {

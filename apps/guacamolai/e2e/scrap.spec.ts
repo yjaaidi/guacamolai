@@ -6,16 +6,17 @@ test.beforeEach(
 
     await setUpLlmFake([
       {
-        pattern: 'Younes Jaaidi - NG-DE 2024',
+        pattern: 'Apps Are Over. Think Libs With Nx.',
         value: {
           activityType: 'talk',
-          url: 'https://ng-de.org/speakers/younes-jaaidi/',
-          title: 'Fake it till you Mock it',
-          description: `How much do you trust the Mocks, Stubs and Spies you are using in your tests?`,
+          url: 'https://js-poland.pl/speaker/2024/younes-jaaidi',
+          title: 'Apps Are Over. Think Libs With Nx.',
+          description: `Beyond being the leading human-readable alternative to Bazel for organizing a Monorepo, among other qualities, Nx is also a tool that allows you to easily split and organize your applications into libraries. But why would we give in to such a temptation? Is it for simple aesthetics, or are there deeper benefits?
+Let's meet at this talk to see for yourself the benefits that Nx can bring you, starting with a progressive adoption strategy tomorrow.`,
           date: '2024-10-01T00:00:00Z',
           online: false,
-          city: 'Berlin',
-          country: 'Germany',
+          city: 'Warsaw',
+          country: 'Poland',
         },
       },
       {
@@ -58,7 +59,7 @@ test('disables scrap button initially as URL is empty', async ({
 test('disables scrap button if URL becomes invalid', async ({
   scrapFormGlove,
 }) => {
-  await scrapFormGlove.fill('https://ng-de.org/speakers/younes-jaaidi/');
+  await scrapFormGlove.fill('https://js-poland.pl/speaker/2024/younes-jaaidi');
 
   await scrapFormGlove.fill('INVALID_URL');
 
@@ -67,7 +68,7 @@ test('disables scrap button if URL becomes invalid', async ({
 
 test('disables scrap button on click', async ({ scrapFormGlove }) => {
   await scrapFormGlove.fillAndSubmit(
-    'https://ng-de.org/speakers/younes-jaaidi/'
+    'https://js-poland.pl/speaker/2024/younes-jaaidi'
   );
 
   await expect(scrapFormGlove.scrapButton).toBeDisabled();
@@ -112,28 +113,24 @@ test('loads talk', async ({
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
-    'https://ng-de.org/speakers/younes-jaaidi/'
+    'https://js-poland.pl/speaker/2024/younes-jaaidi'
   );
 
-  await expect(activityForm.title).toHaveValue('Fake it till you Mock it', {
-    timeout: 10_000,
-  });
+  await expect(activityForm.title).toHaveValue(
+    'Apps Are Over. Think Libs With Nx.',
+    { timeout: 10_000 }
+  );
 
-  await expect
-    .soft(activityForm.description)
-    .toContainText(
-      'How much do you trust the Mocks, Stubs and Spies you are using in your tests?'
-    );
-  await expect.soft(activityForm.isOnlineCheckbox).not.toBeChecked();
-  await expect.soft(activityForm.isOfflineCheckbox).toBeChecked();
+  await expect.soft(activityForm.description).toContainText('Monorepo');
+  await expect.soft(activityForm.eventFormat).toHaveText('In-Person');
 
-  await expect.soft(activityForm.country).toHaveText('Germany');
-  await expect.soft(activityForm.city).toHaveValue('Berlin');
+  await expect.soft(activityForm.country).toHaveText('Poland');
+  await expect.soft(activityForm.city).toHaveValue('Warsaw');
 
   await expect.soft(activityForm.date).toHaveValue('2024-10-01');
   await expect
     .soft(activityForm.link)
-    .toHaveValue('https://ng-de.org/speakers/younes-jaaidi/');
+    .toHaveValue('https://js-poland.pl/speaker/2024/younes-jaaidi');
 
   await expect.soft(scrapFormGlove.scrapButton).toBeEnabled();
 });
@@ -170,17 +167,18 @@ test('close scrapping tab', async ({
   test.slow();
 
   await scrapFormGlove.fillAndSubmit(
-    'https://ng-de.org/speakers/younes-jaaidi/'
+    'https://js-poland.pl/speaker/2024/younes-jaaidi'
   );
 
-  await expect(activityForm.title).toHaveValue('Fake it till you Mock it', {
-    timeout: 10_000,
-  });
+  await expect(activityForm.title).toHaveValue(
+    'Apps Are Over. Think Libs With Nx.',
+    { timeout: 10_000 }
+  );
 
   /* Make sure `ng-de.org` tab is closed after scraping. */
   await expect
     .poll(() => context.pages().map((p) => p.url()))
     .not.toEqual(
-      expect.arrayContaining([expect.stringContaining('ng-de.org')])
+      expect.arrayContaining([expect.stringContaining('js-poland.pl')])
     );
 });

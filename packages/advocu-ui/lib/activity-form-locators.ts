@@ -16,7 +16,7 @@ export const fieldIds = {
   title: '#/properties/title',
   url: '#/properties/activityUrl',
   description: '#/properties/description',
-  online: '#/properties/onlineEvent',
+  eventFormat: '#/properties/eventFormat',
   country: '#/properties/country',
   city: '#/properties/city',
 } as const;
