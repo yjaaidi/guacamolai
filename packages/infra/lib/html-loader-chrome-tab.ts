@@ -1,23 +1,30 @@
 import { createHtmlPage, HtmlLoader, HtmlPage } from '@guacamolai/core';
 import { defer, Observable } from 'rxjs';
+import { BrowserTabs } from './browser-tabs';
+import { BrowserTabsImpl } from './browser-tabs.impl';
 
 export class HtmlLoaderChromeTab implements HtmlLoader {
+  #browserTabs: BrowserTabs;
+
+  constructor(browserTabs: BrowserTabs = new BrowserTabsImpl()) {
+    this.#browserTabs = browserTabs;
+  }
+
   loadHtml(url: string): Observable<HtmlPage> {
     return defer(async () => {
       console.debug(`Trying HTML loading with chrome tab: ${url}`);
-      const tab = await chrome.tabs.create({ url });
+
+      const lastActiveTab = await this.#browserTabs.getActiveTab();
+      const tab = await this.#browserTabs.createTab(url);
 
       if (tab.id == null) {
         throw new Error(`Can't create tab for URL: ${url}`);
       }
 
       try {
-        const [{ result: html }] = await _executeWithTimeout({
+        const html = await _executeWithTimeout({
           timeout: 5_000,
-          promise: chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: _readBody,
-          }),
+          promise: this.#browserTabs.executeScript(tab.id, _readBody),
         });
 
         if (typeof html !== 'string' || html == null) {
@@ -29,7 +36,11 @@ export class HtmlLoaderChromeTab implements HtmlLoader {
         console.error(cause);
         throw new Error(`Can't extract HTML from URL: ${url}`, { cause });
       } finally {
-        await chrome.tabs.remove(tab.id);
+        await this.#browserTabs.removeTab(tab.id);
+
+        if (lastActiveTab?.id != null) {
+          await this.#browserTabs.activateTab(lastActiveTab.id);
+        }
       }
     });
   }
