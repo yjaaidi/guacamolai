@@ -2,8 +2,7 @@ import { expect, test } from './testing/fixtures';
 
 test.beforeEach(
   async ({ advocuActivitiesPage, scrapFormGlove, setUpLlmFake }) => {
-    test.setTimeout(30_000);
-
+    test.slow();
     await setUpLlmFake([
       {
         pattern: 'Apps Are Over. Think Libs With Nx.',
