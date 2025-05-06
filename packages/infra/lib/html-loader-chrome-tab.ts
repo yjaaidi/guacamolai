@@ -44,13 +44,9 @@ async function _readBody() {
   const debounceDelay = 1_000;
 
   return new Promise((resolve) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    let timeout;
+    let timeout: number;
 
     const reschedule = () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       clearTimeout(timeout);
 
       timeout = setTimeout(
