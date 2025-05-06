@@ -1,4 +1,4 @@
-import { isValidUrl } from '@guacamolai/shared-util';
+import { canonicalizeUrl } from '@guacamolai/shared-util';
 import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { debounceTime, fromEvent, map, Observable, of, startWith } from 'rxjs';
@@ -76,7 +76,7 @@ export function watchInputValue(
     startWith(_getInputValue(el)),
     map(() => {
       const url = _getInputValue(el);
-      return isValidUrl(url) ? url : null;
+      return canonicalizeUrl(url);
     })
   );
 }

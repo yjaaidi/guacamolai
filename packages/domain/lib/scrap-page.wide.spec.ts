@@ -20,15 +20,13 @@ describe(scrapPage.name, () => {
       }),
     });
 
-    expect(
-      result
-    ).toMatchObject({
+    expect(result).toMatchObject({
       type: 'article',
       title: expect.stringContaining(
         'The Missing Ingredient for Angular Template Code Coverage and Future-Proof Testing'
       ),
       description: expect.stringContaining('Ahead-Of-Time (AOT)'),
-      date: '2024-11-17',
+      date: '2024-11-18',
     });
   });
 

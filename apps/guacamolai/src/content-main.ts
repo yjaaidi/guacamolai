@@ -8,7 +8,7 @@ import {
 } from '@guacamolai/advocu-ui';
 import { BackgroundClient, HtmlLoader, ScrapAction } from '@guacamolai/core';
 import { BackgroundClientImpl } from '@guacamolai/infra';
-import { isValidUrl } from '@guacamolai/shared-util';
+import { canonicalizeUrl } from '@guacamolai/shared-util';
 import { suspensify } from '@jscutlery/operators';
 import { filter, from, map, share, startWith, switchMap } from 'rxjs';
 
@@ -30,7 +30,7 @@ export async function main({
 
   const url$ = scrapForm.urlChange$.pipe(
     startWith(null),
-    map((url) => (url != null && isValidUrl(url) ? url : null)),
+    map((url) => canonicalizeUrl(url)),
     share()
   );
 
@@ -80,4 +80,3 @@ export async function main({
     }
   });
 }
-

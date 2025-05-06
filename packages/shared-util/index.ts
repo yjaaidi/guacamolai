@@ -1,1 +1,1 @@
-export * from './lib/is-valid-url';
+export * from './lib/canonicalize-url';
