@@ -36,7 +36,8 @@ export class HtmlLoaderChromeTab implements HtmlLoader {
 }
 
 /**
- * Manual debounce as this code is injected as is without any dependencies.
+ * Wait for app to stay stable for 1 second before returning the HTML.
+ * Note the manual debounce as this code is injected as is without any dependencies.
  *
  * @returns The HTML of the current page.
  */
