@@ -1,4 +1,4 @@
-import { Talk } from '@guacamolai/core';
+import { Activity, Talk } from '@guacamolai/core';
 import { LlmFake } from '@guacamolai/core/testing';
 import { lastValueFrom, NEVER } from 'rxjs';
 import { describe, it } from 'vitest';
@@ -94,6 +94,13 @@ describe(scrapPage.name, () => {
         },
       })
     );
-    expect((talk as Talk).online).toBe(false);
+    assertIsTalk(talk);
+    expect(talk.online).toBe(false);
   });
 });
+
+function assertIsTalk(activity: Activity): asserts activity is Talk {
+  if (activity.type !== 'talk') {
+    throw new Error('Activity is not a talk');
+  }
+}
