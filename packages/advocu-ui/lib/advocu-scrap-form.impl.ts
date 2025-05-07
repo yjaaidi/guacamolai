@@ -110,6 +110,25 @@ export class AdvocuScrapFormImpl implements AdvocuScrapForm {
     );
   }
 
+  showErrorToast(error: unknown) {
+    const toastEl = document.createElement('div');
+    toastEl.role = 'alert';
+    toastEl.textContent = `🥑 GuacamolAI Error: ${error}`;
+    toastEl.style.position = 'fixed';
+    toastEl.style.top = '10px';
+    toastEl.style.transform = 'translateX(calc(50vw - 50%))';
+    toastEl.style.margin = 'auto';
+    toastEl.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    toastEl.style.color = 'white';
+    toastEl.style.padding = '10px';
+    toastEl.style.borderRadius = '5px';
+    toastEl.style.boxShadow = '0 0 10px 0 rgba(0, 0, 0, 0.5)';
+
+    document.body.appendChild(toastEl);
+
+    setTimeout(() => toastEl.remove(), 5_000);
+  }
+
   updateScrapButton(status: 'disabled' | 'enabled' | 'pending') {
     if (['disabled', 'pending'].includes(status)) {
       this.#scrapButtonEl.setAttribute('disabled', '');

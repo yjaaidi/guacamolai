@@ -57,6 +57,7 @@ export async function main({
           const result = suspense.value;
           if ('error' in result) {
             console.error('🥑 GuacamolAI Error:', result.error);
+            scrapForm.showErrorToast(result.error);
           } else {
             activityForm.fillActivityForm(result.activity);
           }

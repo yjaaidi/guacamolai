@@ -181,3 +181,9 @@ test('close scrapping tab', async ({
       expect.arrayContaining([expect.stringContaining('js-poland.pl')])
     );
 });
+
+test('shows error toast', async ({ page, scrapFormGlove }) => {
+  await scrapFormGlove.fillAndSubmit('https://some-invalid-url/');
+
+  await expect(page.getByRole('alert')).toContainText('🥑 GuacamolAI Error');
+});

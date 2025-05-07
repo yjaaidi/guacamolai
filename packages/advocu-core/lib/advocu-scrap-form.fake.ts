@@ -12,6 +12,7 @@ export class AdvocuScrapFormFactoryFake implements AdvocuScrapFormFactory {
 export class AdvocuScrapFormFake implements AdvocuScrapForm {
   status?: 'disabled' | 'enabled' | 'pending';
 
+  #lastError?: unknown;
   #urlChange$ = new Subject<string>();
   #scrapSubmit$ = new Subject<void>();
 
@@ -25,5 +26,13 @@ export class AdvocuScrapFormFake implements AdvocuScrapForm {
   fillAndSubmitForm(url: string) {
     this.#urlChange$.next(url);
     this.#scrapSubmit$.next();
+  }
+
+  showErrorToast(error: unknown): void {
+    this.#lastError = error;
+  }
+
+  getLastError() {
+    return this.#lastError;
   }
 }

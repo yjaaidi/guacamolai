@@ -9,5 +9,7 @@ export interface AdvocuScrapForm {
 
   urlChange$: Observable<string>;
 
+  showErrorToast(error: string): void;
+
   updateScrapButton(status: 'disabled' | 'enabled' | 'pending'): void;
 }
