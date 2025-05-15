@@ -1,6 +1,6 @@
 import { defer, Observable, of } from 'rxjs';
-import { HtmlLoader } from './html-loader';
-import { HtmlPage } from './html-page';
+import type { HtmlLoader } from './html-loader';
+import type { HtmlPage } from './html-page';
 
 export class HtmlLoaderFake implements HtmlLoader {
   #pages: HtmlPage[] = [];

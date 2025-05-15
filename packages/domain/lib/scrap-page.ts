@@ -1,4 +1,4 @@
-import { Activity, Article, HtmlPage, Llm, Talk } from '@guacamolai/core';
+import type { Activity, Article, HtmlPage, Llm, Talk } from '@guacamolai/core';
 import { map, Observable } from 'rxjs';
 
 export function scrapPage({

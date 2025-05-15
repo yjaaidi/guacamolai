@@ -1,6 +1,6 @@
 /// <reference types="chrome" />
 
-import { BackgroundAction, BackgroundClient } from '@guacamolai/core';
+import type { BackgroundAction, BackgroundClient } from '@guacamolai/core';
 
 export class BackgroundClientImpl implements BackgroundClient {
   async sendAction<ACTION extends BackgroundAction>(

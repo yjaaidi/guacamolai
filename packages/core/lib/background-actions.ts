@@ -1,4 +1,4 @@
-import { Activity } from './activity';
+import type { Activity } from './activity';
 
 export interface BackgroundAction<
   TYPE extends string = string,

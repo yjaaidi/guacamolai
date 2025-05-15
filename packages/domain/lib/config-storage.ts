@@ -1,4 +1,4 @@
-import { ExtensionStorage } from '@guacamolai/core';
+import type { ExtensionStorage } from '@guacamolai/core';
 
 export class ConfigStorage {
   #storage: ExtensionStorage;

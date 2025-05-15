@@ -1,4 +1,4 @@
-import { LlmFakeResponse } from '@guacamolai/core/testing';
+import type { LlmFakeResponse } from '@guacamolai/core/testing';
 import { LLM_FAKE_RESPONSES_KEY } from '@guacamolai/domain';
 import { workspaceRoot } from '@nx/devkit';
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
@@ -30,7 +30,10 @@ export const test = base.extend<Fixtures & Options>({
     await use(new AdvocuActivitiesPage(page));
   },
   context: async ({}, use) => {
-    const pathToExtension = join(workspaceRoot, 'apps/guacamolai/dist/guacamolai');
+    const pathToExtension = join(
+      workspaceRoot,
+      'apps/guacamolai/dist/guacamolai'
+    );
     const userDataDir = await mkdtemp(
       join(tmpdir(), 'guacamolai-chromium-user-data-dir-')
     );

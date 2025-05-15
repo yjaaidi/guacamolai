@@ -1,4 +1,4 @@
-import { BackgroundAction, BackgroundServer } from '@guacamolai/core';
+import type { BackgroundAction, BackgroundServer } from '@guacamolai/core';
 
 export class BackgroundServerImpl implements BackgroundServer {
   onAction<ACTION extends BackgroundAction>(

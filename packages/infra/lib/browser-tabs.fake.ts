@@ -1,4 +1,5 @@
-import { BrowserTab, BrowserTabs, createBrowserTab } from './browser-tabs';
+import type { BrowserTab, BrowserTabs } from './browser-tabs';
+import { createBrowserTab } from './browser-tabs';
 
 export class BrowserTabsFake implements BrowserTabs {
   #stubResults: Record<string, unknown> = {};

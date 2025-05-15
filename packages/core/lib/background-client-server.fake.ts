@@ -1,6 +1,6 @@
-import { BackgroundAction } from './background-actions';
-import { BackgroundClient } from './background-client';
-import { BackgroundServer } from './background-server';
+import type { BackgroundAction } from './background-actions';
+import type { BackgroundClient } from './background-client';
+import type { BackgroundServer } from './background-server';
 
 export class BackgroundClientServerFake
   implements BackgroundClient, BackgroundServer

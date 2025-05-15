@@ -1,5 +1,5 @@
-import { Llm } from '@guacamolai/core';
-import { LlmFake, LlmFakeResponse } from '@guacamolai/core/testing';
+import type { Llm } from '@guacamolai/core';
+import { LlmFake, type LlmFakeResponse } from '@guacamolai/core/testing';
 import { Gemini } from '@guacamolai/infra';
 import { ConfigStorage } from './config-storage';
 

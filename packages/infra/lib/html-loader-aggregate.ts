@@ -1,4 +1,4 @@
-import { HtmlLoader, HtmlPage } from '@guacamolai/core';
+import type { HtmlLoader, HtmlPage } from '@guacamolai/core';
 import { HtmlLoaderChromeTab } from './html-loader-chrome-tab';
 import { HtmlLoaderFetch } from './html-loader-fetch';
 import { catchError, Observable, throwError } from 'rxjs';

@@ -1,6 +1,7 @@
-import { createHtmlPage, HtmlLoader, HtmlPage } from '@guacamolai/core';
+import type { HtmlLoader, HtmlPage } from '@guacamolai/core';
+import { createHtmlPage } from '@guacamolai/core';
 import { defer, Observable } from 'rxjs';
-import { BrowserTabs } from './browser-tabs';
+import type { BrowserTabs } from './browser-tabs';
 import { BrowserTabsImpl } from './browser-tabs.impl';
 
 export class HtmlLoaderChromeTab implements HtmlLoader {

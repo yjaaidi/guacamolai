@@ -3,8 +3,8 @@ import { nxE2EPreset } from '@nx/playwright/preset';
 import { defineConfig, devices } from '@playwright/test';
 import { config as dotEnvConfig } from 'dotenv';
 import { join } from 'path';
-import { Options } from './e2e/testing/fixtures';
-import { SetupOptions } from './e2e/testing/setup-fixtures';
+import type { Options } from './e2e/testing/fixtures';
+import type { SetupOptions } from './e2e/testing/setup-fixtures';
 
 const baseURL = 'https://gde.advocu.com';
 

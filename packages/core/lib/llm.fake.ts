@@ -1,5 +1,5 @@
 import { defer, delay, Observable, of } from 'rxjs';
-import { Llm, PromptRequest } from './llm';
+import type { Llm, PromptRequest } from './llm';
 
 export class LlmFake implements Llm {
   #responses: LlmFakeResponse<unknown>[] = [];

@@ -1,4 +1,4 @@
-import { BackgroundAction } from './background-actions';
+import type { BackgroundAction } from './background-actions';
 
 export interface BackgroundClient {
   sendAction<ACTION extends BackgroundAction>(

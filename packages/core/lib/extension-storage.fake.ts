@@ -1,4 +1,4 @@
-import { ExtensionStorage } from './extension-storage';
+import type { ExtensionStorage } from './extension-storage';
 
 export class ExtensionStorageFake implements ExtensionStorage {
   #storage = new Map();

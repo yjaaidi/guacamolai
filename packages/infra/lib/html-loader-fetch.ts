@@ -1,4 +1,5 @@
-import { createHtmlPage, HtmlLoader, HtmlPage } from '@guacamolai/core';
+import type { HtmlLoader, HtmlPage } from '@guacamolai/core';
+import { createHtmlPage } from '@guacamolai/core';
 import { map, Observable, switchMap, throwError } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 

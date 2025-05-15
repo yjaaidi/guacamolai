@@ -1,4 +1,4 @@
-import { Llm, PromptRequest, Schema } from '@guacamolai/core';
+import type { Llm, PromptRequest, Schema } from '@guacamolai/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
