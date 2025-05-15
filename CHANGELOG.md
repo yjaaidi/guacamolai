@@ -1,3 +1,22 @@
+## 0.2.0 (2025-05-15)
+
+### 🚀 Features
+
+- ✨ switch to gemini flash for faster response ([c30e006](https://github.com/yjaaidi/guacamolai/commit/c30e006))
+- ✨ trim url ([cfe3884](https://github.com/yjaaidi/guacamolai/commit/cfe3884))
+- ✨ focus back on last active tab ([305e8f2](https://github.com/yjaaidi/guacamolai/commit/305e8f2))
+- ✨ show scraping errors in advocu ([3d63356](https://github.com/yjaaidi/guacamolai/commit/3d63356))
+
+### 🩹 Fixes
+
+- 🐞 sanitize invalid gemini result ([b5bd618](https://github.com/yjaaidi/guacamolai/commit/b5bd618))
+- 🐞 fix error logs when scraping fails ([188a03d](https://github.com/yjaaidi/guacamolai/commit/188a03d))
+- 🐞 support new in-person / virtual option ([77bba87](https://github.com/yjaaidi/guacamolai/commit/77bba87))
+
+### ❤️ Thank You
+
+- Younes Jaaidi @yjaaidi
+
 ## 0.1.0 (2025-03-17)
 
 ### 🚀 Features
