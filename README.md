@@ -18,4 +18,8 @@ No support for GitHub & YouTube activity yet.
 
 ### Why is it opening a new tab?
 
-The activity is opened a new tab to scrap pages that require authentication such as meetup.com.
+The activity is opened a new tab to scrap pages that you need to be signed in to see such as meetup.com.
+
+### Why not an MCP?
+
+An integration with https://browsermcp.io/ could be a good idea, but how fast would that be?
