@@ -12,7 +12,7 @@
     "module": "esnext",
     "moduleResolution": "bundler"
   },
-  "include": ["**/*.ts", "index.ts"],
+  "include": ["lib/**/*.ts", "index.ts"],
   "references": [
     {
       "path": "../core/tsconfig.lib.json"

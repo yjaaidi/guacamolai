@@ -54,9 +54,8 @@ export class HtmlLoaderChromeTab implements HtmlLoader {
  */
 async function _readBody() {
   const debounceDelay = 1_000;
-
   return new Promise((resolve) => {
-    let timeout: number;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const reschedule = () => {
       clearTimeout(timeout);
