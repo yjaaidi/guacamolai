@@ -4,7 +4,7 @@ Turn your dev advocacy activity into a smooth, shareable spread on advocu.com.
 
 ## Chop & Mix
 
-1. Download and install the latest version from https://github.com/yjaaidi/guacamolai/releases
+1. Download and install the latest version from https://github.com/yjaaidi/guacamolai/releases (For help on loading an unpacked extension, see https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)
 2. Click on the extension and configure it (once) with:
    - your name — this is used to pick your activity from pages that present the activity of multiple people
    - your Gemini API key — this is used to scrap the page
